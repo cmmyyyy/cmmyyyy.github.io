@@ -17,7 +17,7 @@
   <meta name="description" content="">
   <meta name="author" content="magnesium">
   <meta name="keywords" content="">
-  <title>hgame2021-week1-writeup - +mg&#39;s blog</title>
+  <title>+mg&#39;s blog</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
 
@@ -150,7 +150,7 @@
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.1)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="hgame2021-week1-writeup">
+            <span class="h2" id="subtitle" title="">
               
             </span>
 
@@ -172,7 +172,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      266 字
+      267 字
     </span>
   
 
@@ -212,15 +212,14 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">hgame2021-week1-writeup</h1>
+            <h1 style="display: none"></h1>
             
             <div class="markdown-body">
-              <h1 id="week1-writeup-6vv"><a href="#week1-writeup-6vv" class="headerlink" title="week1-writeup-6vv+"></a>week1-writeup-6vv+</h1><p>[TOC]</p>
-<h2 id="Pwn"><a href="#Pwn" class="headerlink" title="Pwn"></a>Pwn</h2><h3 id="whitegive"><a href="#whitegive" class="headerlink" title="whitegive"></a>whitegive</h3><p>c语言中字符串字面量的值是该字符串的首地址，因此用ida打开二进制文件找到“paSsw0rd”字符串的首地址为0x402012</p>
-<p><img src="C:\Users\Magnesium\Desktop\week1\pwn1.png" srcset="/img/loading.gif" alt="pwn1"></p>
+              <h1 id="HGAME-2021-Week1-Writeup–6vv"><a href="#HGAME-2021-Week1-Writeup–6vv" class="headerlink" title="HGAME 2021 Week1 Writeup–6vv+"></a>HGAME 2021 Week1 Writeup–6vv+</h1><h2 id="Pwn"><a href="#Pwn" class="headerlink" title="Pwn"></a>Pwn</h2><h3 id="whitegive"><a href="#whitegive" class="headerlink" title="whitegive"></a>whitegive</h3><p>c语言中字符串字面量的值是该字符串的首地址，因此用ida打开二进制文件找到“paSsw0rd”字符串的首地址为0x402012</p>
+<p><img src="D:\blog\blog\source\img\pwn1.png" srcset="/img/loading.gif"></p>
 <p><code>nc 182.92.108.71 30009</code></p>
 <p>输入0x402012的十进制即可getshell</p>
-<p><img src="C:\Users\Magnesium\Desktop\week1\pwn2.png" srcset="/img/loading.gif" alt="pwn2"></p>
+<p><img src="D:\blog\blog\source\img\pwn2.png" srcset="/img/loading.gif"></p>
 <p><code>hgame&#123;W3lCOme_t0_Hg4m3_2222Z222zO2l&#125;</code></p>
 <h2 id="MISC"><a href="#MISC" class="headerlink" title="MISC"></a>MISC</h2><h3 id="Base全家福"><a href="#Base全家福" class="headerlink" title="Base全家福"></a>Base全家福</h3><p>Base16编码使用16个ASCII可打印字符（数字0-9和字母A-F）对任意字节数据进行编码。</p>
 <p>Base32编码是使用32个可打印字符（字母A-Z和数字2-7）</p>
@@ -233,25 +232,18 @@
 <p>使用base16</p>
 <p><code>hgame&#123;We1c0me_t0_HG4M3_2021&#125;</code></p>
 <h3 id="Galaxy"><a href="#Galaxy" class="headerlink" title="Galaxy"></a>Galaxy</h3><p>拿到一个pcapng文件，放进wireshark里流量分析，因为找的是图片，尝试搜索一下png，找到一个包</p>
-<p><img src="C:\Users\Magnesium\Desktop\week1\A82SJG5XZA%{HPQD}AH@$E3.png" srcset="/img/loading.gif" alt="A82SJG5XZA%{HPQD}AH@$E3"></p>
+<p><img src="D:\blog\blog\source\img\A82SJG5XZA%{HPQD}AH@$E3.png" srcset="/img/loading.gif"></p>
 <p>追踪TCP流</p>
-<p><img src="C:\Users\Magnesium\Desktop\week1\GB{@{VLETRUY8KC19009Z3G.png" srcset="/img/loading.gif" alt="GB{@{VLETRUY8KC19009Z3G"></p>
+<p><img src="D:\blog\blog\source\img\GB{@{VLETRUY8KC19009Z3G.png" srcset="/img/loading.gif"></p>
 <p>发现png格式图片信息，把它导出得到图片，ghex修改一下图片的尺寸后发现flag在图片下方</p>
 <p>PNG文件结构分析<a target="_blank" rel="noopener" href="https://my.oschina.net/ososchina/blog/801358">https://my.oschina.net/ososchina/blog/801358</a></p>
-<p><img src="C:\Users\Magnesium\Desktop\week1\bb.png" srcset="/img/loading.gif" alt="bb"></p>
-<p><img src="C:\Users\Magnesium\Desktop\week1\aaa.png" srcset="/img/loading.gif" alt="aaa"></p>
+<p><img src="D:\blog\blog\source\img\bb.png" srcset="/img/loading.gif"></p>
+<p><img src="D:\blog\blog\source\img\aaa.png" srcset="/img/loading.gif" alt="aaa"></p>
 
             </div>
             <hr>
             <div>
               <div class="post-metas mb-3">
-                
-                  <div class="post-meta mr-3">
-                    <i class="iconfont icon-category"></i>
-                    
-                      <a class="hover-with-bg" href="/categories/ctf-hgame2021/">ctf-hgame2021</a>
-                    
-                  </div>
                 
                 
               </div>
