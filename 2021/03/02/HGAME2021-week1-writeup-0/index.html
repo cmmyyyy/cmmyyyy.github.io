@@ -172,7 +172,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      0 字
+      267 字
     </span>
   
 
@@ -182,7 +182,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      1
+      3
        分钟
     </span>
   
@@ -215,11 +215,42 @@
             <h1 style="display: none">HGAME2021-week1-writeup</h1>
             
             <div class="markdown-body">
-              
+              <h1 id="HGAME-2021-Week1-Writeup–6vv"><a href="#HGAME-2021-Week1-Writeup–6vv" class="headerlink" title="HGAME 2021 Week1 Writeup–6vv+"></a>HGAME 2021 Week1 Writeup–6vv+</h1><h2 id="Pwn"><a href="#Pwn" class="headerlink" title="Pwn"></a>Pwn</h2><h3 id="whitegive"><a href="#whitegive" class="headerlink" title="whitegive"></a>whitegive</h3><p>c语言中字符串字面量的值是该字符串的首地址，因此用ida打开二进制文件找到“paSsw0rd”字符串的首地址为0x402012</p>
+<p><img src="pwn1.png" srcset="/img/loading.gif"></p>
+<p><code>nc 182.92.108.71 30009</code></p>
+<p>输入0x402012的十进制即可getshell</p>
+<p><img src="pwn2.png" srcset="/img/loading.gif"></p>
+<p><code>hgame&#123;W3lCOme_t0_Hg4m3_2222Z222zO2l&#125;</code></p>
+<h2 id="MISC"><a href="#MISC" class="headerlink" title="MISC"></a>MISC</h2><h3 id="Base全家福"><a href="#Base全家福" class="headerlink" title="Base全家福"></a>Base全家福</h3><p>Base16编码使用16个ASCII可打印字符（数字0-9和字母A-F）对任意字节数据进行编码。</p>
+<p>Base32编码是使用32个可打印字符（字母A-Z和数字2-7）</p>
+<p>Base64编码是使用64个可打印ASCII字符（A-Z、a-z、0-9、+、/）将任意字节序列数据编码成ASCII字符串，另有“=”符号用作后缀用途。</p>
+<p><code>R1k0RE1OWldHRTNFSU5SVkc1QkRLTlpXR1VaVENOUlRHTVlETVJCV0dVMlVNTlpVR01ZREtSUlVIQTJET01aVUdSQ0RHTVpWSVlaVEVNWlFHTVpER01KWElRPT09PT09</code></p>
+<p>使用base64</p>
+<p><code>GY4DMNZWGE3EINRVG5BDKNZWGUZTCNRTGMYDMRBWGU2UMNZUGMYDKRRUHA2DOMZUGRCDGMZVIYZTEMZQGMZDGMJXIQ======</code></p>
+<p>使用base32</p>
+<p><code>6867616D657B57653163306D655F74305F4847344D335F323032317D</code></p>
+<p>使用base16</p>
+<p><code>hgame&#123;We1c0me_t0_HG4M3_2021&#125;</code></p>
+<h3 id="Galaxy"><a href="#Galaxy" class="headerlink" title="Galaxy"></a>Galaxy</h3><p>拿到一个pcapng文件，放进wireshark里流量分析，因为找的是图片，尝试搜索一下png，找到一个包</p>
+<p><img src="galaxy1.png" srcset="/img/loading.gif"></p>
+<p>追踪TCP流</p>
+<p><img src="galaxy2.png" srcset="/img/loading.gif"></p>
+<p>发现png格式图片信息，把它导出得到图片，ghex修改一下图片的尺寸后发现flag在图片下方</p>
+<p>PNG文件结构分析<a target="_blank" rel="noopener" href="https://my.oschina.net/ososchina/blog/801358">https://my.oschina.net/ososchina/blog/801358</a></p>
+<p><img src="galaxy3.png" srcset="/img/loading.gif"></p>
+<p><img src="galaxy4.png" srcset="/img/loading.gif"></p>
+
             </div>
             <hr>
             <div>
               <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/ctf-hgame2021/">ctf-hgame2021</a>
+                    
+                  </div>
                 
                 
               </div>
@@ -241,8 +272,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2021/02/14/hgame2021-week2-writeup/">
-                        <span class="hidden-mobile">hgame2021-week2-writeup</span>
+                      <a href="/2021/02/10/Buuctf-pwn-writeup-0/">
+                        <span class="hidden-mobile">Buuctf-pwn-writeup</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
