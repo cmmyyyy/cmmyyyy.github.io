@@ -172,7 +172,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      267 字
+      271 字
     </span>
   
 
@@ -216,7 +216,7 @@
             
             <div class="markdown-body">
               <h1 id="HGAME-2021-Week1-Writeup–6vv"><a href="#HGAME-2021-Week1-Writeup–6vv" class="headerlink" title="HGAME 2021 Week1 Writeup–6vv+"></a>HGAME 2021 Week1 Writeup–6vv+</h1><h2 id="Pwn"><a href="#Pwn" class="headerlink" title="Pwn"></a>Pwn</h2><h3 id="whitegive"><a href="#whitegive" class="headerlink" title="whitegive"></a>whitegive</h3><p>c语言中字符串字面量的值是该字符串的首地址，因此用ida打开二进制文件找到“paSsw0rd”字符串的首地址为0x402012</p>
-<p><img src="D:\blog\blog\source\img\pwn1.png" srcset="/img/loading.gif"></p>
+<figure class="highlight markdown"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs markdown">![](/img/pwn1.jpg)<br></code></pre></div></td></tr></table></figure>
 <p><code>nc 182.92.108.71 30009</code></p>
 <p>输入0x402012的十进制即可getshell</p>
 <p><img src="D:\blog\blog\source\img\pwn2.png" srcset="/img/loading.gif"></p>
