@@ -172,7 +172,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      404 字
+      422 字
     </span>
   
 
@@ -215,7 +215,8 @@
             <h1 style="display: none">ret2syscall</h1>
             
             <div class="markdown-body">
-              <p>打算跟着ctf wiki一题一题地学起，手动实践的时候还是能学到很多东西的。</p>
+              <p>知识点：基本ROP/ROPgadget/有’/bin/sh’情况下的系统调用</p>
+<p>打算跟着ctf wiki一题一题地学起，手动实践的时候还是能学到很多东西的。</p>
 <p>首先是checksec，是32位程序，开启了栈堆不可执行保护，因此不能用shellcode来提权。</p>
 <p><img src="1.png" srcset="/img/loading.gif"></p>
 <p>打开ida查看源代码，存在gets函数栈溢出漏洞</p>
@@ -253,6 +254,12 @@
                 <div class="post-prevnext">
                   <article class="post-prev col-6">
                     
+                    
+                      <a href="/2021/03/10/ret2libc1/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">ret2libc1</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
                     
                   </article>
                   <article class="post-next col-6">

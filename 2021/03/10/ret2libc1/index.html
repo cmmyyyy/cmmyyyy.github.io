@@ -17,7 +17,7 @@
   <meta name="description" content="">
   <meta name="author" content="magnesium">
   <meta name="keywords" content="">
-  <title>关于 - +mg&#39;s blog</title>
+  <title>ret2libc1 - +mg&#39;s blog</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
 
@@ -33,6 +33,8 @@
     
   
 
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
   
 
 
@@ -61,7 +63,7 @@
 
 
 <body>
-  <header style="height: 60vh;">
+  <header style="height: 70vh;">
     <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
   <div class="container">
     <a class="navbar-brand"
@@ -148,9 +150,46 @@
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.1)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="关于">
+            <span class="h2" id="subtitle" title="ret2libc1">
               
             </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-03-10 21:50" pubdate>
+        2021年3月10日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      231 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      2
+       分钟
+    </span>
+  
+
+  
+  
+</div>
 
             
           </div>
@@ -163,56 +202,93 @@
 
   <main>
     
-      <div class="container nopadding-x-md">
-        <div class="py-5" id="board"
-          >
-          
-            <div class="about-avatar">
-              <img src="/img/avatar.png" srcset="/img/loading.gif"
-                   class="img-fluid" alt="avatar">
-            </div>
-          
-          <div class="container">
-            <div class="row">
-              <div class="col-12 col-md-10 m-auto">
-                
+      
 
-<div class="text-center">
-  <div class="about-info">
-    <div class="about-name">M4gne51um</div>
-    <div class="about-intro">HDUer</div>
-    <div class="about-icons">
-      
-        
-        
-        
-        <a target="_blank" rel="noopener" href="https://github.com" class="
-           hint--bottom hint--rounded"
-           aria-label=GitHub
-        >
-          <i class="iconfont icon-github-fill" aria-hidden="true"></i>
-          
-        </a>
-      
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">ret2libc1</h1>
+            
+            <div class="markdown-body">
+              <p>知识点：基本ROP/cyclic计算地址偏移/ROPgadget/有’/bin/sh’与call _system情况下的系统调用</p>
+<p>先checksec</p>
+<p><img src="/1.png" srcset="/img/loading.gif" alt="1"></p>
+<p>是32位程序，开启了栈堆不可执行保护，打开ida</p>
+<p><img src="/2.png" srcset="/img/loading.gif" alt="2"></p>
+<p>gets函数存在栈溢出，用cyclic计算偏移地址。</p>
+<p>首先生成一个比较大的cyclic值。</p>
+<p><img src="/3.png" srcset="/img/loading.gif" alt="3"></p>
+<p>复制到ret2libc1的gdb里，实现栈溢出。<img src="/4.png" srcset="/img/loading.gif" alt="4"></p>
+<p>这里的小箭头指向的就是要跳转的指令的地址，因为填充的数据不可跳转，就停在了这里，这里的0x62616164就是我们填充进去的cyclic中的某一小段，我们找到这一小段在cyclic中的地址，就可以算出需要填充多少垃圾数据，即劫持返回地址的偏移量。</p>
+<p><img src="/5.png" srcset="/img/loading.gif" alt="5"></p>
+<p>因此我们需要填充112个垃圾数据。</p>
+<p>接下来寻找反汇编程序中是否含有/bin/sh与system函数</p>
+<p><img src="/6.png" srcset="/img/loading.gif" alt="6"></p>
+<p><img src="/7.png" srcset="/img/loading.gif" alt="7"></p>
+<p>那么有了system和/bin/sh就可以写exp了</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/pwn/">pwn</a>
+                    
+                  </div>
+                
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/03/10/ret2syscall/">
+                        <span class="hidden-mobile">ret2syscall</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
     </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
   </div>
 </div>
 
-<article class="mt-5 markdown-body">
-  <p>每一个伟大的成就都有一个微不足道的开始</p>
-<p>$《程序员的自我修养》《c++ primer plus》阅读进行中…</p>
-<p>$《汇编语言–王爽》阅读已完成…</p>
-<p>$《c primer plus》阅读已完成…</p>
-
-</article>
+<!-- Custom -->
 
 
-
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
     
 
     
@@ -292,7 +368,11 @@
 
 
 
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.0/dist/tocbot.min.js" ></script>
 
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
 
 
 
