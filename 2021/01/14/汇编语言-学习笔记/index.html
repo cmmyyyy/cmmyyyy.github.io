@@ -172,7 +172,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      911 字
+      916 字
     </span>
   
 
@@ -228,7 +228,7 @@
     ·SS:SP    栈顶段地址:偏移地址
     ·DS:[..]  访问数据段地址:偏移地址  (DS存放程序内存区段地址，即PSP的段地址SA)
     ·ES       段寄存器</code></pre></div>
-<h3 id="falg"><a href="#falg" class="headerlink" title="falg"></a>falg</h3><div class="hljs code-wrapper"><pre><code>    zf(6): 相关指令的结果是否(1/0)为零
+<h3 id="flag"><a href="#flag" class="headerlink" title="flag"></a>flag</h3><div class="hljs code-wrapper"><pre><code>    zf(6): 相关指令的结果是否(1/0)为零
     pf(2)：相关指令执行后的结果所有bit位中1的个数是否(1/0)为偶数
     sf(7)：相关指令执行后的结果是否(1/0)为负
     cf(0)：记录相关指令的进位值和借位值
@@ -263,6 +263,7 @@
           十六位乘法：(AX)*16位reg/内存单元，结果存放在DX(高)和AX(低)中  
     ·push/pop
     ·inc ax : ax自增
+    ·dec ax : ax自减
     ·loop s:循环s地址中的指令cx次
         &#123;       mov cx,idata
             s:
