@@ -1,0 +1,677 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#1f4e5f">
+  <meta name="author" content="Magnesium">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="[TOC] reboot函数123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767778798081828384858687888990919293949596979">
+<meta property="og:type" content="article">
+<meta property="og:title" content="系统重启-Linux内核源码阅读">
+<meta property="og:url" content="http://example.com/2022/12/15/%E7%B3%BB%E7%BB%9F%E9%87%8D%E5%90%AF-Linux%E5%86%85%E6%A0%B8%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB/index.html">
+<meta property="og:site_name" content="M4gne51um&#39;s blog">
+<meta property="og:description" content="[TOC] reboot函数123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767778798081828384858687888990919293949596979">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-12-15T04:24:48.000Z">
+<meta property="article:modified_time" content="2022-12-15T04:26:06.825Z">
+<meta property="article:author" content="Magnesium">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>系统重启-Linux内核源码阅读 - M4gne51um&#39;s blog</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":60,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":"§"},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>M4gne51um&#39;s blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/background.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.1)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="系统重启-Linux内核源码阅读"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-12-15 12:24" pubdate>
+          2022年12月15日 中午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          <!-- compatible with older versions-->
+          7.5k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          <!-- compatible with older versions-->
+          63 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">系统重启-Linux内核源码阅读</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>[TOC]</p>
+<h2 id="reboot函数"><a href="#reboot函数" class="headerlink" title="reboot函数"></a>reboot函数</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">//magic数：用于防止误操作</span><br><span class="hljs-comment">//cmd：reboot方式</span><br>SYSCALL_DEFINE4(reboot, <span class="hljs-type">int</span>, magic1, <span class="hljs-type">int</span>, magic2, <span class="hljs-type">unsigned</span> <span class="hljs-type">int</span>, cmd,<br>		<span class="hljs-type">void</span> __user *, arg)<br>&#123;<br>    <span class="hljs-comment">//获取当前进程命名空间</span><br>    <span class="hljs-comment">//task_active_pid_ns函数</span><br>	<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">pid_namespace</span> *<span class="hljs-title">pid_ns</span> =</span> task_active_pid_ns(current);<br>	<span class="hljs-type">char</span> buffer[<span class="hljs-number">256</span>];<br>	<span class="hljs-type">int</span> ret = <span class="hljs-number">0</span>; <br><br>    <span class="hljs-comment">//判断权限</span><br>    <br>    <span class="hljs-comment">//ns_capable函数</span><br>    <span class="hljs-comment">/*CAP_SYS_BOOT 表示允许使用 reboot() */</span><br>    <span class="hljs-comment">//#define	 EPERM 		 1	 /* 允许操作 */</span><br>	<span class="hljs-keyword">if</span> (!ns_capable(pid_ns-&gt;user_ns, CAP_SYS_BOOT))<br>		<span class="hljs-keyword">return</span> -EPERM;<br>   <br>	<span class="hljs-comment">//magic number:魔数，这是放在linux的目录中的文件信息块中的一个标识符，一般只有几位，用来标识该文件是什么类型的文件，可以被什么样的应用使用。</span><br>	<span class="hljs-comment">/* For safety, we require &quot;magic&quot; arguments. */</span><br>	<span class="hljs-keyword">if</span> (magic1 != LINUX_REBOOT_MAGIC1 ||<br>			(magic2 != LINUX_REBOOT_MAGIC2 &amp;&amp;<br>			magic2 != LINUX_REBOOT_MAGIC2A &amp;&amp;<br>			magic2 != LINUX_REBOOT_MAGIC2B &amp;&amp;<br>			magic2 != LINUX_REBOOT_MAGIC2C))<br>		<span class="hljs-keyword">return</span> -EINVAL;<br>	<span class="hljs-comment">//#define	 EINVAL 		22	 /* 无效参数 */</span><br><br>	<span class="hljs-comment">/*判断当前ns是否处于子进程ns中</span><br><span class="hljs-comment">	 * If pid namespaces are enabled and the current task is in a child</span><br><span class="hljs-comment">	 * pid_namespace, the command is handled by reboot_pid_ns() which will</span><br><span class="hljs-comment">	 * call do_exit().</span><br><span class="hljs-comment">	 */</span><br>	ret = reboot_pid_ns(pid_ns, cmd);<br>	<span class="hljs-keyword">if</span> (ret)<br>		<span class="hljs-keyword">return</span> ret;<br><br>	<span class="hljs-comment">/* Instead of trying to make the power_off code look like</span><br><span class="hljs-comment">	 * halt when pm_power_off is not set do it the easy way.</span><br><span class="hljs-comment">	 */</span><br>	<span class="hljs-keyword">if</span> ((cmd == LINUX_REBOOT_CMD_POWER_OFF) &amp;&amp; !pm_power_off)<br>		cmd = LINUX_REBOOT_CMD_HALT;<br>	<span class="hljs-comment">//* LINUX_REBOOT_CMD_POWER_OFF 如果可能，停止操作系统并断开系统的所有电源。</span><br>    <span class="hljs-comment">//* LINUX_REBOOT_CMD_HALT 停止操作系统并将系统控制权交给 ROM 监视器（如果有）。</span><br>    <br>    <br>	mutex_lock(&amp;reboot_mutex);<span class="hljs-comment">//获取互斥</span><br>    <br><span class="hljs-comment">/* </span><br><span class="hljs-comment">* _reboot() 系统调用接受的命令。</span><br><span class="hljs-comment">* </span><br><span class="hljs-comment">* RESTART 使用默认命令和模式重新启动系统。</span><br><span class="hljs-comment">* HALT 停止操作系统并将系统控制权交给 ROM 监视器（如果有）。</span><br><span class="hljs-comment">* CAD_ON Ctrl-Alt-Del 序列导致 RESTART 命令。</span><br><span class="hljs-comment">* CAD_OFF Ctrl-Alt-Del 序列将 SIGINT 发送到 init 任务。</span><br><span class="hljs-comment">* POWER_OFF 如果可能，停止操作系统并断开系统的所有电源。</span><br><span class="hljs-comment">* RESTART2 使用给定的命令字符串重新启动系统。</span><br><span class="hljs-comment">* SW_SUSPEND 使用软件挂起系统，如果编译在其中。</span><br><span class="hljs-comment">* KEXEC 使用先前加载的 Linux 内核重新启动系统</span><br><span class="hljs-comment">*/</span><br>	<span class="hljs-keyword">switch</span> (cmd) &#123;<br>	<span class="hljs-keyword">case</span> LINUX_REBOOT_CMD_RESTART:<br>		kernel_restart(<span class="hljs-literal">NULL</span>);<br>		<span class="hljs-keyword">break</span>;<br><br>	<span class="hljs-keyword">case</span> LINUX_REBOOT_CMD_CAD_ON:<br>		C_A_D = <span class="hljs-number">1</span>;<br>		<span class="hljs-keyword">break</span>;<br><br>	<span class="hljs-keyword">case</span> LINUX_REBOOT_CMD_CAD_OFF:<br>		C_A_D = <span class="hljs-number">0</span>;<br>		<span class="hljs-keyword">break</span>;<br><br>	<span class="hljs-keyword">case</span> LINUX_REBOOT_CMD_HALT:<br>		kernel_halt();<br>		do_exit(<span class="hljs-number">0</span>);<br>		panic(<span class="hljs-string">&quot;cannot halt&quot;</span>);<br><br>	<span class="hljs-keyword">case</span> LINUX_REBOOT_CMD_POWER_OFF:<br>		kernel_power_off();<br>		do_exit(<span class="hljs-number">0</span>);<br>		<span class="hljs-keyword">break</span>;<br><br>	<span class="hljs-keyword">case</span> LINUX_REBOOT_CMD_RESTART2:<br>		ret = strncpy_from_user(&amp;buffer[<span class="hljs-number">0</span>], arg, <span class="hljs-keyword">sizeof</span>(buffer) - <span class="hljs-number">1</span>);<br>		<span class="hljs-keyword">if</span> (ret &lt; <span class="hljs-number">0</span>) &#123;<br>			ret = -EFAULT;<span class="hljs-comment">/* 错误地址 */</span><br>			<span class="hljs-keyword">break</span>;<br>		&#125;<br>		buffer[<span class="hljs-keyword">sizeof</span>(buffer) - <span class="hljs-number">1</span>] = <span class="hljs-string">&#x27;\0&#x27;</span>;<br><br>		kernel_restart(buffer);<br>		<span class="hljs-keyword">break</span>;<br><br><span class="hljs-meta">#<span class="hljs-keyword">ifdef</span> CONFIG_KEXEC_CORE</span><br>	<span class="hljs-keyword">case</span> LINUX_REBOOT_CMD_KEXEC:<br>		ret = kernel_kexec();<br>		<span class="hljs-keyword">break</span>;<br><span class="hljs-meta">#<span class="hljs-keyword">endif</span></span><br><br><span class="hljs-meta">#<span class="hljs-keyword">ifdef</span> CONFIG_HIBERNATION</span><br>	<span class="hljs-keyword">case</span> LINUX_REBOOT_CMD_SW_SUSPEND:<br>		ret = hibernate();<br>		<span class="hljs-keyword">break</span>;<br><span class="hljs-meta">#<span class="hljs-keyword">endif</span></span><br><br>	<span class="hljs-keyword">default</span>:<br>		ret = -EINVAL;<br>		<span class="hljs-keyword">break</span>;<br>	&#125;<br>	mutex_unlock(&amp;reboot_mutex);<br>	<span class="hljs-keyword">return</span> ret;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="task-active-pid-ns"><a href="#task-active-pid-ns" class="headerlink" title="task_active_pid_ns()"></a>task_active_pid_ns()</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">//获取任务中包含进程的命名空间信息</span><br><br><span class="hljs-comment">//命名空间，namespace 是 Linux 内核用来隔离内核资源的方式。通过 namespace 可以让一些进程只能看到与自己相关的一部分资源，而另外一些进程也只能看到与它们自己相关的资源，这两拨进程根本就感觉不到对方的存在。</span><br><span class="hljs-keyword">struct</span> pid_namespace *<span class="hljs-title function_">task_active_pid_ns</span><span class="hljs-params">(<span class="hljs-keyword">struct</span> task_struct *tsk)</span><br>&#123;<br><span class="hljs-comment">//首先调用函数task_pid()获得任务字段pids[PIDTYPE_PID]的pid值，然后调用函数ns_of_pid()获取函数task_pid()返回值的命名空间信息。</span><br>	<span class="hljs-keyword">return</span> ns_of_pid(task_pid(tsk));<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="ns-capable"><a href="#ns-capable" class="headerlink" title="ns_capable()"></a>ns_capable()</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">//判断ns是否有需要的权限，如果有，在task上设置PF_SUPERPRIV</span><br><span class="hljs-type">bool</span> <span class="hljs-title function_">ns_capable</span><span class="hljs-params">(<span class="hljs-keyword">struct</span> user_namespace *ns, <span class="hljs-type">int</span> cap)</span><br>&#123;<br>    <span class="hljs-comment">//1-2-1 ns_capable_common函数</span><br>	<span class="hljs-keyword">return</span> ns_capable_common(ns, cap, CAP_OPT_NONE);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="ns-capable-common"><a href="#ns-capable-common" class="headerlink" title="ns_capable_common()"></a>ns_capable_common()</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">//判断权限</span><br><span class="hljs-type">static</span> <span class="hljs-type">bool</span> <span class="hljs-title function_">ns_capable_common</span><span class="hljs-params">(<span class="hljs-keyword">struct</span> user_namespace *ns,</span><br><span class="hljs-params">                        <span class="hljs-type">int</span> cap,</span><br><span class="hljs-params">                        <span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> opts)</span><br>&#123;<br>	<span class="hljs-type">int</span> capable;<br>    <span class="hljs-comment">//unlikely：表示执行else的可能性更大，方便编译减少指令跳转</span><br>    <span class="hljs-keyword">if</span> (unlikely(!cap_valid(cap))) &#123;<span class="hljs-comment">//cap_valid宏定义</span><br>        pr_crit(<span class="hljs-string">&quot;capable() called with invalid cap=%u\n&quot;</span>, cap);<span class="hljs-comment">//pr_crit宏定义</span><br>        BUG();<span class="hljs-comment">//BUG宏定义</span><br>        &#125;<br>	<span class="hljs-comment">//security_capable函数</span><br>    capable = security_capable(current_cred(), ns, cap, opts);<br>    <span class="hljs-keyword">if</span> (capable == <span class="hljs-number">0</span>) &#123;<br>        current-&gt;flags |= PF_SUPERPRIV;<br>        <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;<br>    &#125;<br>    <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h5 id="宏BUG"><a href="#宏BUG" class="headerlink" title="宏BUG()"></a>宏BUG()</h5><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">//BUG提示</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> BUG()	do &#123;								\</span><br><span class="hljs-meta">	pr_warn(<span class="hljs-string">&quot;BUG: failure at %s:%d/%s()!\n&quot;</span>, __FILE__, __LINE__, __func__); \</span><br><span class="hljs-meta">	barrier_before_unreachable();						\</span><br><span class="hljs-meta">	__builtin_trap();							\</span><br><span class="hljs-meta">&#125; while (0)</span><br></code></pre></td></tr></table></figure>
+
+<h5 id="宏pr-crit"><a href="#宏pr-crit" class="headerlink" title="宏pr_crit()"></a>宏pr_crit()</h5><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">//打印信息</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> pr_crit(fmt, ...) \</span><br><span class="hljs-meta">		printk(KERN_CRIT pr_fmt(fmt), ##__VA_ARGS__)</span><br></code></pre></td></tr></table></figure>
+
+<h5 id="宏cap-valid"><a href="#宏cap-valid" class="headerlink" title="宏cap_valid()"></a>宏cap_valid()</h5><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">//cap_valid用来检查 cap所表示的权能是否在内核事先定义的权限范围内. 真正的权能检查是在security_capable中</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> cap_valid(x) ((x) &gt;= 0 &amp;&amp; (x) &lt;= CAP_LAST_CAP)</span><br></code></pre></td></tr></table></figure>
+
+<h5 id="security-capable"><a href="#security-capable" class="headerlink" title="security_capable()"></a>security_capable()</h5><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">//cred：进程安全上下文</span><br><span class="hljs-type">int</span> <span class="hljs-title function_">security_capable</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-keyword">struct</span> cred *cred,</span><br><span class="hljs-params">		     <span class="hljs-keyword">struct</span> user_namespace *ns,</span><br><span class="hljs-params">		     <span class="hljs-type">int</span> cap,</span><br><span class="hljs-params">		     <span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> opts)</span><br>&#123;<br>	<span class="hljs-keyword">return</span> call_int_hook(capable, <span class="hljs-number">0</span>, cred, ns, cap, opts);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h6 id="宏call-int-hook"><a href="#宏call-int-hook" class="headerlink" title="宏call_int_hook()"></a>宏call_int_hook()</h6><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">//调用注册的权限检查算法的具体实现函数，依次调用安装到钩子上的安全模块函数进行检查</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> call_int_hook(FUNC, IRC, ...) (&#123;			\</span><br><span class="hljs-meta">	int RC = IRC;						\</span><br><span class="hljs-meta">	do &#123;							\</span><br><span class="hljs-meta">		struct security_hook_list *P;			\</span><br><span class="hljs-meta">								\</span><br><span class="hljs-meta">		<span class="hljs-comment">//hlist_for_each_entry访问hash链表</span></span><br>		<span class="hljs-comment">//LSM 中使用security_hook_heads 将各访问控制模块的接口管理起来</span><br>		hlist_for_each_entry(P, &amp;security_hook_heads.FUNC, <span class="hljs-built_in">list</span>) &#123; \<br>			RC = P-&gt;hook.FUNC(__VA_ARGS__);		\<br>			<span class="hljs-keyword">if</span> (RC != <span class="hljs-number">0</span>)				\<br>				<span class="hljs-keyword">break</span>;				\<br>		&#125;						\<br>	&#125; <span class="hljs-keyword">while</span> (<span class="hljs-number">0</span>);						\<br>	RC;							\<br>&#125;)<br><br></code></pre></td></tr></table></figure>
+
+<h3 id="reboot-pid-ns"><a href="#reboot-pid-ns" class="headerlink" title="reboot_pid_ns()"></a>reboot_pid_ns()</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-type">int</span> <span class="hljs-title function_">reboot_pid_ns</span><span class="hljs-params">(<span class="hljs-keyword">struct</span> pid_namespace *pid_ns, <span class="hljs-type">int</span> cmd)</span><br>&#123;<br>	<span class="hljs-keyword">if</span> (pid_ns == &amp;init_pid_ns)<br>		<span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br><br>	<span class="hljs-keyword">switch</span> (cmd) &#123;<br>	<span class="hljs-keyword">case</span> LINUX_REBOOT_CMD_RESTART2:<br>	<span class="hljs-keyword">case</span> LINUX_REBOOT_CMD_RESTART:<br>		pid_ns-&gt;reboot = SIGHUP;<br>		<span class="hljs-keyword">break</span>;<br><br>	<span class="hljs-keyword">case</span> LINUX_REBOOT_CMD_POWER_OFF:<br>	<span class="hljs-keyword">case</span> LINUX_REBOOT_CMD_HALT:<br>		pid_ns-&gt;reboot = SIGINT;<br>		<span class="hljs-keyword">break</span>;<br>	<span class="hljs-keyword">default</span>:<br>		<span class="hljs-keyword">return</span> -EINVAL;<br>	&#125;<br><br>	read_lock(&amp;tasklist_lock);<br>	send_sig(SIGKILL, pid_ns-&gt;child_reaper, <span class="hljs-number">1</span>);<br>	read_unlock(&amp;tasklist_lock);<br><br>	do_exit(<span class="hljs-number">0</span>);<br><br>	<span class="hljs-comment">/* Not reached */</span><br>	<span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="mutex-lock"><a href="#mutex-lock" class="headerlink" title="mutex_lock()"></a>mutex_lock()</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-type">void</span> __sched <span class="hljs-title function_">mutex_lock</span><span class="hljs-params">(<span class="hljs-keyword">struct</span> mutex *lock)</span><br>&#123;<br>	might_sleep();<br><br>	<span class="hljs-keyword">if</span> (!__mutex_trylock_fast(lock))<br>		__mutex_lock_slowpath(lock);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="might-sleep-宏"><a href="#might-sleep-宏" class="headerlink" title="might_sleep()宏"></a>might_sleep()宏</h4><figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs reasonml"># define might<span class="hljs-constructor">_sleep()</span> \<br>	<span class="hljs-keyword">do</span> &#123; <span class="hljs-constructor">__might_sleep(<span class="hljs-params">__FILE__</span>, <span class="hljs-params">__LINE__</span>, 0)</span>; might<span class="hljs-constructor">_resched()</span>; &#125; <span class="hljs-keyword">while</span> (<span class="hljs-number">0</span>)<br><span class="hljs-comment">/**</span><br></code></pre></td></tr></table></figure>
+
+<h4 id="mutex-trylock"><a href="#mutex-trylock" class="headerlink" title="__mutex_trylock()"></a>__mutex_trylock()</h4><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-comment">/*</span><br><span class="hljs-comment"> * Optimistic trylock that only works in the uncontended case. Make sure to</span><br><span class="hljs-comment"> * follow with a __mutex_trylock() before failing.</span><br><span class="hljs-comment"> */</span><br><span class="hljs-type">static</span> __always_inline <span class="hljs-type">bool</span> __mutex_trylock_fast(<span class="hljs-keyword">struct</span> mutex *lock)<br>&#123;<br>	<span class="hljs-type">unsigned</span> <span class="hljs-type">long</span> curr = (<span class="hljs-type">unsigned</span> <span class="hljs-type">long</span>)current;<br>	<span class="hljs-type">unsigned</span> <span class="hljs-type">long</span> zero = <span class="hljs-number">0UL</span>;<br><br>	<span class="hljs-keyword">if</span> (<span class="hljs-built_in">atomic_long_try_cmpxchg_acquire</span>(&amp;lock-&gt;owner, &amp;zero, curr))<br>		<span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;<br><br>	<span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="mutex-lock-slowpath"><a href="#mutex-lock-slowpath" class="headerlink" title="__mutex_lock_slowpath()"></a>__mutex_lock_slowpath()</h4><figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs applescript">static void __sched __mutex_lock_slowpath(struct mutex *lock);<br><br>/**<br> * mutex_lock - acquire <span class="hljs-keyword">the</span> mutex<br> * @lock: <span class="hljs-keyword">the</span> mutex <span class="hljs-keyword">to</span> be acquired<br> *<br> * Lock <span class="hljs-keyword">the</span> mutex exclusively <span class="hljs-keyword">for</span> this task. If <span class="hljs-keyword">the</span> mutex <span class="hljs-keyword">is</span> <span class="hljs-keyword">not</span><br> * available right now, <span class="hljs-keyword">it</span> will sleep <span class="hljs-keyword">until</span> <span class="hljs-keyword">it</span> can <span class="hljs-keyword">get</span> <span class="hljs-keyword">it</span>.<br> *<br> * The mutex must later <span class="hljs-keyword">on</span> be released <span class="hljs-keyword">by</span> <span class="hljs-keyword">the</span> same task <span class="hljs-keyword">that</span><br> * acquired <span class="hljs-keyword">it</span>. Recursive locking <span class="hljs-keyword">is</span> <span class="hljs-keyword">not</span> allowed. The task<br> * may <span class="hljs-keyword">not</span> <span class="hljs-keyword">exit</span> <span class="hljs-keyword">without</span> <span class="hljs-keyword">first</span> unlocking <span class="hljs-keyword">the</span> mutex. Also, kernel<br> * memory <span class="hljs-keyword">where</span> <span class="hljs-keyword">the</span> mutex resides must <span class="hljs-keyword">not</span> be freed <span class="hljs-keyword">with</span><br> * <span class="hljs-keyword">the</span> mutex still locked. The mutex must <span class="hljs-keyword">first</span> be initialized<br> * (<span class="hljs-keyword">or</span> statically defined) <span class="hljs-keyword">before</span> <span class="hljs-keyword">it</span> can be locked. memset()-ing<br> * <span class="hljs-keyword">the</span> mutex <span class="hljs-keyword">to</span> <span class="hljs-number">0</span> <span class="hljs-keyword">is</span> <span class="hljs-keyword">not</span> allowed.<br> *<br> * (The CONFIG_DEBUG_MUTEXES .config option turns <span class="hljs-keyword">on</span> debugging<br> * checks <span class="hljs-keyword">that</span> will enforce <span class="hljs-keyword">the</span> restrictions <span class="hljs-keyword">and</span> will also do<br> * deadlock debugging)<br> *<br> * This function <span class="hljs-keyword">is</span> similar <span class="hljs-keyword">to</span> (<span class="hljs-keyword">but</span> <span class="hljs-keyword">not</span> equivalent <span class="hljs-keyword">to</span>) down().<br> */<br></code></pre></td></tr></table></figure>
+
+<h3 id="kernel-restart"><a href="#kernel-restart" class="headerlink" title="kernel_restart()"></a>kernel_restart()</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-type">void</span> <span class="hljs-title function_">kernel_restart</span><span class="hljs-params">(<span class="hljs-type">char</span> *cmd)</span><br>&#123;<br>	kernel_restart_prepare(cmd);<br>	migrate_to_reboot_cpu();<br>	syscore_shutdown();<br>	<span class="hljs-keyword">if</span> (!cmd)<br>		pr_emerg(<span class="hljs-string">&quot;Restarting system\n&quot;</span>);<br>	<span class="hljs-keyword">else</span><br>		pr_emerg(<span class="hljs-string">&quot;Restarting system with command &#x27;%s&#x27;\n&quot;</span>, cmd);<br>	kmsg_dump(KMSG_DUMP_RESTART);<br>	machine_restart(cmd);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">//security_capable函数</span><br><span class="hljs-type">int</span> <span class="hljs-title function_">security_capable</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-keyword">struct</span> cred *cred,</span><br><span class="hljs-params">		     <span class="hljs-keyword">struct</span> user_namespace *ns,</span><br><span class="hljs-params">		     <span class="hljs-type">int</span> cap,</span><br><span class="hljs-params">		     <span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> opts)</span><br>&#123;<br>	<span class="hljs-keyword">return</span> call_int_hook(capable, <span class="hljs-number">0</span>, cred, ns, cap, opts);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<p>宏定义</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-meta">#<span class="hljs-keyword">define</span> BUG()	do &#123;								\</span><br><span class="hljs-meta">	pr_warn(<span class="hljs-string">&quot;BUG: failure at %s:%d/%s()!\n&quot;</span>, __FILE__, __LINE__, __func__); \</span><br><span class="hljs-meta">	barrier_before_unreachable();						\</span><br><span class="hljs-meta">	__builtin_trap();							\</span><br><span class="hljs-meta">&#125; while (0)</span><br><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> pr_crit(fmt, ...) \</span><br><span class="hljs-meta">		printk(KERN_CRIT pr_fmt(fmt), ##__VA_ARGS__)</span><br><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> cap_valid(x) ((x) &gt;= 0 &amp;&amp; (x) &lt;= CAP_LAST_CAP)</span><br><br><br></code></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">/** </span><br><span class="hljs-comment">* emergency_restart - 重启系统</span><br><span class="hljs-comment">* </span><br><span class="hljs-comment">* 不关闭任何硬件或获取任何锁</span><br><span class="hljs-comment">* 重启系统。当我们知道我们有</span><br><span class="hljs-comment">麻烦时调用它，所以这是我们重启的最大努力。</span><br><span class="hljs-comment">* 在中断上下文中调用</span><br><span class="hljs-comment">它是安全的。*/</span> <br><span class="hljs-type">void</span>  <span class="hljs-title function_">emergency_restart</span> <span class="hljs-params">( <span class="hljs-type">void</span> )</span> <br>&#123; <br>	kmsg_dump ( KMSG_DUMP_EMERG ); <br>	machine_emergency_restart (); <br>&#125; <br>EXPORT_SYMBOL_GPL ( emergency_restart );<br></code></pre></td></tr></table></figure>
+
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>系统重启-Linux内核源码阅读</div>
+      <div>http://example.com/2022/12/15/系统重启-Linux内核源码阅读/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Magnesium</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年12月15日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/12/26/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-Wireshark%E5%AE%9E%E9%AA%8C/" title="计算机网络-Wireshark实验">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">计算机网络-Wireshark实验</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/08/25/%E5%91%BD%E4%BB%A4%E8%A1%8C%E4%BD%BF%E7%94%A8%E7%9B%B8%E5%85%B3/" title="命令行使用相关">
+                        <span class="hidden-mobile">命令行使用相关</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.11/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/tocbot@4.12.0/dist/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/anchor-js@4.3.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
