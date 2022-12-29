@@ -23,18 +23,18 @@
 <meta property="og:site_name" content="M4gne51um&#39;s blog">
 <meta property="og:description" content="week3">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://example.com/likip1.png">
-<meta property="og:image" content="http://example.com/likip2.png">
-<meta property="og:image" content="http://example.com/likp3.png">
-<meta property="og:image" content="http://example.com/likip4.png">
-<meta property="og:image" content="http://example.com/ne1.png">
-<meta property="og:image" content="http://example.com/ne2.png">
-<meta property="og:image" content="http://example.com/ne3.png">
+<meta property="og:image" content="http://example.com/2021/03/02/HGAME2021-week3-writeup/likip1.png">
+<meta property="og:image" content="http://example.com/2021/03/02/HGAME2021-week3-writeup/likip2.png">
+<meta property="og:image" content="http://example.com/2021/03/02/HGAME2021-week3-writeup/likp3.png">
+<meta property="og:image" content="http://example.com/2021/03/02/HGAME2021-week3-writeup/likip4.png">
+<meta property="og:image" content="http://example.com/2021/03/02/HGAME2021-week3-writeup/ne1.png">
+<meta property="og:image" content="http://example.com/2021/03/02/HGAME2021-week3-writeup/ne2.png">
+<meta property="og:image" content="http://example.com/2021/03/02/HGAME2021-week3-writeup/ne3.png">
 <meta property="article:published_time" content="2021-03-02T12:05:59.000Z">
 <meta property="article:modified_time" content="2021-03-02T12:50:23.089Z">
 <meta property="article:author" content="Magnesium">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="http://example.com/likip1.png">
+<meta name="twitter:image" content="http://example.com/2021/03/02/HGAME2021-week3-writeup/likip1.png">
   
   
   
@@ -285,13 +285,13 @@
                 
                 <h2 id="Crypto"><a href="#Crypto" class="headerlink" title="Crypto"></a>Crypto</h2><h3 id="LikiPrime"><a href="#LikiPrime" class="headerlink" title="LikiPrime"></a>LikiPrime</h3><p>打开文件，注意到n巨大，无法直接分解，就安装下RsaCtfTool</p>
 <p>把n，e转换为pem格式</p>
-<p><img src="/likip1.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2021/03/02/HGAME2021-week3-writeup/likip1.png" srcset="/img/loading.gif" lazyload></p>
 <p>然后将公钥复制进公钥文件里，根据公钥生成私钥</p>
-<p><img src="/likip2.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2021/03/02/HGAME2021-week3-writeup/likip2.png" srcset="/img/loading.gif" lazyload></p>
 <p>复制生成私钥文件</p>
-<p><img src="/likp3.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2021/03/02/HGAME2021-week3-writeup/likp3.png" srcset="/img/loading.gif" lazyload></p>
 <p>这个时候我们得到了私钥的pem格式，这个也就是说包含了d的信息，就可以把pem文件转化为n，d的信息</p>
-<p><img src="/likip4.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2021/03/02/HGAME2021-week3-writeup/likip4.png" srcset="/img/loading.gif" lazyload></p>
 <p>把d复制出来，就可以使用普通的rsa解密脚本了，这里有个小知识是，此时尽管我们得到了p和q，但是在产生n且生成公钥后，p和q就对解密没有作用了，只需n,e,d,m即可知三求四</p>
 <p>exp</p>
 <figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs routeros"><span class="hljs-keyword">from</span> libnum import *<br>import gmpy2<br><span class="hljs-attribute">n</span>=4642849048052035496503633704895293631217710721048480643093066273453539020606503262957979920725495980644474381582401987659483845087785158995583524801974411600660004469521606043828464398381268385741839106107679152285268052785693531737782078311412427416352729645020533101979297815795100035083401887319200662906616821028586789590684789335443762752043629342084834798459618090474753253355410561025472128675037918666523107644910740766105028826314730599018497495492862063800728778692600588195828882048829807212192836385765558385158246669780622288906919083808249111381934780442102461915714453842511870245498903113416571527386297776743000577518964642712819636358630943232264563917498926813595742655374586197861677713568434392710229546068989680236075964913194705687047171077181794254991201877951298787735833716867844575889175057579515311685026867586635553290478360204470269221020803623311502253981426403357439672206326373095909967452469101986678489532087651064918868164697149776944867269827599290237695205317934537972522935809557398527602978413852968190796168743729293895475224641537<br><span class="hljs-attribute">e</span>=65537<br><span class="hljs-attribute">c</span>=3709687551802386646797745785768157879027050609328977568885694731790584712579460465408758306613418567415962830795763454102850272567805909067742475171434530819531323376762844483425142978584670535444556910298311158785244674346185024586744190434166742125402447427024641211299910710700413830069657814167275425086366608186529488973158968024470128222042394722196376369742747012091512362855985796568473133834299704823506724715371622279556576084964319045329385472170502455939280390354138230655997516781374667410921562926248428641624886673723671977041119253922097666216435834216534775971559961023171740810001108875247411400798441332102418344668326564692867689781292248240788343422559465238855056753381648550466898132110941192653170182675007266069504079999064268167773997215580322970078352817713636962794995378965132037968244297009426849367741958926566007286341995187592351353620716142926816093473621244503025516637410519157727321213682617984888429087571356484732639348442588172026432665938014397255748542136399980171709114519127932101071316178153942329339451067510373501385994955068<br><span class="hljs-attribute">d</span>=770773725419322614736096170243691269170830105818201464773373225127401384625459747943647428742441617245401548310367176186508144018723812958663789154912211395321434435942979900771376362274565513173798151799007418357015371687876247391657674474391064746477832347190493921747024737718398589830285373667285704448235210839541392964991539252172484836691253600895417895345234673914968878595402017952065468371953229793264961110654093070865344182897907601093245813936874030965739554262217795080183921897180793596028747028738137662679597765188531565728887340986161397150246232036553519792079001163180694624897916603106343065963758602553926821994399899387763161456806939859495324306883688456099721430769144536235331619886299618985907519204331418792099350868416283322724256163197443146202212692357518249688129160250090117488224473364207648003633976797404611385404362182887064564770724540482831043005176387272197349168925019470641628096392062982237553509096120775879454378983657609664663657876869899429824195166894468110681582491514529961338691940192460421091657400961588382452823337473<br><br><span class="hljs-attribute">m</span>=pow(c,d,n)<br><span class="hljs-built_in">print</span>(hex(m))<br><span class="hljs-attribute">m</span>=n2s(m)<br><span class="hljs-built_in">print</span>(m)<br></code></pre></td></tr></table></figure>
@@ -299,14 +299,14 @@
 
 
 <h3 id="HappyNewYear"><a href="#HappyNewYear" class="headerlink" title="HappyNewYear!!"></a>HappyNewYear!!</h3><p>打开output发现是7组e,n,c，且e相同，可以推测是低加密指数广播攻击，用普通的脚本试了下发现是堆乱码</p>
-<p><img src="/ne1.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2021/03/02/HGAME2021-week3-writeup/ne1.png" srcset="/img/loading.gif" lazyload></p>
 <p>推测7组信息并非由同一个message得来，就加个循环，排列组合，每次用三组明文求密文</p>
 <p>exp</p>
 <figure class="highlight prolog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><code class="hljs prolog">import random<br>from gmpy2 import invert, iroot<br>from libnum import *<br><br>n1=...<br>c1=...<br>n2=...<br>c2=...<br>...<br>...    #篇幅过长省略，把output复制进来<br>e=<span class="hljs-number">3</span><br><br>def broadcast(n1, n2 ,n3, c1, c2, c3):<br>    n = [n1, n2, n3]<br>    <span class="hljs-symbol">C</span> = [c1, c2, c3]<br>    <span class="hljs-symbol">N</span> = <span class="hljs-number">1</span><br>    for i in n:<br>        <span class="hljs-symbol">N</span> *= i<br><br>    <span class="hljs-symbol">Ni</span> = []<br>    for i in n:<br>        <span class="hljs-symbol">Ni</span>.append(<span class="hljs-symbol">N</span> / i)<br><br>    <span class="hljs-symbol">T</span> = []<br>    for i in xrange(<span class="hljs-number">3</span>):<br>        if(gcd(<span class="hljs-symbol">Ni</span>[i],n[i]) == <span class="hljs-number">1</span>):<br>            <span class="hljs-symbol">T</span>.append(long(invert(<span class="hljs-symbol">Ni</span>[i], n[i])))<br>        else:<br>            return <span class="hljs-number">0</span><br><br>    <span class="hljs-symbol">X</span> = <span class="hljs-number">0</span><br>    for i in xrange(<span class="hljs-number">3</span>):<br>        <span class="hljs-symbol">X</span> += <span class="hljs-symbol">C</span>[i] * <span class="hljs-symbol">Ni</span>[i] * <span class="hljs-symbol">T</span>[i]<br><br>    m3 = <span class="hljs-symbol">X</span> <span class="hljs-comment">% N</span><br>    m = iroot(m3, <span class="hljs-number">3</span>)<br>    return m[<span class="hljs-number">0</span>]<br><br>def main():<br>    e = <span class="hljs-number">3</span><br>    n=[n1,n2,n3,n4,n5,n6,n7]<br>    c=[c1,c2,c3,c4,c5,c6,c7]<br>    for i in range(<span class="hljs-number">0</span>,<span class="hljs-number">5</span>):<br>        for j in range(i,<span class="hljs-number">6</span>):<br>            for z in range(j,<span class="hljs-number">7</span>):<br>                m = broadcast(n[i],n[j],n[z],c[i],c[j],c[z])<br>                print m<br>                m=n2s(m)<br>                print m<br><br>if <span class="hljs-symbol">__name__</span>==<span class="hljs-string">&quot;__main__&quot;</span>:<br>    main()<br></code></pre></td></tr></table></figure>
 
 <p>然后就在一大堆乱码中得出一点点信息</p>
-<p><img src="/ne2.png" srcset="/img/loading.gif" lazyload></p>
-<p><img src="/ne3.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2021/03/02/HGAME2021-week3-writeup/ne2.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2021/03/02/HGAME2021-week3-writeup/ne3.png" srcset="/img/loading.gif" lazyload></p>
 <p><code>@ind3r~YOu^9ot=i7&#125;</code></p>
 <p><code>hgame&#123;!f+y0u-pl4y_rem</code></p>
 <p>就得到了flag</p>

@@ -23,15 +23,15 @@
 <meta property="og:site_name" content="M4gne51um&#39;s blog">
 <meta property="og:description" content="fmtstr&#x2F;hijack retaddr&#x2F;64位程序&#x2F;wiki题">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://example.com/1.png">
-<meta property="og:image" content="http://example.com/2.png">
-<meta property="og:image" content="http://example.com/4.png">
-<meta property="og:image" content="http://example.com/3.png">
+<meta property="og:image" content="http://example.com/2021/08/13/pwnme-k0/1.png">
+<meta property="og:image" content="http://example.com/2021/08/13/pwnme-k0/2.png">
+<meta property="og:image" content="http://example.com/2021/08/13/pwnme-k0/4.png">
+<meta property="og:image" content="http://example.com/2021/08/13/pwnme-k0/3.png">
 <meta property="article:published_time" content="2021-08-13T03:49:30.000Z">
 <meta property="article:modified_time" content="2021-08-13T07:35:57.642Z">
 <meta property="article:author" content="Magnesium">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="http://example.com/1.png">
+<meta name="twitter:image" content="http://example.com/2021/08/13/pwnme-k0/1.png">
   
   
   
@@ -281,14 +281,14 @@
               <div class="markdown-body">
                 
                 <p>先分析下程序和保护，开了RELRO，不能改got地址</p>
-<p><img src="/1.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2021/08/13/pwnme-k0/1.png" srcset="/img/loading.gif" lazyload></p>
 <p>分析程序，发现第一个register只要第一位不为48就可以跳过。</p>
 <p>跳过以后发现漏洞主要在Show命令里的两个printf，格式化字符串漏洞。且程序中含有system（）函数。</p>
-<p><img src="/2.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2021/08/13/pwnme-k0/2.png" srcset="/img/loading.gif" lazyload></p>
 <p>那么我们的思路就是：先edit，输入两个格式化字符串泄露栈中存储返回地址的地址，再修改内容为system（）函数的地址，这样函数返回时就会调用system（）。</p>
 <p>接下来是我主要的分析和学习的知识点：</p>
-<p><img src="/4.png" srcset="/img/loading.gif" lazyload></p>
-<p><img src="/3.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2021/08/13/pwnme-k0/4.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2021/08/13/pwnme-k0/3.png" srcset="/img/loading.gif" lazyload></p>
 <p>找了一些资料解决我对偏移、指针一类的疑惑，我大概是如上图这样理解的。</p>
 <p>0x400D74是show函数运行完后跳转的地址，因此它相对于show函数的帧顶的偏移是不变的，我们可以直接泄露出存储该返回地址的地址，即上图0x…dd08，利用%n修改0x…dd08地址中的值。</p>
 <p>1、确定格式化字符串的偏移</p>

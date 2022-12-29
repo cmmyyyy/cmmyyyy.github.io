@@ -23,17 +23,17 @@
 <meta property="og:site_name" content="M4gne51um&#39;s blog">
 <meta property="og:description" content="堆溢出&#x2F;off-by-one&#x2F;64位程序&#x2F;wiki题">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://example.com/1.png">
-<meta property="og:image" content="http://example.com/2.png">
-<meta property="og:image" content="http://example.com/3.png">
-<meta property="og:image" content="http://example.com/4.png">
-<meta property="og:image" content="http://example.com/6.png">
-<meta property="og:image" content="http://example.com/5.png">
+<meta property="og:image" content="http://example.com/2021/08/31/b00ks/1.png">
+<meta property="og:image" content="http://example.com/2021/08/31/b00ks/2.png">
+<meta property="og:image" content="http://example.com/2021/08/31/b00ks/3.png">
+<meta property="og:image" content="http://example.com/2021/08/31/b00ks/4.png">
+<meta property="og:image" content="http://example.com/2021/08/31/b00ks/6.png">
+<meta property="og:image" content="http://example.com/2021/08/31/b00ks/5.png">
 <meta property="article:published_time" content="2021-08-31T12:34:17.000Z">
 <meta property="article:modified_time" content="2021-11-11T01:30:40.908Z">
 <meta property="article:author" content="Magnesium">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="http://example.com/1.png">
+<meta name="twitter:image" content="http://example.com/2021/08/31/b00ks/1.png">
   
   
   
@@ -288,22 +288,22 @@
 <p>在我的另一篇博客记录了更换libc的过程</p>
 <hr>
 <p>首先是应该看ida，都知道漏洞是出在自定义read函数上，它这里多输入了一个数，且自增后将指针指向的值修改为0，这就是溢出了单字节。</p>
-<p><img src="/1.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2021/08/31/b00ks/1.png" srcset="/img/loading.gif" lazyload></p>
 <p>然后是create book的数据结构，是在这一段</p>
 <figure class="highlight smali"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs smali">v3 = malloc(0x20u<span class="hljs-class">LL);</span><br>         <span class="hljs-built_in"> if </span>( v3 )<br>          &#123;<br>            *((_DWORD *)v3 + 6) = v1;	//==*((_QWORD *)v3 + 3) = v1;		<br>            									//des_size<br>            *((_QWORD *)off_202010 + v2) = v3;	//把book指针放到author_name后或前一个book后<br>            *((_QWORD *)v3 + 2) = v5;			//des_ptr<br>            *((_QWORD *)v3 + 1) = ptr;			//name_ptr<br>            *(_DWORD *)v3 = ++unk_202024;		//id<br>           <span class="hljs-built_in"> return </span>0<span class="hljs-class">LL;</span><br>          &#125;<br></code></pre></td></tr></table></figure>
 
 <p>那么我们用gdb一步一步调试分析利用</p>
 <p>1、由于第一步操作是输入author_name，所以这里溢出的单字节会被后面放入的指针覆盖，所以随便写点就可以，这里写入‘A’*32。</p>
 <p>2、create两个book，并且第二个book分配较大内存以便后续利用（如0x21000），查看内存分析结构，这里开启了PIE，所以关闭一下ASLR，这样会同时使PIE无法启用，调试更方便。</p>
-<p><img src="/2.png" srcset="/img/loading.gif" lazyload alt="用search找到author name的位置"></p>
+<p><img src="/2021/08/31/b00ks/2.png" srcset="/img/loading.gif" lazyload alt="用search找到author name的位置"></p>
 <p>查看author name地址中的内容</p>
-<p><img src="/3.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2021/08/31/b00ks/3.png" srcset="/img/loading.gif" lazyload></p>
 <p>这里的book由于是不确定的空间大小，根据c语言的结构体，这里会分配一个指向book内存的指针放在这个结构内，也是上面*((_QWORD *)off_202010 + v2) &#x3D; v3;的结果，因此这里是指向book1内存的指针，然后进入这个指针观察。</p>
-<p><img src="/4.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2021/08/31/b00ks/4.png" srcset="/img/loading.gif" lazyload></p>
 <p>那么回到author name的内存，因为后面紧跟着book1 ptr，因此溢出的单字节可以对book1 ptr进行修改，由于小端序，会将最后两位修改为00，这时候我们修改一下author_name，就可以覆盖book1的最后一位，修改后的地址刚好在book1_des的内容里面，就可以在book1_des里伪造一个fake_chunk，由于ASLR，每次运行程序的地址都不一样，我们在fake_chunk里放入当下book2的内容地址并且泄露出来，就可以计算出根据libc和mmap分配内存的固定偏移，这样在重新运行的时候就能根据固定偏移算出libcbase，从而修改free_hook为system函数。</p>
-<p><img src="/6.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2021/08/31/b00ks/6.png" srcset="/img/loading.gif" lazyload></p>
 <p>注意这里我写入了payload&#x3D;p64(1)+p64(book1_addr+0x38)+p64(book1_addr+0x40)+p64(0xffff)以后发现它有些移位，这是book1大小不同导致的，所以前面要填充一部分deadbeef使fake_chunk刚好在这个指针指向的内存上，而这也是book1不能设置太大的原因，否则单字节覆盖后的指针不一定会指向book1_des内的空间。</p>
-<p><img src="/5.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2021/08/31/b00ks/5.png" srcset="/img/loading.gif" lazyload></p>
 <p>这里看到libc_base是0x7fddf35b2000，而输出book1_name得到的内容是book2_name_ptr，输出book1_des得到的内容是book2_des_ptr，这里的book2_des_ptr为0x00007fddf356e010</p>
 <p>到这里遇到了一点问题不能继续，我会在查阅资料后完善这篇文章。</p>
 

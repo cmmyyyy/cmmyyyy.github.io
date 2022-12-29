@@ -25,15 +25,15 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://pic4.zhimg.com/80/v2-b217278d1613737321f72d41e5a37453_1440w.jpg">
 <meta property="og:image" content="https://pic4.zhimg.com/80/v2-6e066085ca916978359bd73744fad5bb_1440w.jpg">
-<meta property="og:image" content="http://example.com/rsa1.png">
-<meta property="og:image" content="http://example.com/gcd1.png">
-<meta property="og:image" content="http://example.com/rsa2.png">
-<meta property="og:image" content="http://example.com/tel1.png">
-<meta property="og:image" content="http://example.com/tel2.png">
-<meta property="og:image" content="http://example.com/tel3.png">
-<meta property="og:image" content="http://example.com/tel4.png">
-<meta property="og:image" content="http://example.com/mul1.png">
-<meta property="og:image" content="http://example.com/mul2.png">
+<meta property="og:image" content="http://example.com/2021/03/02/HGAME2021-week2-writeup-0/rsa1.png">
+<meta property="og:image" content="http://example.com/2021/03/02/HGAME2021-week2-writeup-0/gcd1.png">
+<meta property="og:image" content="http://example.com/2021/03/02/HGAME2021-week2-writeup-0/rsa2.png">
+<meta property="og:image" content="http://example.com/2021/03/02/HGAME2021-week2-writeup-0/tel1.png">
+<meta property="og:image" content="http://example.com/2021/03/02/HGAME2021-week2-writeup-0/tel2.png">
+<meta property="og:image" content="http://example.com/2021/03/02/HGAME2021-week2-writeup-0/tel3.png">
+<meta property="og:image" content="http://example.com/2021/03/02/HGAME2021-week2-writeup-0/tel4.png">
+<meta property="og:image" content="http://example.com/2021/03/02/HGAME2021-week2-writeup-0/mul1.png">
+<meta property="og:image" content="http://example.com/2021/03/02/HGAME2021-week2-writeup-0/mul2.png">
 <meta property="article:published_time" content="2021-03-02T12:05:54.000Z">
 <meta property="article:modified_time" content="2021-03-02T12:44:55.807Z">
 <meta property="article:author" content="Magnesium">
@@ -311,14 +311,14 @@
 <p><img src="https://pic4.zhimg.com/80/v2-6e066085ca916978359bd73744fad5bb_1440w.jpg" srcset="/img/loading.gif" lazyload alt="img"></p>
 <figure class="highlight plaintext"><figcaption><span>binascii</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs import">import gmpy2<br>n=882564595536224140639625987659416029426239230804614613279163<br>#这里我用yafu分解了n<br>p=857504083339712752489993810777<br>q=1029224947942998075080348647219<br>e=65537<br>c=747831491353896780365654517748216624798517769637260742155527<br>phi=(p-1)*(q-1)<br>d=gmpy2.invert(e,phi)<br>m=pow(c,d,n)<br>print(hex(m))<br>print(binascii.unhexlify(hex(m)[2:].strip(&quot;L&quot;)))<br></code></pre></td></tr></table></figure>
 
-<p><img src="/rsa1.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2021/03/02/HGAME2021-week2-writeup-0/rsa1.png" srcset="/img/loading.gif" lazyload></p>
 <h3 id="gcd-or-more"><a href="#gcd-or-more" class="headerlink" title="gcd or more?"></a>gcd or more?</h3><p>e&#x3D;2，用上一题的脚本显示找不到d，百度到了rabin加密</p>
 <p><code>https://en.wikipedia.org/wiki/Rabin_cryptosystem</code></p>
 <p>然后题目直接给出了p和q，不用手动分解n，就直接套公式解，从四个输出中找可能存在的真正明文</p>
 <p>exp</p>
 <figure class="highlight plaintext"><figcaption><span>binascii</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs import">import gmpy2<br>import libnum<br>p = 85228565021128901853314934583129083441989045225022541298550570449389839609019<br>q = 111614714641364911312915294479850549131835378046002423977989457843071188836271<br>n = p * q<br>#cipher = pow(s2n(FLAG), 2, n)<br>#print(cipher)<br>c=7665003682830666456193894491015989641647854826647177873141984107202099081475984827806007287830472899616818080907276606744467453445908923054975393623509539<br>e=2<br><br><br>mp = pow(c, (p + 1) / 4, p)<br>mq = pow(c, (q + 1) / 4, q)<br>yp = gmpy2.invert(p, q)<br>yq = gmpy2.invert(q, p)<br>r = (yp * p * mq + yq * q * mp) % n<br>rr = n - r<br>s = (yp * p * mq - yq * q * mp) % n<br>ss = n - s<br>print libnum.n2s(r)<br>print libnum.n2s(rr)<br>print libnum.n2s(s)<br>print libnum.n2s(ss)<br></code></pre></td></tr></table></figure>
 
-<p><img src="/gcd1.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2021/03/02/HGAME2021-week2-writeup-0/gcd1.png" srcset="/img/loading.gif" lazyload></p>
 <p><code>hgame&#123;3xgcd~is~really~difficult&#125;(狗头）</code></p>
 <h3 id="signin"><a href="#signin" class="headerlink" title="signin"></a>signin</h3><p>#竟是数学题</p>
 <p>c&#x3D;a^p*m（mod p）</p>
@@ -329,22 +329,22 @@
 <p>exp</p>
 <figure class="highlight plaintext"><figcaption><span>libnum import *</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs from">a = 143476170144915086020651461328049339656692126954818003650099852868145841319041470073020587125213976925474341076505642227853407676058773113885865826640680023147360447444464935801614525784110903480871654141802517672864060026452463495645509064414259143561988416176609991854421929607534242834743124652491022090289<br>p = 144990456446230144694263694418769858495021475043392279183925650174062004178559844401086360607928511714506442495515664176646230769554023179040226957152981442993492885354384799122222074255748702871095896167656675843624069307328779207379633792655160544271545569917511963865120135589875939937494010889658831130797<br>c = 120094382885627426802043931936833471575878884523974767764562747592243608117847482125722859363444069094268578813034406859087905808108331619918394213908184448430084247326673068817903131008945590119114470183031722078599931222887555377046173518111618239410979061284925061871538324577871419928874075180494037057601<br>p2=p-2<br>am=pow(a,p2,p)<br>cm=c*am<br>m=cm%p<br>print(hex(m))<br>m=n2s(m)<br>print(m)<br></code></pre></td></tr></table></figure>
 
-<p><img src="/rsa2.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2021/03/02/HGAME2021-week2-writeup-0/rsa2.png" srcset="/img/loading.gif" lazyload></p>
 <h2 id="misc"><a href="#misc" class="headerlink" title="misc"></a>misc</h2><h3 id="Telegraph：1601-6639-3459-3134-0892"><a href="#Telegraph：1601-6639-3459-3134-0892" class="headerlink" title="Telegraph：1601 6639 3459 3134 0892"></a>Telegraph：1601 6639 3459 3134 0892</h3><p>这名字很可疑，百度一下，我就知道</p>
-<p><img src="/tel1.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2021/03/02/HGAME2021-week2-writeup-0/tel1.png" srcset="/img/loading.gif" lazyload></p>
 <p>好吧，那咱打开au，显示频谱</p>
-<p><img src="/tel2.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2021/03/02/HGAME2021-week2-writeup-0/tel2.png" srcset="/img/loading.gif" lazyload></p>
 <p>打开滤波器，过滤850Hz</p>
-<p><img src="/tel3.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2021/03/02/HGAME2021-week2-writeup-0/tel3.png" srcset="/img/loading.gif" lazyload></p>
 <p>oh我的上帝，这熟悉的点杠隔</p>
-<p><img src="/tel4.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2021/03/02/HGAME2021-week2-writeup-0/tel4.png" srcset="/img/loading.gif" lazyload></p>
 <p>然后把莫斯电码写下来</p>
 <p>-.–&#x2F;—&#x2F;..-&#x2F;.-.&#x2F;..-.&#x2F;.-..&#x2F;.-&#x2F;–.&#x2F;..&#x2F;…&#x2F;—…&#x2F;….-&#x2F;–.&#x2F;—–&#x2F;—–&#x2F;-..&#x2F;…&#x2F;—–&#x2F;-.&#x2F;–.&#x2F;-…&#x2F;..-&#x2F;-&#x2F;-.&#x2F;—–&#x2F;-&#x2F;….-&#x2F;–.&#x2F;—–&#x2F;—–&#x2F;-..&#x2F;–&#x2F;.-&#x2F;-.&#x2F;—–&#x2F;…–&#x2F;—-.&#x2F;…–&#x2F;.—-&#x2F;—–&#x2F;-.-&#x2F;..</p>
 <p>解密得</p>
 <p><code>yourflagis:4g00ds0ngbutn0t4g00dman039310ki</code></p>
 <p>转化大写包上hgame{}就能交</p>
 <h3 id="Hallucigenia"><a href="#Hallucigenia" class="headerlink" title="Hallucigenia"></a>Hallucigenia</h3><p>放进stegsolve康康有小惊喜</p>
-<p><img src="/mul1.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2021/03/02/HGAME2021-week2-writeup-0/mul1.png" srcset="/img/loading.gif" lazyload></p>
 <p>扫一扫</p>
 <figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">gmBCrkRORUkAAAAA+jrgsWajaq0BeC3IQhCEIQhCKZw1MxTzSlNKnmJpivW9IHVPrTjvkkuI3sP7bWAEdIHWCbDsGsRkZ9IUJC9AhfZFbpqrmZBtI+ZvptWC<span class="hljs-regexp">/KCPrL0gFeRPOcI2WyqjndfUWlNj+dgWpe1qSTEcdurXzMRAc5EihsEflmIN8RzuguWq61JWRQpSI51/</span>KHHT<span class="hljs-regexp">/6/</span>ztPZJ33SSKbieTa1C5koONbLcf9aYmsVh7RW6p3SpASnUSb3JuSvpUBKxscbyBjiOpOTq8jcdRsx5<span class="hljs-regexp">/IndXw3VgJV6iO1+6jl4gjVpWouViO6ih9ZmybSPkhaqyNUxVXpV5cYU+Xx5sQTfKystDLipmqaMhxIcgvplLqF/</span>LWZzIS5PvwbqOvrSlNHVEYchCEIQISICSZJijwu50rRQHDyUpaF0y<span class="hljs-regexp">//</span><span class="hljs-regexp">/p6FEDCCDFsuW7YFoVEFEST0BAACLgLOrAAAAAggUAAAAtAAAAFJESEkNAAAAChoKDUdOUIk=</span><br></code></pre></td></tr></table></figure>
 
@@ -352,7 +352,7 @@
 <figure class="highlight plaintext"><figcaption><span>60 42 AE 44 4E 45 49  00 00 00 00 FA 3A E0 B1</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs 82">00 01 02 03 04 05 06 07  08 09 0A 0B 0C 0D 0E 0F <br>--------------------------------------------------------------------<br>82 60 42 AE 44 4E 45 49  00 00 00 00 FA 3A E0 B1   | .`B.DNEI.....:..<br>66 A3 6A AD 01 78 2D C8  42 10 84 21 08 42 29 9C   | f.j..x-.B..!.B).<br>35 33 14 F3 4A 53 4A 9E  62 69 8A F5 BD 20 75 4F   | 53..JSJ.bi... uO<br>AD 38 EF 92 4B 88 DE C3  FB 6D 60 04 74 81 D6 09   | .8..K....m`.t...<br>B0 EC 1A C4 64 67 D2 14  24 2F 40 85 F6 45 6E 9A   | ....dg..$/@..En.<br>AB 99 90 6D 23 E6 6F A6  D5 82 FC A0 8F AC BD 20   | ...m#.o........ <br>15 E4 4F 39 C2 36 5B 2A  A3 9D D7 D4 5A 53 63 F9   | ..O9.6[*....ZSc.<br>D8 16 A5 ED 6A 49 31 1C  76 EA D7 CC C4 40 73 91   | ....jI1.v....@s.<br>22 86 C1 1F 96 62 0D F1  1C EE 82 E5 AA EB 52 56   | &quot;....b........RV<br>45 0A 52 23 9D 7F 28 71  D3 FF AF F3 B4 F6 49 DF   | E.R#.(q......I.<br>74 92 29 B8 9E 4D AD 42  E6 4A 0E 35 B2 DC 7F D6   | t.)..M.B.J.5...<br>98 9A C5 61 ED 15 BA A7  74 A9 01 29 D4 49 BD C9   | ...a....t..).I..<br>B9 2B E9 50 12 B1 B1 C6  F2 06 38 8E A4 E4 EA F2   | .+.P......8.....<br>37 1D 46 CC 79 FC 89 DD  5F 0D D5 80 95 7A 88 ED   | 7.F.y..._....z..<br>7E EA 39 78 82 35 69 5A  8B 95 88 EE A2 87 D6 66   | ~.9x.5iZ.......f<br>C9 B4 8F 92 16 AA C8 D5  31 55 7A 55 E5 C6 14 F9   | ........1UzU....<br>7C 79 B1 04 DF 2B 2B 2D  0C B8 A9 9A A6 8C 87 12   | |y...++-........<br>1C 82 FA 65 2E A1 7F 2D  66 73 21 2E 4F BF 06 EA   | ...e..-fs!.O...<br>3A FA D2 94 D1 D5 11 87  21 08 42 10 21 22 02 49   | :.......!.B.!&quot;.I<br>92 62 8F 0B B9 D2 B4 50  1C 3C 94 A5 A1 74 CB FF   | .b.....P.&lt;...t..<br>FF A7 A1 44 0C 20 83 16  CB 96 ED 81 68 54 41 44   | ...D. ......hTAD<br>49 3D 01 00 00 8B 80 B3  AB 00 00 00 02 08 14 00   | I=..............<br>00 00 B4 00 00 00 52 44  48 49 0D 00 00 00 0A 1A   | ......RDHI......<br>0A 0D 47 4E 50 89                                 | ..GNP.<br></code></pre></td></tr></table></figure>
 
 <p>反转后保存成png文件，是一个长得很别致的flag</p>
-<p><img src="/mul2.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2021/03/02/HGAME2021-week2-writeup-0/mul2.png" srcset="/img/loading.gif" lazyload></p>
 <p>翻转一下就好</p>
 
                 

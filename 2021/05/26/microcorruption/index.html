@@ -23,20 +23,20 @@
 <meta property="og:site_name" content="M4gne51um&#39;s blog">
 <meta property="og:description" content="gdb小游戏">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://example.com/1.png">
-<meta property="og:image" content="http://example.com/2.png">
-<meta property="og:image" content="http://example.com/3.png">
-<meta property="og:image" content="http://example.com/4.png">
-<meta property="og:image" content="http://example.com/5.png">
-<meta property="og:image" content="http://example.com/10.png">
-<meta property="og:image" content="http://example.com/13.png">
-<meta property="og:image" content="http://example.com/14.png">
-<meta property="og:image" content="http://example.com/15.png">
+<meta property="og:image" content="http://example.com/2021/05/26/microcorruption/1.png">
+<meta property="og:image" content="http://example.com/2021/05/26/microcorruption/2.png">
+<meta property="og:image" content="http://example.com/2021/05/26/microcorruption/3.png">
+<meta property="og:image" content="http://example.com/2021/05/26/microcorruption/4.png">
+<meta property="og:image" content="http://example.com/2021/05/26/microcorruption/5.png">
+<meta property="og:image" content="http://example.com/2021/05/26/microcorruption/10.png">
+<meta property="og:image" content="http://example.com/2021/05/26/microcorruption/13.png">
+<meta property="og:image" content="http://example.com/2021/05/26/microcorruption/14.png">
+<meta property="og:image" content="http://example.com/2021/05/26/microcorruption/15.png">
 <meta property="article:published_time" content="2021-05-26T11:52:03.000Z">
 <meta property="article:modified_time" content="2021-07-14T15:20:52.770Z">
 <meta property="article:author" content="Magnesium">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="http://example.com/1.png">
+<meta name="twitter:image" content="http://example.com/2021/05/26/microcorruption/1.png">
   
   
   
@@ -286,26 +286,26 @@
               <div class="markdown-body">
                 
                 <p>前两题忘记记下来了，反正很容易就不写了</p>
-<h2 id="Sydney"><a href="#Sydney" class="headerlink" title="Sydney"></a>Sydney</h2><h4 id=""><a href="#" class="headerlink" title=""></a><img src="/1.png" srcset="/img/loading.gif" lazyload></h4><p>这里是逐一比较，一开始按照顺序来写不对，卡了一下，看了题解应该是数据存储应该是高位在后面，就是要6750倒过来写5067，很容易忘记的基础知识点了orz。</p>
-<h2 id="Hanoi"><a href="#Hanoi" class="headerlink" title="Hanoi"></a>Hanoi</h2><p><img src="/2.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="Sydney"><a href="#Sydney" class="headerlink" title="Sydney"></a>Sydney</h2><h4 id><a href="#" class="headerlink" title></a><img src="/2021/05/26/microcorruption/1.png" srcset="/img/loading.gif" lazyload></h4><p>这里是逐一比较，一开始按照顺序来写不对，卡了一下，看了题解应该是数据存储应该是高位在后面，就是要6750倒过来写5067，很容易忘记的基础知识点了orz。</p>
+<h2 id="Hanoi"><a href="#Hanoi" class="headerlink" title="Hanoi"></a>Hanoi</h2><p><img src="/2021/05/26/microcorruption/2.png" srcset="/img/loading.gif" lazyload></p>
 <p>这里是要比较0x2e和0x2410地址里的东西是否一样，一样就可以过，前面可以随便填</p>
-<h2 id="Cusco"><a href="#Cusco" class="headerlink" title="Cusco"></a>Cusco</h2><p><img src="/3.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="Cusco"><a href="#Cusco" class="headerlink" title="Cusco"></a>Cusco</h2><p><img src="/2021/05/26/microcorruption/3.png" srcset="/img/loading.gif" lazyload></p>
 <p>不能让r15&#x3D;0，就往前面函数看看</p>
-<p><img src="/4.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2021/05/26/microcorruption/4.png" srcset="/img/loading.gif" lazyload></p>
 <p>不管前面输入什么，到这两句r15都会变为0，因此不能单纯靠写答案过这题，看了看题解应该是要用栈溢出来操作。</p>
-<p><img src="/5.png" srcset="/img/loading.gif" lazyload></p>
-<p>当执行到login函数的ret指令时，sp处于我们可以覆盖的位置，因此可以把这个位置写成我们需要跳转的地址<unlock_door>0x4446,因此选择16位输入aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa4644，就过啦！</p>
+<p><img src="/2021/05/26/microcorruption/5.png" srcset="/img/loading.gif" lazyload></p>
+<p>当执行到login函数的ret指令时，sp处于我们可以覆盖的位置，因此可以把这个位置写成我们需要跳转的地址<unlock_door>0x4446,因此选择16位输入aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa4644，就过啦！</unlock_door></p>
 <h2 id="Reykjavik"><a href="#Reykjavik" class="headerlink" title="Reykjavik"></a>Reykjavik</h2><p>照例输入aaaaaaaaaaaa运行一下，当sp运行到password开始的地方，留意汇编指令</p>
-<p><img src="/10.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2021/05/26/microcorruption/10.png" srcset="/img/loading.gif" lazyload></p>
 <p>这里需要比较0x6cd1和0x43fe-0x24&#x3D;0x43da的内容，也就是password的第一组数字，因此password先直接输d16c，然后就发现过了。</p>
 <p>其实这一题做的时候并没有这么简单，当时是发现了程序的汇编码在内存里面，只能一条一条去看，并且看见enc的函数名，以为是要一条一条解密的，后来实在撂不清2400后面的程序整个的逻辑，去找了题解顺着做才发现这条重要指令，对汇编指令还是不够敏感，还得继续努力orz。</p>
 <h2 id="Whitehorse"><a href="#Whitehorse" class="headerlink" title="Whitehorse"></a>Whitehorse</h2><p>这道题出现栈溢出的地方是程序最后的ret那里</p>
-<p><img src="/13.png" srcset="/img/loading.gif" lazyload></p>
-<p>因为之前习惯于在最后判定结果前找漏洞，找这个ret找了很久，最后是在栈溢出的地方填需要跳转的地址，这里没有unlock函数，但是在conditional_xxx函数里有一个call<int>，我们可以填充参数0x7f进去，就能unlock。</p>
+<p><img src="/2021/05/26/microcorruption/13.png" srcset="/img/loading.gif" lazyload></p>
+<p>因为之前习惯于在最后判定结果前找漏洞，找这个ret找了很久，最后是在栈溢出的地方填需要跳转的地址，这里没有unlock函数，但是在conditional_xxx函数里有一个call<int>，我们可以填充参数0x7f进去，就能unlock。</int></p>
 <h2 id="Montevideo"><a href="#Montevideo" class="headerlink" title="Montevideo"></a>Montevideo</h2><p>跟上一题是一模一样的。</p>
-<h2 id="Johannesburg"><a href="#Johannesburg" class="headerlink" title="Johannesburg"></a>Johannesburg</h2><p><img src="/14.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="Johannesburg"><a href="#Johannesburg" class="headerlink" title="Johannesburg"></a>Johannesburg</h2><p><img src="/2021/05/26/microcorruption/14.png" srcset="/img/loading.gif" lazyload></p>
 <p>这里是一个cananry，因此sp+11地址的值应该等于30，才能绕过，同时填充我们要的返回地址0x4446就行。</p>
-<h2 id="Santa-Cruz"><a href="#Santa-Cruz" class="headerlink" title="Santa Cruz"></a>Santa Cruz</h2><p><img src="/15.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="Santa-Cruz"><a href="#Santa-Cruz" class="headerlink" title="Santa Cruz"></a>Santa Cruz</h2><p><img src="/2021/05/26/microcorruption/15.png" srcset="/img/loading.gif" lazyload></p>
 <p>这里不能使之为0，一步一步推。</p>
 
                 
