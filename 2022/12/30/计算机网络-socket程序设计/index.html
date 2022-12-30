@@ -16,19 +16,31 @@
   <meta name="author" content="Magnesium">
   <meta name="keywords" content="">
   
-    <meta property="og:type" content="article">
-<meta property="og:title" content="test">
-<meta property="og:url" content="http://example.com/2022/12/26/test/index.html">
+    <meta name="description" content="socket、python">
+<meta property="og:type" content="article">
+<meta property="og:title" content="计算机网络-socket程序设计">
+<meta property="og:url" content="http://example.com/2022/12/30/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-socket%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/index.html">
 <meta property="og:site_name" content="M4gne51um&#39;s blog">
+<meta property="og:description" content="socket、python">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2022-12-26T14:08:38.000Z">
-<meta property="article:modified_time" content="2022-12-26T14:08:38.780Z">
+<meta property="og:image" content="http://example.com/2022/12/30/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-socket%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/image-20221230115058372.png">
+<meta property="og:image" content="http://example.com/2022/12/30/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-socket%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/image-20221230115104402.png">
+<meta property="og:image" content="http://example.com/2022/12/30/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-socket%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/image-20221230115111776.png">
+<meta property="og:image" content="http://example.com/2022/12/30/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-socket%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/image-20221230115120350.png">
+<meta property="og:image" content="http://example.com/2022/12/30/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-socket%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/image-20221230115144481.png">
+<meta property="og:image" content="http://example.com/2022/12/30/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-socket%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/image-20221230115155108.png">
+<meta property="og:image" content="http://example.com/2022/12/30/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-socket%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/image-20221230115201158.png">
+<meta property="og:image" content="http://example.com/2022/12/30/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-socket%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/image-20221230115207650.png">
+<meta property="article:published_time" content="2022-12-30T03:43:38.000Z">
+<meta property="article:modified_time" content="2022-12-30T03:55:36.326Z">
 <meta property="article:author" content="Magnesium">
+<meta property="article:tag" content="计网">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/2022/12/30/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-socket%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/image-20221230115058372.png">
   
   
   
-  <title>test - M4gne51um&#39;s blog</title>
+  <title>计算机网络-socket程序设计 - M4gne51um&#39;s blog</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
 
@@ -194,7 +206,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="test"></span>
+            <span id="subtitle" data-typed-text="计算机网络-socket程序设计"></span>
           
         </div>
 
@@ -205,8 +217,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2022-12-26 22:08" pubdate>
-          2022年12月26日 晚上
+        <time datetime="2022-12-30 11:43" pubdate>
+          2022年12月30日 中午
         </time>
       </span>
     
@@ -218,7 +230,7 @@
         <i class="iconfont icon-chart"></i>
         
           <!-- compatible with older versions-->
-          0 字
+          1.2k 字
         
       </span>
     
@@ -230,7 +242,7 @@
         
         
           <!-- compatible with older versions-->
-          1 分钟
+          11 分钟
         
       </span>
     
@@ -268,12 +280,35 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">test</h1>
+            <h1 style="display: none">计算机网络-socket程序设计</h1>
             
             
               <div class="markdown-body">
                 
-                
+                <h1 id="实验名称：SOCKET-网络程序设计"><a href="#实验名称：SOCKET-网络程序设计" class="headerlink" title="实验名称：SOCKET 网络程序设计"></a>实验名称：SOCKET 网络程序设计</h1><h3 id="实验目的与要求："><a href="#实验目的与要求：" class="headerlink" title="实验目的与要求："></a>实验目的与要求：</h3><p>•理解进程通信的原理及通信过程；<br>•掌握基本的网络编程方法；<br>•需要有流程图；<br>•需要抓取传输内容，比如“你的名字和学号”；<br>•实现并发服务器。</p>
+<h3 id="实验环境说明："><a href="#实验环境说明：" class="headerlink" title="实验环境说明："></a>实验环境说明：</h3><p>Pycharm、wireshark、RawCap</p>
+<h3 id="实验过程、步骤（可另附页、使用网络拓扑图等辅助说明）及结果："><a href="#实验过程、步骤（可另附页、使用网络拓扑图等辅助说明）及结果：" class="headerlink" title="实验过程、步骤（可另附页、使用网络拓扑图等辅助说明）及结果："></a>实验过程、步骤（可另附页、使用网络拓扑图等辅助说明）及结果：</h3><p>先画流程图：</p>
+<p><img src="/2022/12/30/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-socket%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/image-20221230115058372.png" srcset="/img/loading.gif" lazyload alt="image-20221230115058372"></p>
+<p>编写server.py：</p>
+<p><img src="/2022/12/30/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-socket%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/image-20221230115104402.png" srcset="/img/loading.gif" lazyload alt="image-20221230115104402"></p>
+<p>编写client.py:</p>
+<p><img src="/2022/12/30/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-socket%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/image-20221230115111776.png" srcset="/img/loading.gif" lazyload alt="image-20221230115111776"></p>
+<p>启动server后启动client，查看运行结果：</p>
+<p><img src="/2022/12/30/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-socket%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/image-20221230115120350.png" srcset="/img/loading.gif" lazyload alt="image-20221230115120350"></p>
+<p><img src="/2022/12/30/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-socket%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/image-20221230115144481.png" srcset="/img/loading.gif" lazyload alt="image-20221230115144481"></p>
+<p>可以看出，client连接目标端口后，server将client的地址信息打印出来，同时向client发送信息，client接收后向Server发送信息，均能成功接收，完成所有任务后server关闭连接。<br>接下来使用wireshark对本地回环进行抓包，由于本实验的server和client均是建立在本地主机上的，默认的Wincap无法抓本地回环包，在上网查阅资料后发现可以使用RawCap+wireshark来抓本地回环包。<br>下载并安装RawCap：</p>
+<p><img src="/2022/12/30/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-socket%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/image-20221230115155108.png" srcset="/img/loading.gif" lazyload alt="image-20221230115155108"></p>
+<p>使用wireshark抓取Loopback网卡包，指定端口为目标端口12345：</p>
+<p><img src="/2022/12/30/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-socket%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/image-20221230115201158.png" srcset="/img/loading.gif" lazyload alt="image-20221230115201158"></p>
+<p><img src="/2022/12/30/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-socket%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/image-20221230115207650.png" srcset="/img/loading.gif" lazyload alt="image-20221230115207650"></p>
+<p>发现成功抓取server和client之间的信息传输内容，其中中文部分由于编码原因，没有显示。</p>
+<p>附程序代码：<br>Server.py:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs python">-*- coding: UTF-<span class="hljs-number">8</span> -*-<br><br><span class="hljs-keyword">import</span> socket  <span class="hljs-comment"># 导入 socket 模块</span><br><br>s = socket.socket()  <span class="hljs-comment"># 创建 socket 对象</span><br>host = socket.gethostname()  <span class="hljs-comment"># 获取本地主机名</span><br>port = <span class="hljs-number">12345</span>  <span class="hljs-comment"># 设置端口</span><br>s.bind((host, port))  <span class="hljs-comment"># 绑定端口</span><br><br>s.listen(<span class="hljs-number">5</span>)  <span class="hljs-comment"># 等待客户端连接</span><br><span class="hljs-keyword">while</span> <span class="hljs-literal">True</span>:<br>    c, addr = s.accept()  <span class="hljs-comment"># 建立客户端连接</span><br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;连接地址：&#x27;</span>, addr)<br>    c.send(<span class="hljs-built_in">bytes</span>(<span class="hljs-string">&#x27;欢迎访问曹嘉美_20052201_Server！&#x27;</span>,encoding=<span class="hljs-string">&quot;utf-8&quot;</span>))<br>    <span class="hljs-built_in">print</span>(<span class="hljs-built_in">str</span>(c.recv(<span class="hljs-number">1024</span>),encoding=<span class="hljs-string">&quot;utf-8&quot;</span>))<br>    c.close()  <span class="hljs-comment"># 关闭连接</span><br></code></pre></td></tr></table></figure>
+
+<p>Client.py:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> socket  <span class="hljs-comment"># 导入 socket 模块</span><br><br>s = socket.socket()  <span class="hljs-comment"># 创建 socket 对象</span><br>host = socket.gethostname()  <span class="hljs-comment"># 获取本地主机名</span><br>port = <span class="hljs-number">12345</span>  <span class="hljs-comment"># 设置端口号</span><br><br>s.connect((host, port))<br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">str</span>(s.recv(<span class="hljs-number">1024</span>),encoding=<span class="hljs-string">&quot;utf-8&quot;</span>))<br>s.send(<span class="hljs-built_in">bytes</span>(<span class="hljs-string">&quot;client：曹嘉美_20052201&quot;</span>,encoding=<span class="hljs-string">&quot;utf-8&quot;</span>))<br>s.close()<br></code></pre></td></tr></table></figure>
+
+
                 
               </div>
             
@@ -281,6 +316,34 @@
             <div>
               <div class="post-metas my-3">
   
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-HDU/" class="category-chain-item">计算机网络-HDU</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E8%AE%A1%E7%BD%91/">#计网</a>
+      
+    </div>
   
 </div>
 
@@ -290,8 +353,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>test</div>
-      <div>http://example.com/2022/12/26/test/</div>
+      <div>计算机网络-socket程序设计</div>
+      <div>http://example.com/2022/12/30/计算机网络-socket程序设计/</div>
     </div>
     <div class="license-meta">
       
@@ -303,7 +366,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2022年12月26日</div>
+          <div>2022年12月30日</div>
         </div>
       
       
@@ -334,6 +397,12 @@
                 <div class="post-prevnext my-3">
                   <article class="post-prev col-6">
                     
+                    
+                      <a href="/2022/12/30/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-ApacheWeb%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE/" title="计算机网络-ApacheWeb服务器安装配置">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">计算机网络-ApacheWeb服务器安装配置</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
                     
                   </article>
                   <article class="post-next col-6">
