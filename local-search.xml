@@ -4,6 +4,33 @@
   
   
   <entry>
+    <title>2023新年快乐！</title>
+    <link href="/2023/01/01/2023%E6%96%B0%E5%B9%B4%E5%BF%AB%E4%B9%90%EF%BC%81/"/>
+    <url>/2023/01/01/2023%E6%96%B0%E5%B9%B4%E5%BF%AB%E4%B9%90%EF%BC%81/</url>
+    
+    <content type="html"><![CDATA[<h1 id="随便写点"><a href="#随便写点" class="headerlink" title="随便写点"></a>随便写点</h1><h3 id="00"><a href="#00" class="headerlink" title="00"></a>00</h3><p>今天是二周年噢！</p><h3 id="01"><a href="#01" class="headerlink" title="01"></a>01</h3><p>不管2022怎么过，2023年新年快乐！</p><h3 id="02"><a href="#02" class="headerlink" title="02"></a>02</h3><p>blog建于2021.1.1，不知不觉就两年啦，可以移步到我第一篇博客，收获来自2020年的新年祝福！→<a href="https://cmmyyyy.github.io/2021/01/01/+Mg%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87%E5%8D%9A%E5%AE%A2/">https://cmmyyyy.github.io/2021/01/01/+Mg%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87%E5%8D%9A%E5%AE%A2/</a></p><h3 id="03"><a href="#03" class="headerlink" title="03"></a>03</h3><p>2021年的文章基本关于PWN、安全、CTF、汇编，那一年收获了非常非常多东西，虽然成就不高，但是学习的过程收获了很多快乐！</p><h3 id="04"><a href="#04" class="headerlink" title="04"></a>04</h3><p>2021-2022有一长段时间基本没有更新博客，开始进入实验室做项目，学习各种开发和算法，决定暂时放下安全方向啦，平时主要忙于课程，有很多笔记记下来也感觉没有发博客的必要。</p><h3 id="05"><a href="#05" class="headerlink" title="05"></a>05</h3><p>2022一整年学习了非常多硬课，有很多花了很多精力做的大作业，赶在年末这几天比较空闲，一股脑整理了大部分的文章更新上来，还有一部分其他的零散文章，后续会慢慢整理更新。</p><h3 id="06"><a href="#06" class="headerlink" title="06"></a>06</h3><p>得了一次新冠，突然就有了很多感慨，想要珍惜每一天是如何度过，希望大家都能健康平安。</p><h3 id="07"><a href="#07" class="headerlink" title="07"></a>07</h3><p>2023要开始准备实习啦，要准备选择新的方向，学习新的技能，不知道前面有什么困难在等着我嘿！</p><h3 id="08"><a href="#08" class="headerlink" title="08"></a>08</h3><p>但是只要还能摸电脑，情况能坏那里去？</p><h3 id="09"><a href="#09" class="headerlink" title="09"></a>09</h3><p>最近在看一些小说和人文社科的书，这两天在看阿德勒，相见恨晚！</p><h3 id="10"><a href="#10" class="headerlink" title="10"></a>10</h3><p>2023，希望自己能够<code>与物忘我</code>，跳脱到时间之外去感受世界吧。</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>随记</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>新年快乐</tag>
+      
+      <tag>2023</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>OS添加系统调用</title>
     <link href="/2022/12/31/OS%E6%B7%BB%E5%8A%A0%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/"/>
     <url>/2022/12/31/OS%E6%B7%BB%E5%8A%A0%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/</url>
@@ -1016,7 +1043,7 @@
     <link href="/2021/01/01/+Mg%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87%E5%8D%9A%E5%AE%A2/"/>
     <url>/2021/01/01/+Mg%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87%E5%8D%9A%E5%AE%A2/</url>
     
-    <content type="html"><![CDATA[<h2 id="一点感想"><a href="#一点感想" class="headerlink" title="一点感想"></a>一点感想</h2><h3 id="01"><a href="#01" class="headerlink" title="01"></a>01</h3><p>学习过程中的琐碎知识点与方法，时时值得记录，记录下自己的学习轨迹，以求温故知新，不记下来的话，回望来时的路似乎有点空荡</p><h3 id="02"><a href="#02" class="headerlink" title="02"></a>02</h3><p>可能要学很多很多不同领域的知识，大概方便自己区分一下（？）</p><h3 id="03"><a href="#03" class="headerlink" title="03"></a>03</h3><p>会把学到的大大小小的知识点、解决的大大小小的问题、做过的大大小小的题都记下来，大概是个日记本</p><h3 id="04"><a href="#04" class="headerlink" title="04"></a>04</h3><p>blog模板有一些功能还不太会用，接下来会慢慢学习<br>该blog采用模板：fluid搭建，后续会加一些实用（花里胡哨）的功能，比如评论区和音乐播放器和友链（如果有hxd愿意的话）</p><h3 id="05"><a href="#05" class="headerlink" title="05"></a>05</h3><p>用国内网络访问会有亿点点慢，后期可能会换成私人服务器，如果有奇怪的bug存在，pls联系<a href="mailto:&#49;&#x37;&#x35;&#x36;&#53;&#54;&#x37;&#56;&#x31;&#x34;&#64;&#113;&#113;&#x2e;&#x63;&#111;&#x6d;">&#49;&#x37;&#x35;&#x36;&#53;&#54;&#x37;&#56;&#x31;&#x34;&#64;&#113;&#113;&#x2e;&#x63;&#111;&#x6d;</a></p><h3 id="06"><a href="#06" class="headerlink" title="06"></a>06</h3><p>关于页有我的github，可能后面会慢慢开始用，但现在是一片荒地（</p><h3 id="07"><a href="#07" class="headerlink" title="07"></a>07</h3><p>还没有决定方向，大概突然想学什么就学什么</p><h3 id="08"><a href="#08" class="headerlink" title="08"></a>08</h3><p>大概是要告诫自己：万丈高楼平地起，勿在浮沙筑高台</p>]]></content>
+    <content type="html"><![CDATA[<h2 id="一点感想"><a href="#一点感想" class="headerlink" title="一点感想"></a>一点感想</h2><h3 id="00"><a href="#00" class="headerlink" title="00"></a>00</h3><p>2021，祝我遇到的每个人都新年快乐！</p><h3 id="01"><a href="#01" class="headerlink" title="01"></a>01</h3><p>为啥要建blog？</p><p>学习过程中总有些琐碎知识点与方法，记录下自己的学习轨迹，以求温故知新，不记下来的话，回望来时的路似乎有点空荡</p><h3 id="02"><a href="#02" class="headerlink" title="02"></a>02</h3><p>可能要学很多很多不同领域的知识，大概方便自己区分一下（？）</p><h3 id="03"><a href="#03" class="headerlink" title="03"></a>03</h3><p>会把学到的大大小小的知识点、解决的大大小小的问题、做过的大大小小的题都记下来，大概是个日记本</p><h3 id="04"><a href="#04" class="headerlink" title="04"></a>04</h3><p>blog模板有一些功能还不太会用，接下来会慢慢学习<br>该blog采用模板：fluid搭建，后续会加一些实用（花里胡哨）的功能，比如评论区和音乐播放器和友链（如果有hxd愿意的话）</p><h3 id="05"><a href="#05" class="headerlink" title="05"></a>05</h3><p>用国内网络访问会有亿点点慢，后期可能会换成私人服务器，如果有奇怪的bug存在，pls联系<a href="mailto:&#x31;&#55;&#53;&#x36;&#53;&#x36;&#x37;&#56;&#x31;&#52;&#x40;&#x71;&#113;&#46;&#x63;&#x6f;&#109;">&#x31;&#55;&#53;&#x36;&#53;&#x36;&#x37;&#56;&#x31;&#52;&#x40;&#x71;&#113;&#46;&#x63;&#x6f;&#109;</a></p><h3 id="06"><a href="#06" class="headerlink" title="06"></a>06</h3><p>关于页有我的github，可能后面会慢慢开始用，但现在是一片荒地（</p><h3 id="07"><a href="#07" class="headerlink" title="07"></a>07</h3><p>还没有决定方向，大概突然想学什么就学什么</p><h3 id="08"><a href="#08" class="headerlink" title="08"></a>08</h3><p>大概是要告诫自己：万丈高楼平地起，勿在浮沙筑高台</p>]]></content>
     
     
     <categories>
@@ -1026,21 +1053,18 @@
     </categories>
     
     
-  </entry>
-  
-  
-  
-  
-  
-  
-  <entry>
-    <title>about</title>
-    <link href="/"/>
-    <url>/</url>
-    
-    <content type="html"><![CDATA[<p>每一个伟大的成就都有一个微不足道的开始</p><h4 id><a href="#" class="headerlink" title></a></h4><p>$《深入理解计算机系统》阅读进行中</p><p>$  Android学习进行中</p><p>$《操作系统编译与设计-NJU》学习进行中</p><p>$《Engineering a Compiler》阅读进行中</p><p>$《编译原理》阅读已完成</p><p>$《计算机网络自顶向下方法》阅读已完成</p><p>$《程序员的自我修养》阅读已完成</p><p>$《c++ primer plus》阅读已完成</p><p>$《汇编语言–王爽》阅读已完成</p><p>$《c primer plus》阅读已完成</p>]]></content>
+    <tags>
+      
+      <tag>2021</tag>
+      
+      <tag>新年快乐</tag>
+      
+    </tags>
     
   </entry>
+  
+  
+  
   
   
   
@@ -1050,6 +1074,17 @@
     <url>/</url>
     
     <content type="html"><![CDATA[]]></content>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>about</title>
+    <link href="/"/>
+    <url>/</url>
+    
+    <content type="html"><![CDATA[<p>每一个伟大的成就都有一个微不足道的开始</p><h4 id><a href="#" class="headerlink" title></a></h4><p>$《深入理解计算机系统》阅读进行中</p><p>$  Android学习进行中</p><p>$《操作系统编译与设计-NJU》学习进行中</p><p>$《Engineering a Compiler》阅读进行中</p><p>$《编译原理》阅读已完成</p><p>$《计算机网络自顶向下方法》阅读已完成</p><p>$《程序员的自我修养》阅读已完成</p><p>$《c++ primer plus》阅读已完成</p><p>$《汇编语言–王爽》阅读已完成</p><p>$《c primer plus》阅读已完成</p>]]></content>
     
   </entry>
   
