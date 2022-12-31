@@ -1,0 +1,713 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#1f4e5f">
+  <meta name="author" content="Magnesium">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Linux、OS、内核模块">
+<meta property="og:type" content="article">
+<meta property="og:title" content="OS添加内核模块">
+<meta property="og:url" content="http://example.com/2022/12/31/OS%E6%B7%BB%E5%8A%A0%E5%86%85%E6%A0%B8%E6%A8%A1%E5%9D%97/index.html">
+<meta property="og:site_name" content="M4gne51um&#39;s blog">
+<meta property="og:description" content="Linux、OS、内核模块">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2022/12/31/OS%E6%B7%BB%E5%8A%A0%E5%86%85%E6%A0%B8%E6%A8%A1%E5%9D%97/wps13-167249667960125.jpg">
+<meta property="og:image" content="http://example.com/2022/12/31/OS%E6%B7%BB%E5%8A%A0%E5%86%85%E6%A0%B8%E6%A8%A1%E5%9D%97/wps14-167249667960128.jpg">
+<meta property="og:image" content="http://example.com/2022/12/31/OS%E6%B7%BB%E5%8A%A0%E5%86%85%E6%A0%B8%E6%A8%A1%E5%9D%97/wps15-167249667960126.jpg">
+<meta property="og:image" content="http://example.com/2022/12/31/OS%E6%B7%BB%E5%8A%A0%E5%86%85%E6%A0%B8%E6%A8%A1%E5%9D%97/wps16-167249667960127.jpg">
+<meta property="og:image" content="file:///C:/Users/MAGNES~1/AppData/Local/Temp/ksohtml22712/wps17.jpg">
+<meta property="og:image" content="http://example.com/2022/12/31/OS%E6%B7%BB%E5%8A%A0%E5%86%85%E6%A0%B8%E6%A8%A1%E5%9D%97/wps18-167249667960129.jpg">
+<meta property="og:image" content="http://example.com/2022/12/31/OS%E6%B7%BB%E5%8A%A0%E5%86%85%E6%A0%B8%E6%A8%A1%E5%9D%97/wps19-167249667960131.jpg">
+<meta property="og:image" content="file:///C:/Users/MAGNES~1/AppData/Local/Temp/ksohtml22712/wps20.jpg">
+<meta property="article:published_time" content="2022-12-31T14:21:53.000Z">
+<meta property="article:modified_time" content="2022-12-31T14:30:18.926Z">
+<meta property="article:author" content="Magnesium">
+<meta property="article:tag" content="OS">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/2022/12/31/OS%E6%B7%BB%E5%8A%A0%E5%86%85%E6%A0%B8%E6%A8%A1%E5%9D%97/wps13-167249667960125.jpg">
+  
+  
+  
+  <title>OS添加内核模块 - M4gne51um&#39;s blog</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":60,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":"§"},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>M4gne51um&#39;s blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/background.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.1)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="OS添加内核模块"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-12-31 22:21" pubdate>
+          2022年12月31日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          <!-- compatible with older versions-->
+          3.8k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          <!-- compatible with older versions-->
+          33 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">OS添加内核模块</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="一-题目介绍"><a href="#一-题目介绍" class="headerlink" title="一 题目介绍"></a>一 题目介绍</h1><p>（1）设计一个模块，要求列出系统中所有内核线程的程序名、PID、进程状态、进程优先级、父进程的PID。</p>
+<p>（2）设计一个带参数的模块，其参数为某个进程的PID号，模块的功能是列出该进程的家族信息，包括父进程、兄弟进程和子进程的程序名、PID号、进程状态。</p>
+<p>该题目要求学习Linux的模块化机制，学习通过模块编程的方式扩充Linux的功能，问题的关键在于掌握模块的基本概念和原理、掌握Linux系统的基本命令和使用方法，学习查看Linux系统进程的技术，掌握模块编程的能力。</p>
+<h1 id="二-实验思路"><a href="#二-实验思路" class="headerlink" title="二 实验思路"></a>二 实验思路</h1><p><img src="/2022/12/31/OS%E6%B7%BB%E5%8A%A0%E5%86%85%E6%A0%B8%E6%A8%A1%E5%9D%97/wps13-167249667960125.jpg" srcset="/img/loading.gif" lazyload alt="流程图"> </p>
+<p>第一题中，题目要求遍历内核线程，输出它们的信息，因此，在init函数中，使用一个task_struct指针p获取进程信息即可，使用for_each_process宏遍历进程链表，使用p-&gt;mm判断该线程是否为进程线程，根据定义，当进程为内核线程时，mm等于NULL，当p遍历完后，运行exit清理函数，发送关闭信息。</p>
+<p><img src="/2022/12/31/OS%E6%B7%BB%E5%8A%A0%E5%86%85%E6%A0%B8%E6%A8%A1%E5%9D%97/wps14-167249667960128.jpg" srcset="/img/loading.gif" lazyload alt="流程图"> </p>
+<p>第二题中，题目要求列出进程的家族信息，包括父进程、兄弟进程、子进程，因此仅需要一个信息量，即在module_param宏在init函数时传入pid号，在init函数定义task_struct指针用于遍历进程，使用list_for_each宏的p-&gt;parent-&gt;chilren遍历兄弟节点，由于该链表中，每个parent-&gt;chilren由sibling成员进行连接，因此在list_entry宏中使用sibling作为member量计算节点的首地址，存入psibling指针中，通过该指针打印出进程信息，遍历子进程时同理，list_for_each的宏参数改为p-&gt;chilren。</p>
+<h1 id="三-遇到问题及解决方法"><a href="#三-遇到问题及解决方法" class="headerlink" title="三 遇到问题及解决方法"></a>三 遇到问题及解决方法</h1><ol>
+<li><p>实验（1）中的insmod操作时存在warning：module verification failed: signature and&#x2F;or required key missing - tainting kerne，经查阅资料，发现是新版linux中出于安全考虑，需要自定义内核模块使用正确的数字签名，由于我编写的模块程序无签名，从而出现warning，但在目前的使用中可忽略。</p>
+</li>
+<li><p>实验（2）中对list_for_each和list_entry宏的使用原理不清楚，不理解为什么list_entry宏中member值需要使用sibling，经查询linux内核task_struct链表结构后明白，由于遍历兄弟进程时，需要从第一个兄弟进程开始即p-&gt;parent-&gt;chilren，而获得的该链表节点之间互为sibling，因此list_for_each得到的ptr指向了sibling节点头部，因此需要用sibling作为member值来计算task_struct的首地址，从而打印进程信息。</p>
+</li>
+</ol>
+<h1 id="四-核心代码及实验结果展示"><a href="#四-核心代码及实验结果展示" class="headerlink" title="四 核心代码及实验结果展示"></a>四 核心代码及实验结果展示</h1><p>#PidsInfoModule.c</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-type">static</span> <span class="hljs-type">int</span> <span class="hljs-title function_">hello_init</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span><br><br>&#123;<br><br>​    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">task_struct</span> *<span class="hljs-title">p</span>;</span><br><br>​    p = <span class="hljs-literal">NULL</span>;<br><br>​    p = &amp;init_task;<br><br>​    printk(KERN_ALERT<span class="hljs-string">&quot;名称\t进程号\t状态\t优先级\t父进程号\t&quot;</span>);<br><br>​    for_each_process(p)<br><br>​    &#123;<br><br>​        <span class="hljs-keyword">if</span>(p-&gt;mm == <span class="hljs-literal">NULL</span>)&#123;<br><br>​        printk(KERN_ALERT<span class="hljs-string">&quot;%s\t%d\t%d\t%d\n&quot;</span>,p-&gt;comm,p-&gt;pid, p-&gt;__state,p-&gt;normal_prio,p-&gt;parent-&gt;pid);<br><br>​        &#125;<br><br>​    &#125;<br><br>​    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+<p>#makefile</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs c">obj-m:=PidsModule.o<br><br>PidsModule-objs:=PidsInfoModule.o<br><br>KDIR:= /lib/modules/$(shell uname -r)/build<br><br>PWD:= $(shell pwd)<br><br> <br><br><span class="hljs-keyword">default</span>:<br><br>​    $(MAKE) -C $(KDIR) M=$(PWD) modules  <br><br>clean:<br><br>​    $(MAKE) -C $(KDIR) M=$(PWD) clean<br><br></code></pre></td></tr></table></figure>
+
+<p><img src="/2022/12/31/OS%E6%B7%BB%E5%8A%A0%E5%86%85%E6%A0%B8%E6%A8%A1%E5%9D%97/wps15-167249667960126.jpg" srcset="/img/loading.gif" lazyload alt="模块信息"> </p>
+<p><img src="/2022/12/31/OS%E6%B7%BB%E5%8A%A0%E5%86%85%E6%A0%B8%E6%A8%A1%E5%9D%97/wps16-167249667960127.jpg" srcset="/img/loading.gif" lazyload alt="dmesg信息打印"> </p>
+<p><img src="file:///C:\Users\MAGNES~1\AppData\Local\Temp\ksohtml22712\wps17.jpg" srcset="/img/loading.gif" lazyload alt="dmesg信息打印"> </p>
+<p>#PidsFamily.c</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-type">static</span> <span class="hljs-type">pid_t</span> pid;<br><br>module_param(pid,<span class="hljs-type">int</span>,<span class="hljs-number">0644</span>);<br><br> <br><br><span class="hljs-type">static</span> <span class="hljs-type">int</span> <span class="hljs-title function_">hello_init</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span><br><br>&#123;<br><br>  <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">task_struct</span> *<span class="hljs-title">p</span>;</span><br><br>  <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">list_head</span> *<span class="hljs-title">pp</span>;</span><br><br>  <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">task_struct</span> *<span class="hljs-title">psibling</span>;</span><br><br> <br><br>  p = pid_task(find_vpid(pid), PIDTYPE_PID);<br><br>  printk(<span class="hljs-string">&quot;me: %s %d %d\n&quot;</span>, p-&gt;comm, p-&gt;pid,p-&gt;__state);<br><br> <br><br>  <span class="hljs-keyword">if</span>(p-&gt;parent == <span class="hljs-literal">NULL</span>) &#123;<br><br>​    printk(<span class="hljs-string">&quot;No Parent\n&quot;</span>);<br><br>  &#125;<br><br>  <span class="hljs-keyword">else</span> &#123;<br><br>​    printk(<span class="hljs-string">&quot;Parent: %s %d %d\n&quot;</span>, p-&gt;parent-&gt;comm, p-&gt;parent-&gt;pid, p-&gt;parent-&gt;__state);<br><br>  &#125;<br><br> <br><br>  list_for_each(pp, &amp;p-&gt;parent-&gt;children)<br><br>  &#123;<br><br>​    psibling = list_entry(pp, <span class="hljs-keyword">struct</span> task_struct, sibling);<br><br>​    printk(<span class="hljs-string">&quot;sibling  %s %d %d\n&quot;</span>, psibling-&gt;comm, psibling-&gt;pid,psibling-&gt;__state);<br><br>  &#125;<br><br> <br><br>  list_for_each(pp, &amp;p-&gt;children)<br><br>  &#123;<br><br>​    psibling = list_entry(pp, <span class="hljs-keyword">struct</span> task_struct, sibling);<br><br>​    printk(<span class="hljs-string">&quot;children %s %d %d\n&quot;</span>, psibling-&gt;comm, psibling-&gt;pid,psibling-&gt;__state);<br><br>  &#125;<br><br> <br><br>  <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br><br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+<p>#Makefile</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs c">obj-m:=Family.o<br><br>Family-objs:=PidsFamily.o<br><br>KDIR:= /lib/modules/$(shell uname -r)/build<br><br>PWD:= $(shell pwd)<br><br> <br><br><span class="hljs-keyword">default</span>:<br><br>​    $(MAKE) -C $(KDIR) M=$(PWD) modules  <br><br>clean:<br><br>​    $(MAKE) -C $(KDIR) M=$(PWD) clean<br></code></pre></td></tr></table></figure>
+<p><img src="/2022/12/31/OS%E6%B7%BB%E5%8A%A0%E5%86%85%E6%A0%B8%E6%A8%A1%E5%9D%97/wps18-167249667960129.jpg" srcset="/img/loading.gif" lazyload alt="模块信息"> </p>
+<p><img src="/2022/12/31/OS%E6%B7%BB%E5%8A%A0%E5%86%85%E6%A0%B8%E6%A8%A1%E5%9D%97/wps19-167249667960131.jpg" srcset="/img/loading.gif" lazyload alt="pid=1时打印信息"> </p>
+<p><img src="file:///C:\Users\MAGNES~1\AppData\Local\Temp\ksohtml22712\wps20.jpg" srcset="/img/loading.gif" lazyload alt="pid=548时打印信息"> </p>
+<h1 id="五-个人实验改进与总结"><a href="#五-个人实验改进与总结" class="headerlink" title="五 个人实验改进与总结"></a>五 个人实验改进与总结</h1><h2 id="5-1-个人实验改进"><a href="#5-1-个人实验改进" class="headerlink" title="5.1 个人实验改进"></a>5.1 个人实验改进</h2><p>大部分代码参考书本实验指南进行编写，少部分不理解的代码上网查阅资料后编写，如</p>
+<p>（1）我本来尝试每条打印信息均打印中文标识符，后参阅网上资料后，认为参考linux的ps命令的信息打印方法更加直观。</p>
+<p>（2）中我本来打算使用书本中list_for_each_entry宏来进行遍历兄弟节点和子节点，但由于对task_struct结构的不熟悉，无法正确使用，在查阅资料后选择分别使用list_for_each和list_entry宏，使程序逻辑更加直观，但这样会显得代码没那么简洁。</p>
+<p>（3）阅读书本及资料时，本打算使用task_struct.state输出进程状态，查阅相关资料后发现该成员随着版本更新需要改为__state。</p>
+<h2 id="5-2-个人实验总结"><a href="#5-2-个人实验总结" class="headerlink" title="5.2 个人实验总结"></a>5.2 个人实验总结</h2><p>本次实验是我初步理解了task_struct进程标识符的结构，初步了解了linux内核中的链表原理，基础链表通过结合各种其他数据类型形成新的链表结构，从而形成高度抽象的linux数据结构，同时，也让我熟悉了基本内核编程的方法，包括init函数与exit函数的编写与调用、传入参数的方法、内核编译的方法以及查看内核运行信息的方法，同时也了解了linux进程之间的基本数据结构，学习了多种宏的使用，如list_entry等，学习了打印系统日志的方法和内核函数调用的方法，受益匪浅。</p>
+<h1 id="六-参考文献"><a href="#六-参考文献" class="headerlink" title="六 参考文献"></a>六 参考文献</h1><ol>
+<li><p>task_struct数据结构：<a target="_blank" rel="noopener" href="http://blog.guorongfei.com/2015/02/26/lkd-chapter-three/">http://blog.guorongfei.com/2015/02/26/lkd-chapter-three/</a></p>
+</li>
+<li><p>mm的使用方法：<a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1368752">https://cloud.tencent.com/developer/article/1368752</a></p>
+</li>
+<li><p>parent&#x2F;children&#x2F;sibling之间的关系：<a target="_blank" rel="noopener" href="https://www.796t.com/content/1544611525.html">https://www.796t.com/content/1544611525.html</a></p>
+</li>
+<li><p>Task_struct state定义：<a target="_blank" rel="noopener" href="https://blog.csdn.net/mybelief321/article/details/9048257">https://blog.csdn.net/mybelief321/article/details/9048257</a></p>
+</li>
+</ol>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" class="category-chain-item">操作系统</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/OS/">#OS</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>OS添加内核模块</div>
+      <div>http://example.com/2022/12/31/OS添加内核模块/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Magnesium</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年12月31日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/12/31/OS%E6%B7%BB%E5%8A%A0%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/" title="OS添加系统调用">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">OS添加系统调用</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/12/31/%E9%A2%91%E5%9F%9F%E5%9B%BE%E5%83%8F%E4%B8%89%E7%82%B9%E6%B3%95%E4%BF%A1%E6%81%AF%E5%B5%8C%E5%85%A5/" title="频域图像三点法信息嵌入">
+                        <span class="hidden-mobile">频域图像三点法信息嵌入</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.11/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/tocbot@4.12.0/dist/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/anchor-js@4.3.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
