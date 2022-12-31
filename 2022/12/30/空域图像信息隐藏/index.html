@@ -1,0 +1,794 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#1f4e5f">
+  <meta name="author" content="Magnesium">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="LSB、二值图像隐藏、patchwork">
+<meta property="og:type" content="article">
+<meta property="og:title" content="空域图像信息隐藏">
+<meta property="og:url" content="http://example.com/2022/12/30/%E7%A9%BA%E5%9F%9F%E5%9B%BE%E5%83%8F%E4%BF%A1%E6%81%AF%E9%9A%90%E8%97%8F/index.html">
+<meta property="og:site_name" content="M4gne51um&#39;s blog">
+<meta property="og:description" content="LSB、二值图像隐藏、patchwork">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2022/12/30/%E7%A9%BA%E5%9F%9F%E5%9B%BE%E5%83%8F%E4%BF%A1%E6%81%AF%E9%9A%90%E8%97%8F/wps1.jpg">
+<meta property="og:image" content="http://example.com/2022/12/30/%E7%A9%BA%E5%9F%9F%E5%9B%BE%E5%83%8F%E4%BF%A1%E6%81%AF%E9%9A%90%E8%97%8F/wps3.jpg">
+<meta property="og:image" content="http://example.com/2022/12/30/%E7%A9%BA%E5%9F%9F%E5%9B%BE%E5%83%8F%E4%BF%A1%E6%81%AF%E9%9A%90%E8%97%8F/wps4.jpg">
+<meta property="og:image" content="http://example.com/2022/12/30/%E7%A9%BA%E5%9F%9F%E5%9B%BE%E5%83%8F%E4%BF%A1%E6%81%AF%E9%9A%90%E8%97%8F/wps5.jpg">
+<meta property="og:image" content="http://example.com/2022/12/30/%E7%A9%BA%E5%9F%9F%E5%9B%BE%E5%83%8F%E4%BF%A1%E6%81%AF%E9%9A%90%E8%97%8F/wps6.jpg">
+<meta property="og:image" content="http://example.com/2022/12/30/%E7%A9%BA%E5%9F%9F%E5%9B%BE%E5%83%8F%E4%BF%A1%E6%81%AF%E9%9A%90%E8%97%8F/wps7.jpg">
+<meta property="og:image" content="http://example.com/2022/12/30/%E7%A9%BA%E5%9F%9F%E5%9B%BE%E5%83%8F%E4%BF%A1%E6%81%AF%E9%9A%90%E8%97%8F/wps8.jpg">
+<meta property="og:image" content="http://example.com/2022/12/30/%E7%A9%BA%E5%9F%9F%E5%9B%BE%E5%83%8F%E4%BF%A1%E6%81%AF%E9%9A%90%E8%97%8F/wps9.jpg">
+<meta property="og:image" content="http://example.com/2022/12/30/%E7%A9%BA%E5%9F%9F%E5%9B%BE%E5%83%8F%E4%BF%A1%E6%81%AF%E9%9A%90%E8%97%8F/wps10.jpg">
+<meta property="og:image" content="http://example.com/2022/12/30/%E7%A9%BA%E5%9F%9F%E5%9B%BE%E5%83%8F%E4%BF%A1%E6%81%AF%E9%9A%90%E8%97%8F/wps11.jpg">
+<meta property="og:image" content="http://example.com/2022/12/30/%E7%A9%BA%E5%9F%9F%E5%9B%BE%E5%83%8F%E4%BF%A1%E6%81%AF%E9%9A%90%E8%97%8F/wps12.jpg">
+<meta property="og:image" content="http://example.com/2022/12/30/%E7%A9%BA%E5%9F%9F%E5%9B%BE%E5%83%8F%E4%BF%A1%E6%81%AF%E9%9A%90%E8%97%8F/wps13.jpg">
+<meta property="og:image" content="http://example.com/2022/12/30/%E7%A9%BA%E5%9F%9F%E5%9B%BE%E5%83%8F%E4%BF%A1%E6%81%AF%E9%9A%90%E8%97%8F/wps2.jpg">
+<meta property="og:image" content="http://example.com/2022/12/30/%E7%A9%BA%E5%9F%9F%E5%9B%BE%E5%83%8F%E4%BF%A1%E6%81%AF%E9%9A%90%E8%97%8F/wps14.jpg">
+<meta property="og:image" content="http://example.com/2022/12/30/%E7%A9%BA%E5%9F%9F%E5%9B%BE%E5%83%8F%E4%BF%A1%E6%81%AF%E9%9A%90%E8%97%8F/wps15.jpg">
+<meta property="og:image" content="http://example.com/2022/12/30/%E7%A9%BA%E5%9F%9F%E5%9B%BE%E5%83%8F%E4%BF%A1%E6%81%AF%E9%9A%90%E8%97%8F/wps16.jpg">
+<meta property="og:image" content="http://example.com/2022/12/30/%E7%A9%BA%E5%9F%9F%E5%9B%BE%E5%83%8F%E4%BF%A1%E6%81%AF%E9%9A%90%E8%97%8F/wps17.jpg">
+<meta property="og:image" content="http://example.com/2022/12/30/%E7%A9%BA%E5%9F%9F%E5%9B%BE%E5%83%8F%E4%BF%A1%E6%81%AF%E9%9A%90%E8%97%8F/wps18.jpg">
+<meta property="og:image" content="http://example.com/2022/12/30/%E7%A9%BA%E5%9F%9F%E5%9B%BE%E5%83%8F%E4%BF%A1%E6%81%AF%E9%9A%90%E8%97%8F/wps19.jpg">
+<meta property="og:image" content="http://example.com/2022/12/30/%E7%A9%BA%E5%9F%9F%E5%9B%BE%E5%83%8F%E4%BF%A1%E6%81%AF%E9%9A%90%E8%97%8F/wps20.jpg">
+<meta property="article:published_time" content="2022-12-30T13:46:54.000Z">
+<meta property="article:modified_time" content="2022-12-31T03:49:05.462Z">
+<meta property="article:author" content="Magnesium">
+<meta property="article:tag" content="信息隐藏">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/2022/12/30/%E7%A9%BA%E5%9F%9F%E5%9B%BE%E5%83%8F%E4%BF%A1%E6%81%AF%E9%9A%90%E8%97%8F/wps1.jpg">
+  
+  
+  
+  <title>空域图像信息隐藏 - M4gne51um&#39;s blog</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":60,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":"§"},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>M4gne51um&#39;s blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/background.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.1)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="空域图像信息隐藏"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-12-30 21:46" pubdate>
+          2022年12月30日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          <!-- compatible with older versions-->
+          8.4k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          <!-- compatible with older versions-->
+          70 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">空域图像信息隐藏</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="空域图像信息隐藏"><a href="#空域图像信息隐藏" class="headerlink" title="空域图像信息隐藏"></a>空域图像信息隐藏</h1><h3 id="一、LSB算法"><a href="#一、LSB算法" class="headerlink" title="一、LSB算法"></a>一、LSB算法</h3><h4 id="【实验目的】"><a href="#【实验目的】" class="headerlink" title="【实验目的】"></a>【实验目的】</h4><p>了解信息隐藏中常用的LSB算法，并掌握其原理，设计并实现基于图像LSB隐藏算法，并通过峰值信噪比（PSNR）对图像质量进行评价，对结果进行卡方分析和RS分析。</p>
+<h4 id="【实验环境】"><a href="#【实验环境】" class="headerlink" title="【实验环境】"></a>【实验环境】</h4><p>matlab&#x2F;python <em><strong>*灰度图片*</strong></em> s-tool工具</p>
+<h4 id="【实验原理】"><a href="#【实验原理】" class="headerlink" title="【实验原理】"></a>【实验原理】</h4><p>1） 图像</p>
+<p>灰度图：使用一个0（全黑）~255（全白）的数字表示一个像素点的灰度等级。</p>
+<p>RGB图像：由三个通道组成，每个像素点上由一组数据【B（蓝色） G（绿色） R（红色）】表示，同样的表示单一颜色通道的值取值范围也为0~255。</p>
+<p>（2）位深度：以灰度图为例，每一个像素点上有一个8位二进制串（0-255）表示灰度值，灰度层的位深度就为8。</p>
+<p>（3）位层：以灰度图为例，每个像素点的每一位组成一个位层，如每个像素点的最低位组成最低位层，最高位组成最高位层，灰度图片一共有8个位层，因为每一个像素点由8位组成。</p>
+<h4 id="任务："><a href="#任务：" class="headerlink" title="任务："></a>任务：</h4><p>1） 选取合适的图片作为载体图片和嵌入图片，载体图片分成8个位平面，并显示。</p>
+<figure class="highlight gcode"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs gcode">I=imread<span class="hljs-comment">(&quot;./**.bmp&quot;)</span>;      <span class="hljs-meta">%</span>载体图片<br><br>[h,w]=size<span class="hljs-comment">(I)</span>;<br><br>II=zeros<span class="hljs-comment">(h,w,8)</span>;<br><br>a=I;  <span class="hljs-meta">%</span>存储原始图像矩阵<br><br>for k=<span class="hljs-number">1</span>:<span class="hljs-number">8</span><br><br>  II<span class="hljs-comment">(:,:,k)</span> = mod<span class="hljs-comment">(a,2)</span>;<span class="hljs-meta">%</span>将图像灰度值分解为二进制串，然后取第k位<br><br>  a=idivide<span class="hljs-comment">(int32(a)</span>,i<span class="hljs-symbol">nt32</span><span class="hljs-comment">(2)</span>);<br><br>  subplot<span class="hljs-comment">(3,3,k+1)</span>;<br><br>  imshow<span class="hljs-comment">(II(:,:,k)</span>);<br><br>  tex=[<span class="hljs-string">&#x27;第&#x27;</span>,<span class="hljs-symbol">num2</span>str<span class="hljs-comment">(k)</span>,<span class="hljs-string">&#x27;个位平面&#x27;</span>];<br><br>  title<span class="hljs-comment">(tex)</span>;<br><br>e<span class="hljs-symbol">nd</span><br></code></pre></td></tr></table></figure>
+
+
+<p>2） 制作水印图片，分别为一个位平面的，两个位平面的，三个位平面的，并显示，将制作的水印图片嵌入载体图片中生成含水印图片并显示。</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs routeros"><span class="hljs-keyword">for</span> <span class="hljs-attribute">k</span>=1:3<br><br>  II(:,:,k)=II0(:,:,9-k);  %替换后三位的数据<br><br>  <span class="hljs-keyword">for</span> <span class="hljs-attribute">kk</span>=8:-1:1<br><br>​    III(:,:,k)=III(:,:,k)<span class="hljs-number">*2</span>+II(:,:,kk);<br><br>  end<br><br>  subplot(2,2,k+1);<br><br>  imshow(III(:,:,k),[]);<br><br>  tex=[<span class="hljs-string">&#x27;嵌入&#x27;</span>,num2str(k),<span class="hljs-string">&#x27;bit/pixel后的伪装图片&#x27;</span>];<br><br>  title(tex);<br><br>end<br></code></pre></td></tr></table></figure>
+
+<p>3） 从含水印图片中提取水印图片并显示，对含水印图片进行信噪比计算（PSNR）</p>
+<p><img src="/2022/12/30/%E7%A9%BA%E5%9F%9F%E5%9B%BE%E5%83%8F%E4%BF%A1%E6%81%AF%E9%9A%90%E8%97%8F/wps1.jpg" srcset="/img/loading.gif" lazyload alt="img"> </p>
+<p>4） 比较含水印图片和原图的直方图， </p>
+<p>5） 使用stirmark进行攻击，并分析结果</p>
+<h4 id="【实验过程】"><a href="#【实验过程】" class="headerlink" title="【实验过程】"></a>【实验过程】</h4><ol>
+<li>将载体图片分成8个位平面。</li>
+</ol>
+<p><img src="/2022/12/30/%E7%A9%BA%E5%9F%9F%E5%9B%BE%E5%83%8F%E4%BF%A1%E6%81%AF%E9%9A%90%E8%97%8F/wps3.jpg" srcset="/img/loading.gif" lazyload alt="img"> </p>
+<ol start="2">
+<li>制作水印图片，分别为一个位平面的，两个位平面的，三个位平面的，将制作的水印图片嵌入载体图片中生成含水印图片并显示。</li>
+</ol>
+<p><img src="/2022/12/30/%E7%A9%BA%E5%9F%9F%E5%9B%BE%E5%83%8F%E4%BF%A1%E6%81%AF%E9%9A%90%E8%97%8F/wps4.jpg" srcset="/img/loading.gif" lazyload alt="img"> </p>
+<p><img src="/2022/12/30/%E7%A9%BA%E5%9F%9F%E5%9B%BE%E5%83%8F%E4%BF%A1%E6%81%AF%E9%9A%90%E8%97%8F/wps5.jpg" srcset="/img/loading.gif" lazyload alt="img"> </p>
+<ol start="3">
+<li>从含水印图片中提取水印图片并显示，对含水印图片进行信噪比计算（PSNR）</li>
+</ol>
+<p><img src="/2022/12/30/%E7%A9%BA%E5%9F%9F%E5%9B%BE%E5%83%8F%E4%BF%A1%E6%81%AF%E9%9A%90%E8%97%8F/wps6.jpg" srcset="/img/loading.gif" lazyload alt="img"> </p>
+<p>Psnr&#x3D;11.9784</p>
+<p><img src="/2022/12/30/%E7%A9%BA%E5%9F%9F%E5%9B%BE%E5%83%8F%E4%BF%A1%E6%81%AF%E9%9A%90%E8%97%8F/wps7.jpg" srcset="/img/loading.gif" lazyload alt="img"> </p>
+<ol start="4">
+<li>比较含原图和水印图片的直方图</li>
+</ol>
+<p><img src="/2022/12/30/%E7%A9%BA%E5%9F%9F%E5%9B%BE%E5%83%8F%E4%BF%A1%E6%81%AF%E9%9A%90%E8%97%8F/wps8.jpg" srcset="/img/loading.gif" lazyload alt="img"><img src="/2022/12/30/%E7%A9%BA%E5%9F%9F%E5%9B%BE%E5%83%8F%E4%BF%A1%E6%81%AF%E9%9A%90%E8%97%8F/wps9.jpg" srcset="/img/loading.gif" lazyload alt="img"> </p>
+<ol start="5">
+<li>使用stirmark进行攻击，并分析结果</li>
+</ol>
+<p><img src="/2022/12/30/%E7%A9%BA%E5%9F%9F%E5%9B%BE%E5%83%8F%E4%BF%A1%E6%81%AF%E9%9A%90%E8%97%8F/wps10.jpg" srcset="/img/loading.gif" lazyload alt="img"> </p>
+<p>旋转0.25</p>
+<p><img src="/2022/12/30/%E7%A9%BA%E5%9F%9F%E5%9B%BE%E5%83%8F%E4%BF%A1%E6%81%AF%E9%9A%90%E8%97%8F/wps11.jpg" srcset="/img/loading.gif" lazyload alt="img"> </p>
+<p>旋转5</p>
+<p><img src="/2022/12/30/%E7%A9%BA%E5%9F%9F%E5%9B%BE%E5%83%8F%E4%BF%A1%E6%81%AF%E9%9A%90%E8%97%8F/wps12.jpg" srcset="/img/loading.gif" lazyload alt="img"> </p>
+<p>旋转45</p>
+<p><img src="/2022/12/30/%E7%A9%BA%E5%9F%9F%E5%9B%BE%E5%83%8F%E4%BF%A1%E6%81%AF%E9%9A%90%E8%97%8F/wps13.jpg" srcset="/img/loading.gif" lazyload alt="img"> </p>
+<p>综上可看出，经过旋转攻击后，水印模糊。</p>
+<h4 id="【代码】"><a href="#【代码】" class="headerlink" title="【代码】"></a>【代码】</h4><figure class="highlight matlab"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br></pre></td><td class="code"><pre><code class="hljs matlab">一、<br>clc<br>clear<br>close all<br>I=imread(<span class="hljs-string">&quot;./pic.bmp&quot;</span>); <span class="hljs-comment">%载体图片</span><br>I0=imread(<span class="hljs-string">&quot;./lena.bmp&quot;</span>); <span class="hljs-comment">%被嵌入图片</span><br><span class="hljs-built_in">figure</span>()<br>[h,w]=<span class="hljs-built_in">size</span>(I);<br>subplot(<span class="hljs-number">3</span>,<span class="hljs-number">3</span>,<span class="hljs-number">1</span>);<br>imshow(I);<br>title(<span class="hljs-string">&quot;原图&quot;</span>);<br>II=<span class="hljs-built_in">zeros</span>(h,w,<span class="hljs-number">8</span>);<br>II0=<span class="hljs-built_in">zeros</span>(h,w,<span class="hljs-number">8</span>);<br><span class="hljs-comment">%% 将载体图片分成8个位平面，并显示</span><br>a=I; <span class="hljs-comment">%存储原始图像矩阵</span><br><span class="hljs-keyword">for</span> k=<span class="hljs-number">1</span>:<span class="hljs-number">8</span><br>II(:,:,k) = <span class="hljs-built_in">mod</span>(a,<span class="hljs-number">2</span>);<span class="hljs-comment">%将图像灰度值分解为二进制串，然后取第k位</span><br>a=idivide(int32(a),int32(<span class="hljs-number">2</span>));<br>subplot(<span class="hljs-number">3</span>,<span class="hljs-number">3</span>,k+<span class="hljs-number">1</span>);<br>imshow(II(:,:,k));<br>tex=[<span class="hljs-string">&#x27;第&#x27;</span>,num2str(k),<span class="hljs-string">&#x27;个位平面&#x27;</span>];<br>title(tex);<br><span class="hljs-keyword">end</span><br><span class="hljs-comment">%% 制作水印图片</span><br>a=I0;<br><span class="hljs-keyword">for</span> k=<span class="hljs-number">1</span>:<span class="hljs-number">8</span><br>II0(:,:,k) = <span class="hljs-built_in">mod</span>(a,<span class="hljs-number">2</span>);<span class="hljs-comment">%将图像灰度值分解为二进制串，然后取第k位</span><br>a=idivide(int32(a),int32(<span class="hljs-number">2</span>));<br><span class="hljs-keyword">end</span><br><span class="hljs-built_in">figure</span>();<br>A=<span class="hljs-built_in">zeros</span>(h,w); <span class="hljs-comment">%制作水印图片，可以嵌入1个位平面的、2个位平面的、3个位平面的</span><br>subplot(<span class="hljs-number">2</span>,<span class="hljs-number">2</span>,<span class="hljs-number">1</span>);<br>imshow(I0);<br>title(<span class="hljs-string">&quot;原图&quot;</span>);<br><span class="hljs-keyword">for</span> <span class="hljs-built_in">i</span>=<span class="hljs-number">1</span>:<span class="hljs-number">3</span><br>P=A;<br>P(:,:)=P(:,:)*<span class="hljs-number">2</span>+II0(:,:,<span class="hljs-number">9</span>-<span class="hljs-built_in">i</span>);<br>A=P;<br>P=bitshift(P,<span class="hljs-number">8</span>-<span class="hljs-built_in">i</span>);<br>subplot(<span class="hljs-number">2</span>,<span class="hljs-number">2</span>,<span class="hljs-built_in">i</span>+<span class="hljs-number">1</span>);<br>imshow(P,[]);<br>tex=[<span class="hljs-string">&#x27;嵌入&#x27;</span>,num2str(<span class="hljs-built_in">i</span>),<span class="hljs-string">&#x27;个位平面的水印图片&#x27;</span>];<br>title(tex);<br><span class="hljs-keyword">end</span><br><span class="hljs-comment">%% 图片开始嵌入载体图片并显示载体图像</span><br><span class="hljs-built_in">figure</span>();<br>subplot(<span class="hljs-number">2</span>,<span class="hljs-number">2</span>,<span class="hljs-number">1</span>)<br>imshow(I);<br>title(<span class="hljs-string">&quot;原图&quot;</span>);<br>III=<span class="hljs-built_in">zeros</span>(h,w,<span class="hljs-number">3</span>); <span class="hljs-comment">%分别嵌入1bit/pixel、2bit/pixel、3bit/pixel后的伪装图片</span><br><span class="hljs-keyword">for</span> k=<span class="hljs-number">1</span>:<span class="hljs-number">3</span><br>II(:,:,k)=II0(:,:,<span class="hljs-number">9</span>-k); <span class="hljs-comment">%替换后三位的数据</span><br><span class="hljs-keyword">for</span> kk=<span class="hljs-number">8</span>:<span class="hljs-number">-1</span>:<span class="hljs-number">1</span><br>III(:,:,k)=III(:,:,k)*<span class="hljs-number">2</span>+II(:,:,kk);<br><span class="hljs-keyword">end</span><br>subplot(<span class="hljs-number">2</span>,<span class="hljs-number">2</span>,k+<span class="hljs-number">1</span>);<br>imshow(III(:,:,k),[]);<br>tex=[<span class="hljs-string">&#x27;嵌入&#x27;</span>,num2str(k),<span class="hljs-string">&#x27;bit/pixel后的伪装图片&#x27;</span>];<br>title(tex);<br><span class="hljs-keyword">end</span><br>imwrite(uint8(III(:,:,<span class="hljs-number">3</span>)),<span class="hljs-string">&#x27;result.bmp&#x27;</span>);<br><span class="hljs-comment">%% 嵌入图片提取</span><br><span class="hljs-built_in">figure</span>();<br>III0=<span class="hljs-built_in">zeros</span>(h,w,<span class="hljs-number">3</span>); <span class="hljs-comment">%分别保存三个维度的替换后的水印图片(取前3位）</span><br><span class="hljs-keyword">for</span> <span class="hljs-built_in">i</span>=<span class="hljs-number">1</span>:<span class="hljs-number">3</span><br>a=int32(III(:,:,<span class="hljs-built_in">i</span>));<br>subplot(<span class="hljs-number">3</span>,<span class="hljs-number">2</span>,<span class="hljs-number">2</span>*(<span class="hljs-built_in">i</span><span class="hljs-number">-1</span>)+<span class="hljs-number">1</span>);<br>imshow(a,[]);<br>tex=[<span class="hljs-string">&#x27;嵌入&#x27;</span>,num2str(<span class="hljs-built_in">i</span>),<span class="hljs-string">&#x27;bit/pixel后的伪装图片&#x27;</span>];<br>title(tex);<br>IIII=<span class="hljs-built_in">zeros</span>(h,w);<br><span class="hljs-keyword">for</span> k=<span class="hljs-number">1</span>:<span class="hljs-built_in">i</span><br>III0(:,:,k)=<span class="hljs-built_in">mod</span>(a,<span class="hljs-number">2</span>);<span class="hljs-comment">%将图像灰度值分解为二进制串，然后取第k位</span><br>a=idivide(int32(a),int32(<span class="hljs-number">2</span>));<br>IIII(:,:)=IIII(:,:)*<span class="hljs-number">2</span>+III0(:,:,k);<br><span class="hljs-keyword">end</span><br>IIII=bitshift(IIII,<span class="hljs-number">8</span>-<span class="hljs-built_in">i</span>);<br>subplot(<span class="hljs-number">3</span>,<span class="hljs-number">2</span>,<span class="hljs-number">2</span>*(<span class="hljs-built_in">i</span><span class="hljs-number">-1</span>)+<span class="hljs-number">2</span>);<br>imshow(IIII,[]);<br>tex=[<span class="hljs-string">&#x27;嵌入&#x27;</span>,num2str(<span class="hljs-built_in">i</span>),<span class="hljs-string">&#x27;bit/pixel后的秘密信息提取&#x27;</span>];<br>title(tex);<br><br><span class="hljs-keyword">end</span><br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="二、二值图像信息隐藏"><a href="#二、二值图像信息隐藏" class="headerlink" title="二、二值图像信息隐藏"></a>二、二值图像信息隐藏</h3><h4 id="【实验目的】-1"><a href="#【实验目的】-1" class="headerlink" title="【实验目的】"></a>【实验目的】</h4><p>了解二值图像的基本特点，并在二值图片中嵌入隐藏信息。</p>
+<h4 id="【实验环境】-1"><a href="#【实验环境】-1" class="headerlink" title="【实验环境】"></a>【实验环境】</h4><p>matlab&#x2F;python</p>
+<h4 id="【实验原理】-1"><a href="#【实验原理】-1" class="headerlink" title="【实验原理】"></a>【实验原理】</h4><p>第一种方法：把一个二值图像分成L个矩形图像区域Bi ，如果Bi中黑色象素的个数大于一半，则表示嵌入0；如果白色象素的个数大于一半，则表示嵌入1，当需要嵌入的比特与所选区域的黑白象素的比例不一致时，为了达到希望的象素关系，则需要修改一些象素的颜色。修改应遵循一定的规则，原则是不引起感观察觉。修改应在黑白区域的边缘进行。同时为了保证修改的区域不大，保证图片的质量，对修改的块Bi应该做出选择，当需要修改太多时，应该选择放弃从而选取其他块。所以，应考虑有一定的冗余度。确定有效区域。确定两个阈值 R1 &gt; 50% 和 R0 &lt; 50% ，以及一个健壮性参数 λ 。隐藏 0 时，该块的黑色象素的个数应属于 [R1 , R1 + λ] 隐藏 1 时，该块的黑色象素的个数应属于 [R0 - λ , R0] 。如果为了适应所嵌入的比特，目标块必须修改太多的象素，就把该块设为无效。标识无效块：将无效块中的象素进行少量的修改，使得其中黑色象素的百分比大于 R1 + 3λ ，或者小于 R0 - 3λ 。</p>
+<p>第二种方法：利用游标卡尺方法，例：</p>
+<p> <img src="/2022/12/30/%E7%A9%BA%E5%9F%9F%E5%9B%BE%E5%83%8F%E4%BF%A1%E6%81%AF%E9%9A%90%E8%97%8F/wps2.jpg" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>编码：&lt; a0, 3 &gt; &lt; a1, 5 &gt; &lt; a2, 4 &gt; &lt; a3, 2 &gt; &lt; a4, 1 &gt;，如果秘密信息位是 0 ，则修改该游程长度为偶数；如果为 1 ，则修改游程长度为奇数；上面便可以嵌入（11001）五位编码</p>
+<h4 id="任务：-1"><a href="#任务：-1" class="headerlink" title="任务："></a>任务：</h4><p>完成第一或者第二种方法，并从嵌入的图片中成功提取水印，附上代码和截图。并用stirmark攻击对水印进行鲁棒性测试</p>
+<h4 id="【实验过程】-1"><a href="#【实验过程】-1" class="headerlink" title="【实验过程】"></a>【实验过程】</h4><p>第二种方法：</p>
+<ol>
+<li>隐藏信息</li>
+</ol>
+<p><img src="/2022/12/30/%E7%A9%BA%E5%9F%9F%E5%9B%BE%E5%83%8F%E4%BF%A1%E6%81%AF%E9%9A%90%E8%97%8F/wps14.jpg" srcset="/img/loading.gif" lazyload alt="img">原图与水印图片</p>
+<p><img src="/2022/12/30/%E7%A9%BA%E5%9F%9F%E5%9B%BE%E5%83%8F%E4%BF%A1%E6%81%AF%E9%9A%90%E8%97%8F/wps15.jpg" srcset="/img/loading.gif" lazyload alt="img">  <img src="/2022/12/30/%E7%A9%BA%E5%9F%9F%E5%9B%BE%E5%83%8F%E4%BF%A1%E6%81%AF%E9%9A%90%E8%97%8F/wps16.jpg" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>​	原图	水印图</p>
+<ol start="2">
+<li>信息提取</li>
+</ol>
+<p><img src="/2022/12/30/%E7%A9%BA%E5%9F%9F%E5%9B%BE%E5%83%8F%E4%BF%A1%E6%81%AF%E9%9A%90%E8%97%8F/wps17.jpg" srcset="/img/loading.gif" lazyload alt="img"> </p>
+<ol start="3">
+<li>stirmark攻击</li>
+</ol>
+<p>Stirmark不能对本实验所用bmp单色位图进行攻击产生结果，无法测试。</p>
+<h4 id="【代码】-1"><a href="#【代码】-1" class="headerlink" title="【代码】"></a>【代码】</h4><figure class="highlight matlab"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br></pre></td><td class="code"><pre><code class="hljs matlab"><br>二、<br>嵌入<br>clc;<br>clear;<br><br>threshold = <span class="hljs-number">10</span>;<br>oi = imread(<span class="hljs-string">&#x27;lena2.bmp&#x27;</span>);<br>si = <span class="hljs-built_in">size</span>(oi); <span class="hljs-comment">% 保存读入图像的行列,以便恢复图像</span><br>oi = oi(:); <span class="hljs-comment">% 变成一列, 按列变</span><br>[len, col] = <span class="hljs-built_in">size</span>(oi); <span class="hljs-comment">%len= row,1</span><br>carrier = oi; <br><br><span class="hljs-built_in">j</span>=<span class="hljs-number">1</span>;<br><span class="hljs-built_in">i</span>=<span class="hljs-number">1</span>;<br><span class="hljs-comment">%统计游程长度</span><br><span class="hljs-keyword">while</span>(<span class="hljs-built_in">i</span> &lt;= len)<br>last = oi(<span class="hljs-built_in">i</span>); <span class="hljs-comment">% 依次取出每个数</span><br>count = <span class="hljs-number">1</span>;<br><span class="hljs-keyword">while</span>( <span class="hljs-built_in">i</span>+<span class="hljs-number">1</span> &lt;= len &amp;&amp; oi(<span class="hljs-built_in">i</span>+<span class="hljs-number">1</span>)== last) <span class="hljs-comment">% 下一个与上一个相同</span><br><span class="hljs-built_in">i</span> = <span class="hljs-built_in">i</span> + <span class="hljs-number">1</span>;<br>count = count + <span class="hljs-number">1</span>;<br><span class="hljs-keyword">end</span><br>RLE(<span class="hljs-built_in">j</span>) = count;<br><span class="hljs-built_in">j</span> = <span class="hljs-built_in">j</span> + <span class="hljs-number">1</span>;<br><span class="hljs-built_in">i</span> = <span class="hljs-built_in">i</span> + <span class="hljs-number">1</span>;<br><span class="hljs-keyword">end</span><br><br>msgfid = fopen(<span class="hljs-string">&#x27;hide.txt&#x27;</span>, <span class="hljs-string">&#x27;r&#x27;</span>);<br>[msg, msgcount] = fread(msgfid);<br>fclose(msgfid);<br><br>msg = dec2bin(msg,<span class="hljs-number">8</span>); <span class="hljs-comment">%将读入的每个字节转换成二进制</span><br>msg = str2num(msg(:)); <span class="hljs-comment">% </span><br>msgcount = msgcount*<span class="hljs-number">8</span>; <span class="hljs-comment">% 需要隐藏的数目</span><br><br><span class="hljs-built_in">i</span> = <span class="hljs-number">1</span>; <span class="hljs-comment">% msg 的索引</span><br>count = <span class="hljs-number">1</span>; <span class="hljs-comment">% RLE的索引,只为奇数 1 3 5...</span><br>sum = <span class="hljs-number">0</span>;<br><span class="hljs-keyword">while</span> count &lt; <span class="hljs-built_in">length</span>(RLE)<span class="hljs-number">-1</span><br>addSum = RLE(count) + RLE(count+<span class="hljs-number">1</span>); <span class="hljs-comment">%相邻两个数相加的和，从1开始</span><br><span class="hljs-keyword">if</span> count &gt;= <span class="hljs-number">3</span> <br>sum = sum + RLE(count - <span class="hljs-number">1</span>) + RLE(count - <span class="hljs-number">2</span>); <span class="hljs-comment">% 当前count的在数组中的下标-1</span><br><span class="hljs-keyword">end</span><br><span class="hljs-keyword">if</span>(addSum &gt;= threshold) <span class="hljs-comment">% 只有当相邻游程和大于阈值,才隐藏信息</span><br><span class="hljs-keyword">if</span> RLE(count) &gt;= RLE(count+<span class="hljs-number">1</span>)<br>modifyPoint = sum + RLE(count);<br><span class="hljs-keyword">else</span><br>modifyPoint = sum + RLE(count) + <span class="hljs-number">1</span>;<br><span class="hljs-keyword">end</span><br><span class="hljs-keyword">if</span>(msg(<span class="hljs-built_in">i</span>) == <span class="hljs-number">0</span>) <span class="hljs-comment">% 嵌入的信息为0，但是游程为奇数，需要修改</span><br><span class="hljs-keyword">if</span>(<span class="hljs-built_in">mod</span>(RLE(count), <span class="hljs-number">2</span>) == <span class="hljs-number">1</span>) <span class="hljs-comment">%RLE(count) == &#x27;奇数&#x27; </span><br>carrier(modifyPoint) = <span class="hljs-built_in">mod</span>(carrier(modifyPoint)+<span class="hljs-number">1</span> ,<span class="hljs-number">2</span>); <span class="hljs-comment">% 修改点的值取反 mod(carrier(modifyPoint)+1 ,2)</span><br><span class="hljs-keyword">end</span><br><span class="hljs-keyword">else</span> <span class="hljs-comment">% 嵌入的信息为1，但是游程为偶数，需要修改</span><br><span class="hljs-keyword">if</span> <span class="hljs-built_in">mod</span>(RLE(count), <span class="hljs-number">2</span>) == <span class="hljs-number">0</span> <span class="hljs-comment">%RLE(count) == &#x27;偶数&#x27; </span><br>carrier(modifyPoint) = <span class="hljs-built_in">mod</span>(carrier(modifyPoint) + <span class="hljs-number">1</span> ,<span class="hljs-number">2</span>); <span class="hljs-comment">% 修改点的值取反 mod(carrier(modifyPoint)+1 ,2)</span><br><span class="hljs-keyword">end</span><br><span class="hljs-keyword">end</span><br><span class="hljs-built_in">i</span> = <span class="hljs-built_in">i</span> + <span class="hljs-number">1</span>; <span class="hljs-comment">% 隐藏一个位后， msg索引加1</span><br><span class="hljs-keyword">end</span><br>count = count + <span class="hljs-number">2</span>; <br><span class="hljs-keyword">if</span> <span class="hljs-built_in">i</span> == msgcount <br><span class="hljs-keyword">break</span>;<br><span class="hljs-keyword">end</span><br><span class="hljs-keyword">end</span><br><br><span class="hljs-keyword">if</span> <span class="hljs-built_in">i</span> &lt; msgcount<br>error(<span class="hljs-string">&#x27;不能隐藏全部信息！&#x27;</span>);<br><span class="hljs-keyword">end</span><br><br>imwrite(<span class="hljs-built_in">reshape</span>(carrier, si(<span class="hljs-number">1</span>),si(<span class="hljs-number">2</span>),[]), <span class="hljs-string">&#x27;hide.bmp&#x27;</span>);<br><span class="hljs-built_in">figure</span>;<br>subplot(<span class="hljs-number">121</span>);<br>imshow(<span class="hljs-built_in">reshape</span>(oi, si(<span class="hljs-number">1</span>),si(<span class="hljs-number">2</span>),[]));<br>title(<span class="hljs-string">&#x27;原图&#x27;</span>);<br>subplot(<span class="hljs-number">122</span>);<br>imshow(<span class="hljs-string">&#x27;hide.bmp&#x27;</span>);<br>title(<span class="hljs-string">&#x27;水印图&#x27;</span>);<br><br>提取<br>clc;<br>clear;<br><br>threshold = <span class="hljs-number">3</span>;<br>oi = imread(<span class="hljs-string">&#x27;hide.bmp&#x27;</span>);<br>oi = oi(:); <span class="hljs-comment">% 变成一列, 按列变</span><br>[len, col] = <span class="hljs-built_in">size</span>(oi); <span class="hljs-comment">%len= row,1</span><br><br><span class="hljs-built_in">j</span>=<span class="hljs-number">1</span>;<br><span class="hljs-built_in">i</span>=<span class="hljs-number">1</span>;<br><span class="hljs-comment">%统计游程长度</span><br><span class="hljs-keyword">while</span>(<span class="hljs-built_in">i</span> &lt;= len)<br>last = oi(<span class="hljs-built_in">i</span>); <span class="hljs-comment">% 依次取出每个数</span><br>count = <span class="hljs-number">1</span>;<br><span class="hljs-keyword">while</span>( <span class="hljs-built_in">i</span>+<span class="hljs-number">1</span> &lt;= len &amp;&amp; oi(<span class="hljs-built_in">i</span>+<span class="hljs-number">1</span>)== last) <span class="hljs-comment">% 下一个与上一个相同</span><br><span class="hljs-built_in">i</span> = <span class="hljs-built_in">i</span> + <span class="hljs-number">1</span>;<br>count = count + <span class="hljs-number">1</span>;<br><span class="hljs-keyword">end</span><br>RLE(<span class="hljs-built_in">j</span>) = count;<br><span class="hljs-built_in">j</span> = <span class="hljs-built_in">j</span> + <span class="hljs-number">1</span>;<br><span class="hljs-built_in">i</span> = <span class="hljs-built_in">i</span> + <span class="hljs-number">1</span>;<br><span class="hljs-keyword">end</span><br><br><span class="hljs-built_in">i</span> = <span class="hljs-number">1</span>; <br>msgcount = <span class="hljs-number">160</span>;<br>msg = <span class="hljs-built_in">zeros</span>(msgcount,<span class="hljs-number">1</span>);<br>count = <span class="hljs-number">1</span>; <span class="hljs-comment">% RLE的索引,只为奇数 1 3 5...</span><br><span class="hljs-keyword">while</span> <span class="hljs-built_in">i</span> &lt;= msgcount<br>addSum = RLE(count) + RLE(count+<span class="hljs-number">1</span>); <span class="hljs-comment">%相邻两个数相加的和，从1开始 </span><br><span class="hljs-keyword">if</span>(addSum &gt;= threshold) <span class="hljs-comment">% 只有当相邻游程和大于阈值,才隐藏信息</span><br><span class="hljs-keyword">if</span> <span class="hljs-built_in">mod</span>(RLE(count),<span class="hljs-number">2</span>) == <span class="hljs-number">0</span><br>msg(<span class="hljs-built_in">i</span>) = <span class="hljs-number">0</span>;<br><span class="hljs-keyword">else</span><br>msg(<span class="hljs-built_in">i</span>) = <span class="hljs-number">1</span>;<br><span class="hljs-keyword">end</span><br><span class="hljs-built_in">i</span> = <span class="hljs-built_in">i</span> + <span class="hljs-number">1</span>;<br><span class="hljs-keyword">end</span><br>count = count + <span class="hljs-number">2</span>; <br><span class="hljs-keyword">end</span><br><br>hideInfo = <span class="hljs-built_in">reshape</span>(msg,<span class="hljs-built_in">length</span>(msg)/<span class="hljs-number">8</span>,<span class="hljs-number">8</span>); <span class="hljs-comment">%将二进制字符串分成n行，8列</span><br>bin = num2str(hideInfo); <span class="hljs-comment">% 二进制数值转变成二进制字符串</span><br>dec = bin2dec(bin);<span class="hljs-comment">%二进制字符串转换成十进制数组</span><br>recoverdata = native2unicode(dec);<span class="hljs-comment">% 本机编码转换成unicode</span><br>fprintf(<span class="hljs-string">&#x27;恢复出的信息：%s\n&#x27;</span>,recoverdata);<br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="三、patchwork图像信息隐藏"><a href="#三、patchwork图像信息隐藏" class="headerlink" title="三、patchwork图像信息隐藏"></a>三、patchwork图像信息隐藏</h3><h4 id="【实验目的】-2"><a href="#【实验目的】-2" class="headerlink" title="【实验目的】"></a>【实验目的】</h4><p>了解Patchwork信息隐藏特点，掌握基于Patchwork的图像信息隐藏原理，设计并实现</p>
+<h4 id="【实验环境】-2"><a href="#【实验环境】-2" class="headerlink" title="【实验环境】"></a>【实验环境】</h4><p>matlab&#x2F;python</p>
+<h4 id="【实验原理】-2"><a href="#【实验原理】-2" class="headerlink" title="【实验原理】"></a>【实验原理】</h4><p>Patchwork是指从载体数据中选择一些数据组成两个集合，然后通过修改这两个集合之间的某种关系来携带水印信息。这两个集合可以是两个系数、两组系数或者是两个特征量。两个集合之间的关系可以是大小关系、能量关系、逻辑关系和奇偶性关系等。</p>
+<p>Patchwork方法嵌入水印时，通过修改集合之间的某种关系来嵌入水印；提取水印时，则根据对应的关系来提取嵌入的水印信息。Patchwork方法最大优点之一就是可以实现盲检测。Patchwork适用于时&#x2F;空域、变换域和压缩域，本节主要介绍时域下的典型Patchwork方法。</p>
+<p>Patchwork方法典型算法只能隐藏lbit的信息，即只能说明该图像是否存在水印，隐藏的信息量比较小，但是该算法的鲁棒性较强。该算法的原理如下：随机选择两个集合A&#x3D;{ai}和B&#x3D;{bi},要求A和B中含有相同图像系数，设为n;将集合A中所有样点的像素值增加d,同时将集合B中所有样点的像素值减少d,这样两个集合中的样值都经过微小的改动。选择集合A和B的方法很多，但是Patch Work方法是基于以下假设的，也就是说随机选择的两个样本集合的均值相同。本节中方法是根据图像的横坐标和纵坐标之和的奇偶性不同将图像分为两组，将横坐标和纵坐标之和为偶数的所有系数上增加常量d&#x3D;2.3,将横坐标和纵坐标之和为奇数的所有系数上减少常量d&#x3D;2.3。另一种方法是随机选择N对像素点（ai和bi），然后将ai点的数值增加d，将bi点的像素值减少d。</p>
+<h4 id="要求："><a href="#要求：" class="headerlink" title="要求："></a>要求：</h4><p>完成嵌入和提取方法，用stirmark进行攻击测试，查看鲁棒性，并分析结果。</p>
+<p> Tips：嵌入</p>
+<p>for i&#x3D;1:row</p>
+<p>  for j&#x3D;1:col</p>
+<p>​    if mod(i+j,2)&#x3D;&#x3D;0</p>
+<p>​      wi(i,j)&#x3D;wi(i,j)+d;</p>
+<p>​    else</p>
+<p>​      wi(i,j)&#x3D;wi(i,j)-d;</p>
+<p>​    end</p>
+<p>  end</p>
+<p>end</p>
+<p>提取</p>
+<p>提取时，首先将两个图像块集合的样本分别求平均值，计算两个样本均值的差来判断水印信息是否存在</p>
+<p>wi&#x3D;imread(lenawatermarked.bmp’);%读入载体图像</p>
+<p>wi&#x3D;double(wi);%必须将unit8类型转换成为double类型，否则tempa也是unit8的类型，最大值只能存储255</p>
+<p>tempa&#x3D;0;</p>
+<p>tempb &#x3D;0;</p>
+<p>for i&#x3D;1:row</p>
+<p>  for j&#x3D;1:col</p>
+<p>​    if mod(i+j,2)&#x3D;&#x3D;0</p>
+<p>​      tempa&#x3D;tempa +wi(i,j);</p>
+<p>​    else</p>
+<p>​      tempb&#x3D;tempb+ wi(i,j);</p>
+<p>​    end</p>
+<p>  end</p>
+<p>end</p>
+<h4 id="【实验过程】-2"><a href="#【实验过程】-2" class="headerlink" title="【实验过程】"></a>【实验过程】</h4><ol>
+<li>嵌入</li>
+</ol>
+<p><img src="/2022/12/30/%E7%A9%BA%E5%9F%9F%E5%9B%BE%E5%83%8F%E4%BF%A1%E6%81%AF%E9%9A%90%E8%97%8F/wps18.jpg" srcset="/img/loading.gif" lazyload alt="img"> </p>
+<ol start="2">
+<li>提取</li>
+</ol>
+<p><img src="/2022/12/30/%E7%A9%BA%E5%9F%9F%E5%9B%BE%E5%83%8F%E4%BF%A1%E6%81%AF%E9%9A%90%E8%97%8F/wps19.jpg" srcset="/img/loading.gif" lazyload alt="img"> </p>
+<p>Watermark&#x3D;1，图片隐藏水印</p>
+<ol start="3">
+<li>Stirmark攻击</li>
+</ol>
+<p><img src="/2022/12/30/%E7%A9%BA%E5%9F%9F%E5%9B%BE%E5%83%8F%E4%BF%A1%E6%81%AF%E9%9A%90%E8%97%8F/wps20.jpg" srcset="/img/loading.gif" lazyload alt="img"> </p>
+<p>水印图像经过crop攻击后仍能被检测出水印，说明patchwork算法得到的图像抗裁剪攻击。</p>
+<h4 id="【代码】-2"><a href="#【代码】-2" class="headerlink" title="【代码】"></a>【代码】</h4><figure class="highlight matlab"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><code class="hljs matlab">三、<br>嵌入<br>clc;<br>clear;<br>oi=imread(<span class="hljs-string">&#x27;lena.bmp&#x27;</span>);<br>wi=oi;<br>wi=double(wi);<br>[row,col]=<span class="hljs-built_in">size</span>(wi);<br>d=<span class="hljs-number">2.3</span>;<br><span class="hljs-keyword">for</span> <span class="hljs-built_in">i</span>=<span class="hljs-number">1</span>:row<br><span class="hljs-keyword">for</span> <span class="hljs-built_in">j</span>=<span class="hljs-number">1</span>:col<br><span class="hljs-keyword">if</span> <span class="hljs-built_in">mod</span>(<span class="hljs-built_in">i</span>+<span class="hljs-built_in">j</span>,<span class="hljs-number">2</span>)==<span class="hljs-number">0</span><br>wi(<span class="hljs-built_in">i</span>,<span class="hljs-built_in">j</span>)=wi(<span class="hljs-built_in">i</span>,<span class="hljs-built_in">j</span>)+d;<br><span class="hljs-keyword">else</span><br>wi(<span class="hljs-built_in">i</span>,<span class="hljs-built_in">j</span>)=wi(<span class="hljs-built_in">i</span>,<span class="hljs-built_in">j</span>)-d;<br><span class="hljs-keyword">end</span><br><span class="hljs-keyword">end</span><br><span class="hljs-keyword">end</span><br>imwrite(uint8(wi),<span class="hljs-string">&#x27;hide.bmp&#x27;</span>);<br>subplot(<span class="hljs-number">2</span>,<span class="hljs-number">2</span>,<span class="hljs-number">1</span>),imshow(<span class="hljs-string">&#x27;lena.bmp&#x27;</span>),title(<span class="hljs-string">&#x27;原始图像&#x27;</span>);<br>subplot(<span class="hljs-number">2</span>,<span class="hljs-number">2</span>,<span class="hljs-number">2</span>),imshow(<span class="hljs-string">&#x27;hide.bmp&#x27;</span>),title(<span class="hljs-string">&#x27;水印图像&#x27;</span>);<br><br>提取<br>clc;<br>clear;<br>d=<span class="hljs-number">2.3</span>;<br>r=<span class="hljs-number">1.6</span>;<br>wi=imread(<span class="hljs-string">&#x27;hide_CROP_10.bmp&#x27;</span>);<span class="hljs-comment">%读入载体图像</span><br>wi=double(wi);<span class="hljs-comment">%必须将unit8类型转换成为double类型，否则tempa也是unit8的类型，最大值只能存储255</span><br>[row,col]=<span class="hljs-built_in">size</span>(wi);<br>tempa=<span class="hljs-number">0</span>;<br>tempb =<span class="hljs-number">0</span>;<br><span class="hljs-keyword">for</span> <span class="hljs-built_in">i</span>=<span class="hljs-number">1</span>:row<br><span class="hljs-keyword">for</span> <span class="hljs-built_in">j</span>=<span class="hljs-number">1</span>:col<br><span class="hljs-keyword">if</span> <span class="hljs-built_in">mod</span>(<span class="hljs-built_in">i</span>+<span class="hljs-built_in">j</span>,<span class="hljs-number">2</span>)==<span class="hljs-number">0</span><br>tempa=tempa +wi(<span class="hljs-built_in">i</span>,<span class="hljs-built_in">j</span>);<br><span class="hljs-keyword">else</span><br>tempb=tempb+ wi(<span class="hljs-built_in">i</span>,<span class="hljs-built_in">j</span>);<br><span class="hljs-keyword">end</span><br><span class="hljs-keyword">end</span><br><span class="hljs-keyword">end</span><br>avea=(tempa*<span class="hljs-number">2</span>)/(row*col);<br>aveb=(tempb*<span class="hljs-number">2</span>)/(row*col);<br><span class="hljs-keyword">if</span>(avea-aveb)&gt;r*d<br>watermark=<span class="hljs-number">1</span>;<br><span class="hljs-keyword">else</span><br>watermark=<span class="hljs-number">0</span>;<br><span class="hljs-keyword">end</span><br><br></code></pre></td></tr></table></figure>
+
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E4%BF%A1%E6%81%AF%E9%9A%90%E8%97%8F/" class="category-chain-item">信息隐藏</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E4%BF%A1%E6%81%AF%E9%9A%90%E8%97%8F/">#信息隐藏</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>空域图像信息隐藏</div>
+      <div>http://example.com/2022/12/30/空域图像信息隐藏/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Magnesium</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年12月30日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/12/31/Linux%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/" title="Linux常用命令">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Linux常用命令</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/12/30/BMP%E5%9B%BE%E7%89%87%E9%9A%90%E5%86%99/" title="BMP图片隐写">
+                        <span class="hidden-mobile">BMP图片隐写</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.11/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/tocbot@4.12.0/dist/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/anchor-js@4.3.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
