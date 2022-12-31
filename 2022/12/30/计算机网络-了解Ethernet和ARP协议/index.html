@@ -19,22 +19,22 @@
     <meta name="description" content="Ethernet、ARP、wireshark">
 <meta property="og:type" content="article">
 <meta property="og:title" content="计算机网络-了解Ethernet和ARP协议">
-<meta property="og:url" content="http://example.com/2022/12/30/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-%E4%BA%86%E8%A7%A3Ethernet-%E5%92%8C-ARP-%E5%8D%8F%E8%AE%AE/index.html">
+<meta property="og:url" content="http://example.com/2022/12/30/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-%E4%BA%86%E8%A7%A3Ethernet%E5%92%8CARP%E5%8D%8F%E8%AE%AE/index.html">
 <meta property="og:site_name" content="M4gne51um&#39;s blog">
 <meta property="og:description" content="Ethernet、ARP、wireshark">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://example.com/2022/12/30/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-%E4%BA%86%E8%A7%A3Ethernet-%E5%92%8C-ARP-%E5%8D%8F%E8%AE%AE/image-20221230175314069.png">
-<meta property="og:image" content="http://example.com/2022/12/30/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-%E4%BA%86%E8%A7%A3Ethernet-%E5%92%8C-ARP-%E5%8D%8F%E8%AE%AE/image-20221230175322654.png">
-<meta property="og:image" content="http://example.com/2022/12/30/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-%E4%BA%86%E8%A7%A3Ethernet-%E5%92%8C-ARP-%E5%8D%8F%E8%AE%AE/image-20221230175327984.png">
-<meta property="og:image" content="http://example.com/2022/12/30/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-%E4%BA%86%E8%A7%A3Ethernet-%E5%92%8C-ARP-%E5%8D%8F%E8%AE%AE/image-20221230175333971.png">
-<meta property="og:image" content="http://example.com/2022/12/30/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-%E4%BA%86%E8%A7%A3Ethernet-%E5%92%8C-ARP-%E5%8D%8F%E8%AE%AE/image-20221230175343184.png">
-<meta property="og:image" content="http://example.com/2022/12/30/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-%E4%BA%86%E8%A7%A3Ethernet-%E5%92%8C-ARP-%E5%8D%8F%E8%AE%AE/image-20221230175349363.png">
+<meta property="og:image" content="http://example.com/2022/12/30/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-%E4%BA%86%E8%A7%A3Ethernet%E5%92%8CARP%E5%8D%8F%E8%AE%AE/image-20221230175314069.png">
+<meta property="og:image" content="http://example.com/2022/12/30/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-%E4%BA%86%E8%A7%A3Ethernet%E5%92%8CARP%E5%8D%8F%E8%AE%AE/image-20221230175322654.png">
+<meta property="og:image" content="http://example.com/2022/12/30/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-%E4%BA%86%E8%A7%A3Ethernet%E5%92%8CARP%E5%8D%8F%E8%AE%AE/image-20221230175327984.png">
+<meta property="og:image" content="http://example.com/2022/12/30/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-%E4%BA%86%E8%A7%A3Ethernet%E5%92%8CARP%E5%8D%8F%E8%AE%AE/image-20221230175333971.png">
+<meta property="og:image" content="http://example.com/2022/12/30/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-%E4%BA%86%E8%A7%A3Ethernet%E5%92%8CARP%E5%8D%8F%E8%AE%AE/image-20221230175343184.png">
+<meta property="og:image" content="http://example.com/2022/12/30/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-%E4%BA%86%E8%A7%A3Ethernet%E5%92%8CARP%E5%8D%8F%E8%AE%AE/image-20221230175349363.png">
 <meta property="article:published_time" content="2022-12-30T09:52:23.000Z">
-<meta property="article:modified_time" content="2022-12-30T09:55:37.502Z">
+<meta property="article:modified_time" content="2022-12-31T04:29:32.194Z">
 <meta property="article:author" content="Magnesium">
 <meta property="article:tag" content="计网">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="http://example.com/2022/12/30/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-%E4%BA%86%E8%A7%A3Ethernet-%E5%92%8C-ARP-%E5%8D%8F%E8%AE%AE/image-20221230175314069.png">
+<meta name="twitter:image" content="http://example.com/2022/12/30/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-%E4%BA%86%E8%A7%A3Ethernet%E5%92%8CARP%E5%8D%8F%E8%AE%AE/image-20221230175314069.png">
   
   
   
@@ -286,16 +286,16 @@
                 <h1 id="Ethernet-和-ARP-协议的研究"><a href="#Ethernet-和-ARP-协议的研究" class="headerlink" title="Ethernet 和 ARP 协议的研究"></a>Ethernet 和 ARP 协议的研究</h1><h3 id="实验目的：（需要在涉及关键步骤的截图上有明显的能体现自己信息的标记）"><a href="#实验目的：（需要在涉及关键步骤的截图上有明显的能体现自己信息的标记）" class="headerlink" title="实验目的：（需要在涉及关键步骤的截图上有明显的能体现自己信息的标记）"></a>实验目的：（需要在涉及关键步骤的截图上有明显的能体现自己信息的标记）</h3><p>1.了解以太网协议<br>2.了解 ARP 协议<br>3.了解计算机 OSI 7 层的链路层</p>
 <h3 id="实验环境说明："><a href="#实验环境说明：" class="headerlink" title="实验环境说明："></a>实验环境说明：</h3><p>Windows、wireshark</p>
 <h3 id="实验过程、步骤（可另附页、使用网络拓扑图等辅助说明）及结果："><a href="#实验过程、步骤（可另附页、使用网络拓扑图等辅助说明）及结果：" class="headerlink" title="实验过程、步骤（可另附页、使用网络拓扑图等辅助说明）及结果："></a>实验过程、步骤（可另附页、使用网络拓扑图等辅助说明）及结果：</h3><p>ARP（Address Resolution Protocol，地址解析协议）是用来将IP地址解析为MAC地址的协议。主机或三层网络设备上会维护一张ARP表，用于存储IP地址和MAC地址的映射关系，一般ARP表项包括动态ARP表项和静态ARP表项。<br>1、启动 Wireshark 并用 Chrome 访问其他网站，保存实验结果，使用cmd显示arp缓存。</p>
-<p><img src="/2022/12/30/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-%E4%BA%86%E8%A7%A3Ethernet-%E5%92%8C-ARP-%E5%8D%8F%E8%AE%AE/image-20221230175314069.png" srcset="/img/loading.gif" lazyload alt="image-20221230175314069"></p>
+<p><img src="/2022/12/30/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-%E4%BA%86%E8%A7%A3Ethernet%E5%92%8CARP%E5%8D%8F%E8%AE%AE/image-20221230175314069.png" srcset="/img/loading.gif" lazyload alt="image-20221230175314069"></p>
 <p>2、打开wireshark分析arp协议，源MAC地址为14:f6:d8:b6:8d:84，ip地址为192.168.31.207,目的MAC地址9c:9d:7e:c3:4f:a8 ，该ip地址为192.168.31.1，为本机的默认网关路由地址。硬件地址长度为6（以太网），协议地址长度为4（IPv4）。</p>
-<p><img src="/2022/12/30/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-%E4%BA%86%E8%A7%A3Ethernet-%E5%92%8C-ARP-%E5%8D%8F%E8%AE%AE/image-20221230175322654.png" srcset="/img/loading.gif" lazyload alt="image-20221230175322654">3、双字节帧类型字段值为0x0806，为ARP协议。</p>
-<p><img src="/2022/12/30/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-%E4%BA%86%E8%A7%A3Ethernet-%E5%92%8C-ARP-%E5%8D%8F%E8%AE%AE/image-20221230175327984.png" srcset="/img/loading.gif" lazyload alt="image-20221230175327984"></p>
+<p><img src="/2022/12/30/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-%E4%BA%86%E8%A7%A3Ethernet%E5%92%8CARP%E5%8D%8F%E8%AE%AE/image-20221230175322654.png" srcset="/img/loading.gif" lazyload alt="image-20221230175322654">3、双字节帧类型字段值为0x0806，为ARP协议。</p>
+<p><img src="/2022/12/30/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-%E4%BA%86%E8%A7%A3Ethernet%E5%92%8CARP%E5%8D%8F%E8%AE%AE/image-20221230175327984.png" srcset="/img/loading.gif" lazyload alt="image-20221230175327984"></p>
 <p>4、分析ARP缓存的列值含义</p>
-<p><img src="/2022/12/30/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-%E4%BA%86%E8%A7%A3Ethernet-%E5%92%8C-ARP-%E5%8D%8F%E8%AE%AE/image-20221230175333971.png" srcset="/img/loading.gif" lazyload alt="image-20221230175333971"></p>
+<p><img src="/2022/12/30/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-%E4%BA%86%E8%A7%A3Ethernet%E5%92%8CARP%E5%8D%8F%E8%AE%AE/image-20221230175333971.png" srcset="/img/loading.gif" lazyload alt="image-20221230175333971"></p>
 <p>5、分析ARP请求，从以太网帧开始到ARP操作码字段共21字节，操作码为1，意思是ARP请求</p>
-<p><img src="/2022/12/30/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-%E4%BA%86%E8%A7%A3Ethernet-%E5%92%8C-ARP-%E5%8D%8F%E8%AE%AE/image-20221230175343184.png" srcset="/img/loading.gif" lazyload alt="image-20221230175343184"></p>
+<p><img src="/2022/12/30/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-%E4%BA%86%E8%A7%A3Ethernet%E5%92%8CARP%E5%8D%8F%E8%AE%AE/image-20221230175343184.png" srcset="/img/loading.gif" lazyload alt="image-20221230175343184"></p>
 <p>6、分析ARP响应，操作码为2，意思是ARP回显。目标地址与源地址就与请求报文相反。</p>
-<p><img src="/2022/12/30/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-%E4%BA%86%E8%A7%A3Ethernet-%E5%92%8C-ARP-%E5%8D%8F%E8%AE%AE/image-20221230175349363.png" srcset="/img/loading.gif" lazyload alt="image-20221230175349363"></p>
+<p><img src="/2022/12/30/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-%E4%BA%86%E8%A7%A3Ethernet%E5%92%8CARP%E5%8D%8F%E8%AE%AE/image-20221230175349363.png" srcset="/img/loading.gif" lazyload alt="image-20221230175349363"></p>
 
                 
               </div>
@@ -342,7 +342,7 @@
   <div class="license-box my-3">
     <div class="license-title">
       <div>计算机网络-了解Ethernet和ARP协议</div>
-      <div>http://example.com/2022/12/30/计算机网络-了解Ethernet-和-ARP-协议/</div>
+      <div>http://example.com/2022/12/30/计算机网络-了解Ethernet和ARP协议/</div>
     </div>
     <div class="license-meta">
       
